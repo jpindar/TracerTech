@@ -30,30 +30,56 @@ default
     
     listen(integer channel,string name,key id,string msg)
     {
-        if(msg=="Cancel")
+       if(msg=="Cancel")
         {
             llListenRemove(handle);
         }
         else if(msg=="show")
         {
             llSay(chatChan,"show");
-         }
-        else if(msg=="hide")
-        {
-            llSay(chatChan,"hide");
         }
+       else if(msg=="hide")
+       {
+           llSay(chatChan,"hide");
+      }
         else if(msg=="fire")
        {
             llSay(chatChan,"fire");
-       }
-       else if(msg=="channel")
-       {
-            llSay(chatChan, "set channel " + (string)newChan);
-       }
+        }
+       else if (msg=="channel")
+        {
+             state changeChannel;
+        }
         else
         {
-       llOwnerSay(msg);
-      llListenRemove(handle);
+           //llSay(DEBUG_CHANNEL,msg);
+           llListenRemove(handle);
         }
     }
 }
+
+state changeChannel
+{
+     state_entry()
+    {
+         llTextBox(toucher,"enter new channel",menuChan+1);
+         handle2=llListen(menuChan+1,"",toucher,"");
+         llSetTimerEvent(10);
+    }
+    
+    listen(integer channel,string name,key toucher,string msg)
+    { 
+        {
+            newChan = (integer)msg;
+            llSay(chatChan, "set channel " + (string)newChan);
+            chatChan = newChan;
+            llResetScript();
+        }
+    }   
+      
+  timer()
+  {
+       llResetScript();
+   }
+}
+
