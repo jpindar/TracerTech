@@ -6,7 +6,7 @@ key toucher;
 integer handle;
 integer handle2;
 string group;
-integer menuChan = -12972;
+integer menuChan;
 integer newChan = 42;
 integer chatChan;
 integer PUBLIC = 0;
@@ -24,6 +24,7 @@ default
     state_entry()
     {
         chatChan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
+        menuChan = (integer)(llFrand(-1000000000.0) - 1000000000.0); //we generate random channel...
         owner=llGetOwner();
         access = PUBLIC;
     }
@@ -53,17 +54,17 @@ default
              if(msg == "all")
              {
                  access = PUBLIC;
-                 llSay(chatChan,"ALL");
+                 sendMsg("ALL");
              }
              else if(msg == "group")
              {
                  access = GROUP;
-                 llSay(chatChan,"GROUP");
+                 sendMsg("GROUP");
              }
              else if(msg == "owner")
              {
                  access = OWNER;
-                 llSay(chatChan,"OWNER");
+                 sendMsg("OWNER");
              }
         }    
         if(msg=="Cancel")
@@ -72,21 +73,22 @@ default
         }
         else if(msg=="reset")
         {
-            llSay(chatChan,"reset");
+            sendMsg("reset");
             llResetScript();
         }
 
         else if(msg=="show")
         {
-            llSay(chatChan,"show");
+           sendMsg("show");
         }
         else if(msg=="hide")
         {
-           llSay(chatChan,"hide");
+           sendMsg("hide");
         }
         else if(msg=="fire")
         {
-            llSay(chatChan,"fire");
+            llSay(DEBUG_CHANNEL,"firing");
+            sendMsg("fire");
         }
         else if (msg=="channel")
         {
@@ -112,15 +114,21 @@ state changeChannel
     { 
         {
             newChan = (integer)msg;
-            llSay(chatChan, "set channel " + (string)newChan);
+            msg = "set channel " + (string)newChan;
+            sendMsg(msg);
             chatChan = newChan;
             state default;
         }
     }   
       
-  timer()
-  {
+   timer()
+   {
        state default;
    }
 }
 
+sendMsg(string msg)
+{
+   llSay(chatChan,msg);  
+   llMessageLinked(LINK_SET, 0, msg, "");   
+}
