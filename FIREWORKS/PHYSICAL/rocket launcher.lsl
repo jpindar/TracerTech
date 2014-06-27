@@ -9,11 +9,12 @@ key soundKey = "0718a9e6-4632-48f2-af66-664196d7597d";
 float speed = 15;  //8 to 25
 integer payloadParam = 3;//1 to 10 typ 1 to 3
 integer payloadIndex = 0;
-
+integer payloadParam2 = 0;
 
 integer chan;
 integer handle;
 key id = "";
+integer preloadFace = 2;
 
 fire()
 {
@@ -30,7 +31,7 @@ fire()
     for (i = 0; i< n; i++)
     {
         rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-        llRezAtRoot(rocket,pos,vel, rot, payloadParam);
+        llRezAtRoot(rocket,pos,vel, rot, payloadParam + (payloadParam2*256));
       }
 }
 
@@ -41,7 +42,7 @@ default
 
     state_entry()
     {
-        //llSetTexture(burstTexture, 2);
+        //llSetTexture(burstTexture,preloadFace);
         //id = llGetOwner();
         chan = (integer)llGetObjectDesc();
         //chan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
