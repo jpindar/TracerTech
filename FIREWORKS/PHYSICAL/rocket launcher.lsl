@@ -22,6 +22,7 @@ fire()
     integer soundChan = 556;
 
     llPlaySound(soundKey,1);
+    //llPlaySound(llGetInventoryName(INVENTORY_SOUND,0),1);
     llRegionSay(soundChan, soundKey);
     integer n = llGetInventoryNumber(INVENTORY_OBJECT);
     integer i;
@@ -32,7 +33,7 @@ fire()
     {
         rocket = llGetInventoryName(INVENTORY_OBJECT,i);
         llRezAtRoot(rocket,pos,vel, rot, payloadParam + (payloadParam2*256));
-      }
+    }
 }
 
 default
@@ -44,8 +45,8 @@ default
     {
         //llSetTexture(burstTexture,preloadFace);
         //id = llGetOwner();
-        chan = (integer)llGetObjectDesc();
-        //chan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
+        //chan = (integer)llGetObjectDesc();
+        chan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
         handle = llListen( chan, "",id, "" );
         llOwnerSay("listening on channel "+(string)chan);
     }
