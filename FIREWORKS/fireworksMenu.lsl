@@ -133,9 +133,8 @@ state changeChannel
             msg = "set channel " + (string)newChan;
             sendMsg(msg);
             chatChan = newChan;
-            //setObjectDesc((string)chatChan);
-            llSetObjectDesc((string)chatChan);
-            state default;
+            setObjectDesc((string)chatChan);
+			state default;
         }
     }   
       
