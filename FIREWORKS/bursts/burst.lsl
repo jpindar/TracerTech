@@ -5,6 +5,8 @@
 
 #include "lib.lsl"
 
+integer FIRE_CMD =1;
+integer preloadFace = 2;
 vector color = <0.0, 0.0, 1.0>;
 string texture = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
 string sound ="a2b1025e-1c8a-4dfb-8868-c14a8bed8116";
@@ -41,7 +43,9 @@ makeParticles(vector color)
 
 fire()
 {
-   llPlaySound( sound, VOLUME );
+   integer soundChan = 556;
+   llRegionSay(soundChan, sound);
+   llPlaySound(sound, VOLUME );
    repeatSound(sound);
    SystemSafeSet = SystemAge;
    makeParticles(color);
@@ -56,13 +60,13 @@ default
 
     state_entry()
     {
-       llSetTexture(texture,2);
+       llSetTexture(texture,preloadFace);
        llParticleSystem([]);
     }
 
     link_message( integer n, integer num, string msg, key texture_key )
     {
-        if (num == 1)
+        if (num == FIRE_CMD)
         {
            fire();
         }
