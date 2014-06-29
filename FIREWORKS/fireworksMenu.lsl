@@ -2,14 +2,12 @@
 //fireworks menu v1.0
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
-
 string menutext="\nChoose One:";
 list buttonsOwner=["channel","reset","foo","owner","group","public", "fire","hide","show"];
 list buttonsAll=["channel","reset","foo", "fire","hide","show"];
 key owner;
 key toucher;
 integer handle;
-integer handle2;
 string group;
 integer menuChan;
 integer newChan = 42;
@@ -26,13 +24,13 @@ default
    on_rez(integer n){llResetScript();}
    changed(integer change){if(change & CHANGED_OWNER) llResetScript();}
 
-    state_entry()
-    {
-        chatChan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
-        menuChan = randomChan();
-        owner=llGetOwner();
-        access = ALL;
-    }
+   state_entry()
+   {
+      chatChan = objectDescToInt();
+      menuChan = randomChan();
+      owner=llGetOwner();
+      access = ALL;
+   }
 
     touch_start(integer num)
     {
@@ -50,61 +48,59 @@ default
         {
             llDialog(toucher,menutext,buttonsAll,menuChan);
          }  
-     
-    }
-    
-    listen(integer channel,string name,key id,string msg)
-    {
-        if (toucher == owner)
-        {
-             if(msg == "public")
-             {
-                 access = ALL;
-                 sendMsg("ALL");
-             }
-             else if(msg == "group")
-             {
-                 access = GROUP;
-                 sendMsg("GROUP");
-             }
-             else if(msg == "owner")
-             {
-                 access = OWNER;
-                 sendMsg("OWNER");
-             }
-        }    
-        if(msg=="Cancel")
-        {
-            llListenRemove(handle);
-        }
-        else if(msg=="reset")
-        {
-            sendMsg("reset");
-            llResetScript();
-        }       
+   }
 
-        else if(msg=="show")
-        {
-           sendMsg("show");
-        }
-        else if(msg=="hide")
-        {
-           sendMsg("hide");
-        }
-        else if(msg=="fire")
-        {
-            llSay(DEBUG_CHANNEL,"firing");
-            sendMsg("fire");
-        }
-        else if (msg=="channel")
-        {
-             state changeChannel;
-        }
-        else
-        {
-             llListenRemove(handle);
-        }
-    }
+   listen(integer chan,string name,key id,string msg)  //listen to dialog box
+   {
+      if (toucher == owner)
+      {
+         if(msg == "public")
+         {
+            access = PUBLIC;
+            sendMsg("PUBLIC");
+         }
+         else if(msg == "group")
+         {
+            access = GROUP;
+            sendMsg("GROUP");
+         }
+         else if(msg == "owner")
+         {
+            access = OWNER;
+            sendMsg("OWNER");
+         }
+      }
+      if(msg=="fire")
+      {
+          llSay(DEBUG_CHANNEL,"firing");
+          sendMsg("fire");
+      }
+      else if(msg=="reset")
+      {
+          sendMsg("reset");
+          llResetScript();
+      }
+      else if(msg=="show")
+      {
+         sendMsg("show");
+      }
+      else if(msg=="hide")
+      {
+         sendMsg("hide");
+      }
+      else if (msg=="channel")
+      {
+         state changeChannel;
+      }
+      if(msg=="Cancel")
+      {
+         llListenRemove(handle);
+      }
+      else
+      {
+         llListenRemove(handle);
+      }
+   }
 }
 
 
@@ -112,9 +108,10 @@ state changeChannel
 {
      state_entry()
     {
-        llTextBox(toucher,"enter  new channel",menuChan+1);
-         handle2=llListen(menuChan+1,"",toucher,"");
-         llSetTimerEvent(10);
+        integer menuChan2 = randomChan();
+        llTextBox(toucher,"enter new channel",menuChan2+1);
+        integer handle2=llListen(menuChan2,"",toucher,"");
+        llSetTimerEvent(10);
     }
     
     listen(integer channel,string name,key toucher,string msg)
@@ -131,7 +128,7 @@ state changeChannel
    timer()
    {
        state default;
-   }              
+   }
 }
 
 sendMsg(string msg)
