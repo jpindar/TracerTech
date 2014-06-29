@@ -11,10 +11,13 @@ integer payloadParam = 3;//1 to 10 typ 1 to 3
 integer payloadIndex = 0;
 integer payloadParam2 = 0;
 float heightOffset = 0.6;
+float glowOnAmount = 0.0; //or 0.05
 integer chan;
 integer handle;
 key id = "";
 integer preloadFace = 2;
+
+#include "lib.lsl"
 
 fire()
 {
@@ -41,15 +44,14 @@ default
    on_rez(integer n){llResetScript();}
    changed(integer change){if(change & CHANGED_OWNER) llResetScript();}
 
-    state_entry()
-    {
-        //llSetTexture(burstTexture,preloadFace);
-        //id = llGetOwner();
-        //chan = (integer)llGetObjectDesc();
-        chan = objectDescToInt();
-        handle = llListen( chan, "",id, "" );
-        llOwnerSay("listening on channel "+(string)chan);
-    }
+   state_entry()
+   {
+      //llSetTexture(textureKey,preloadFace);
+      //id = llGetOwner();
+      chan = objectDescToInt();
+      handle = llListen( chan, "",id, "" );
+      llOwnerSay("listening on channel "+(string)chan);
+   }
 
     touch_start(integer total_number)
     {
@@ -70,27 +72,27 @@ default
 
 msgHandler(string msg)
 {
-        if ( msg == "fire" )
-        {
-            fire();
-        }
-        else if ( msg == "hide")
-        {
-            llSetAlpha(0.0, ALL_SIDES);
-            //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
-        }
-        if ( msg == "show" )
-        {
-           llSetAlpha(1.0, ALL_SIDES);
-          // llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE, PRIM_GLOW, ALL_SIDES, 0.00]);
-        }
-        else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
-        {
-            if ((chan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
-               chan = 0;
-            llSetObjectDesc((string)chan);
-            llResetScript();
-        }
+      if ( msg == "fire" )
+      {
+         fire();
+      }
+      else if ( msg == "hide")
+      {
+          llSetAlpha(0.0, ALL_SIDES);
+          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
+      }
+      else if ( msg == "show" )
+      {
+         llSetAlpha(1.0, ALL_SIDES);
+         //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE, PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+      }
+      else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
+      {
+         if ((chan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
+            chan = 0;
+         llSetObjectDesc((string)chan);
+         llResetScript();
+      }
 }
 
 
