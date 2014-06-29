@@ -10,7 +10,7 @@ float speed = 15;  //8 to 25
 integer payloadParam = 3;//1 to 10 typ 1 to 3
 integer payloadIndex = 0;
 integer payloadParam2 = 0;
-
+float heightOffset = 0.6;
 integer chan;
 integer handle;
 key id = "";
@@ -21,13 +21,13 @@ fire()
     string rocket;
     integer soundChan = 556;
 
-    llPlaySound(soundKey,1);
-    //llPlaySound(llGetInventoryName(INVENTORY_SOUND,0),1);
+    //llPlaySound(soundKey,1);
+    llTriggerSound(soundKey,1);
     llRegionSay(soundChan, soundKey);
     integer n = llGetInventoryNumber(INVENTORY_OBJECT);
     integer i;
     rotation rot = llGetRot();
-    vector pos = llGetPos()+ (<0.0,0.0,0.5> * rot);
+    vector pos = llGetPos()+ (<0.0,0.0,heightOffset> * rot);
     vector vel = <0,0,speed> * rot;
     for (i = 0; i< n; i++)
     {
@@ -46,18 +46,30 @@ default
         //llSetTexture(burstTexture,preloadFace);
         //id = llGetOwner();
         //chan = (integer)llGetObjectDesc();
-        chan = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
+        chan = objectDescToInt();
         handle = llListen( chan, "",id, "" );
         llOwnerSay("listening on channel "+(string)chan);
     }
 
     touch_start(integer total_number)
     {
-        fire();
+      //  fire();
     }
 
+    link_message(integer sender, integer num, string str, key id)
+    {
+       msgHandler(str); 
+    }
+    
     listen( integer chan, string name, key id, string msg )
     {
+       msgHandler(msg);
+    }
+}
+
+
+msgHandler(string msg)
+{
         if ( msg == "fire" )
         {
             fire();
@@ -79,9 +91,6 @@ default
             llSetObjectDesc((string)chan);
             llResetScript();
         }
-    }
-
 }
 
-debug(string s) {if (debug) llOwnerSay(s);}
 
