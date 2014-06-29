@@ -10,14 +10,14 @@ key toucher;
 integer handle;
 string group;
 integer menuChan;
-integer newChan = 42;
-integer chatChan = 42;
-integer ALL = 0;
+integer newChan;
+integer chatChan;
+integer PUBLIC = 0;
 integer GROUP = 1;
 integer OWNER = 2;
 integer access;
 
-#include "lib.lsl" 
+#include "lib.lsl"
  
 default
 {
@@ -29,13 +29,12 @@ default
       chatChan = objectDescToInt();
       menuChan = randomChan();
       owner=llGetOwner();
-      access = ALL;
+      access = PUBLIC;
    }
 
     touch_start(integer num)
     {
         toucher=llDetectedKey(0);
-        handle=llListen(menuChan,"",toucher,"");
         if (toucher == owner)
         {
             llDialog(toucher,menutext,buttonsOwner,menuChan);
@@ -44,14 +43,26 @@ default
         {
             llDialog(toucher,menutext,buttonsAll,menuChan);
         }
-        else if ((access == ALL)) 
+        else if ((access == PUBLIC)) 
         {
             llDialog(toucher,menutext,buttonsAll,menuChan);
-         }  
+        }
+        else
+        {
+        }
+        handle=llListen(menuChan,"",toucher,"");
+        llSetTimerEvent(10); 
    }
 
+   timer()
+   {
+       llSetTimerEvent(0);
+       llListenRemove(handle);
+   }
+   
    listen(integer chan,string name,key id,string msg)  //listen to dialog box
    {
+      llSetTimerEvent(0);
       if (toucher == owner)
       {
          if(msg == "public")
@@ -117,10 +128,13 @@ state changeChannel
     listen(integer channel,string name,key toucher,string msg)
     { 
         {
+            llSetTimerEvent(0);
             newChan = (integer)msg;
             msg = "set channel " + (string)newChan;
             sendMsg(msg);
             chatChan = newChan;
+            //setObjectDesc((string)chatChan);
+            llSetObjectDesc((string)chatChan);
             state default;
         }
     }   
