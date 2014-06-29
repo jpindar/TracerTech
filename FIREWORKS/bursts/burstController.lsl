@@ -1,6 +1,10 @@
 ////////////////////////
 //fireworks burst controller v1.14
 //copyright Tracer Tech aka Tracer Ping 2014
+//this goes in the burst prim
+//it link messages to the actual particle script
+// it listens on the description channel then shows, hides etc.
+
 /////////////////////////////
 float glowOnAmount = 0.0; //or 0.05
 integer chan;
@@ -11,7 +15,7 @@ integer preloadFace = 2;
 
 #include "lib.lsl"
 
-fire()
+fire()  //this is the only message that goes to the particle script
 {
     debugSay("firing");
     llMessageLinked( LINK_SET, num, color, textureKey);
@@ -52,7 +56,7 @@ default
       {
          if ((chan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
             chan = 0;
-         llSetObjectDesc((string)chan);
+         llSetObjectDesc((string)chan);  //TEST ME does this set the prim or the object? 
          llResetScript();
       }
    }
