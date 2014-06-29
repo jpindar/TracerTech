@@ -9,9 +9,9 @@ key owner;
 key toucher;
 integer handle;
 string group;
+integer chatChan;
 integer menuChan;
 integer newChan;
-integer chatChan;
 integer PUBLIC = 0;
 integer GROUP = 1;
 integer OWNER = 2;
@@ -91,7 +91,7 @@ default
           sendMsg("reset");
           llResetScript();
       }
-      else if(msg=="show")
+      if(msg=="show")
       {
          sendMsg("show");
       }
@@ -134,7 +134,7 @@ state changeChannel
             sendMsg(msg);
             chatChan = newChan;
             setObjectDesc((string)chatChan);
-			state default;
+           state default;
         }
     }   
       
