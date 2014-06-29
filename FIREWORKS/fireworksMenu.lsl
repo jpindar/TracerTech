@@ -120,7 +120,7 @@ state changeChannel
      state_entry()
     {
         integer menuChan2 = randomChan();
-        llTextBox(toucher,"enter new channel",menuChan2+1);
+        llTextBox(toucher,"enter new channel",menuChan2);
         integer handle2=llListen(menuChan2,"",toucher,"");
         llSetTimerEvent(10);
     }
