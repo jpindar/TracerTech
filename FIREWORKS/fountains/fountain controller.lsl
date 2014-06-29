@@ -1,20 +1,19 @@
-//fireworks controller
+///////////////////////////
+//fireworks fountain controller
 //Tracer Ping 2013
 
 //string  SOUND = "0f76aca8-101c-48db-998c-6018faf14b62"; // a click sound
-integer num = 1;
-string  cmd_On = "fire";
-string desc;
+integer FIRE_CMD = 1;
 string color = "<1.0,0.0,0.0>";
-integer chan = 556;
-integer Handle;
+integer chatChan;
+integer handle;
 integer textureIndex = 1;
 key textureKey;
+integer preloadFace = 2;
 
-fire()
-{
-    llMessageLinked( LINK_SET, num, color, textureKey);
-}
+#include "lib.lsl"
+
+
 
 default
 {
@@ -23,12 +22,12 @@ default
  
    state_entry()
    {
-      chan = (integer)llGetObjectDesc();
-      llListen( chan, "", "", "" );
-      //Handle = llListen (channel, "", llGetOwner(), "");
-      llOwnerSay("listening on channel "+(string)chan);
-      //textureKey = llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,textureIndex));
-      llSetTexture(textureKey,2);
+      chatChan = objectDescToInt();
+      handle = llListen(chatChan, "", "", "" );
+      //handle = llListen (channel, "", llGetOwner(), "");
+      llOwnerSay("listening on channel "+(string)chatChan);
+      //textureKey = getInventoryTexture();
+      llSetTexture(textureKey,preloadFace);
    }
 
    listen( integer chan, string name, key id, string msg )
@@ -49,9 +48,9 @@ default
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
-         if ((chan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
-            chan = 0;
-         llSetObjectDesc((string)chan);   
+         if ((chatChan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
+            chatChan = 0;
+         setObjectDesc((string)chatChan);   
          llResetScript();
       }
       /*
@@ -79,13 +78,15 @@ default
 
     touch_start(integer total_number)
     {
-       chan = (integer)llGetObjectDesc();
-       //llPlaySound( SOUND, 0.5 );
+       chatChan = objectDescToInt();
        fire();
     }
 }
 
-
+fire()
+{
+    llMessageLinked( LINK_SET, FIRE_CMD, color, textureKey);
+}
 
 
 
