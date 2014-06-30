@@ -1,4 +1,8 @@
 
+vector COLOR_RED = <1.0, 0.0, 0.0>;
+vector COLOR_GOLD = <1.0, 0.8, 0.2>;
+vector COLOR_3 = <0.0, 0.8, 0.2>;
+vector COLOR_BLUE = <0.0, 0.0, 1.0>;
 
 integer randomChan()
 {
@@ -36,5 +40,6 @@ playInventorySound()
 string getInventoryTexture()
 {
     return llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
-)
+}
+
 
