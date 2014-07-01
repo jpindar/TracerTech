@@ -24,7 +24,6 @@ default
    {
       texture = TEXTURE_CLASSIC;
       chatChan = objectDescToInt();
-      menuChan = randomChan();
       owner=llGetOwner();
       access = PUBLIC;
       handle = llListen(chatChan, "", "", "" );
@@ -41,7 +40,8 @@ default
     {
        msgHandler(id, msg);
     }
-   
+}
+
 msgHandler(string sender, string msg)
    {
       llSay(DEBUG_CHANNEL,"Heard "+msg);
@@ -95,7 +95,6 @@ msgHandler(string sender, string msg)
       {
          llListenRemove(handle);
       }
-   }
 }
 
 sendMsg(string msg)
