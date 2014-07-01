@@ -3,8 +3,10 @@
 // listens for commands on either a chat channel
 // or a link message
 //////////////////////
-integer debug = TRUE;
-key sound = "0718a9e6-4632-48f2-af66-664196d7597d";
+#include "lib.lsl"
+//#define DEBUG
+
+string sound = SOUND_ROCKETLAUNCH1;
 float speed = 15;  //8 to 25
 integer payloadParam = 3;//typically time before explosion, typically  1 to 10 
 integer payloadIndex = 0; 
@@ -16,8 +18,6 @@ integer handle;
 integer access;
 key owner = "";
 integer preloadFace = 2;
-
-#include "lib.lsl"
 
 fire()
 {
@@ -52,11 +52,13 @@ default
       llOwnerSay("listening on channel "+(string)chatChan);
    }
 
+    /*
     touch_start(integer n)
     {
-      //  fire();
+       fire();
     }
-
+    */
+	
     link_message(integer sender, integer num, string str, key id)
     {
        msgHandler(owner, str); 
@@ -83,12 +85,14 @@ msgHandler(string sender, string msg)
       else if ( msg == "hide")
       {
           llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
-      }
+          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+          //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+	  }
       else if ( msg == "show" )
       {
          llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-         //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE, PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+         //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
+         //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
