@@ -61,7 +61,7 @@ msgHandler(string sender, string msg)
             access = OWNER;
          }
       }
-      if ((access == OWNER) && (!(id == owner)))
+      if ((access == OWNER) && (!(sender == owner)))
           return;
       if ((access == GROUP) && (!llDetectedGroup(0)))
          return;
