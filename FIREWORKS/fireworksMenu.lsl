@@ -12,9 +12,7 @@ string group;
 integer chatChan;
 integer menuChan;
 integer newChan;
-integer PUBLIC = 0;
-integer GROUP = 1;
-integer OWNER = 2;
+
 integer access;
 
 #include "lib.lsl"
