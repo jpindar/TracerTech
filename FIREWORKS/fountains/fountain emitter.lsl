@@ -1,14 +1,15 @@
 //Fireworks Fountain v1.14
 //Tracer Ping July 2014
 
-vector color = <1.0,0.0,0.0>;
-string textureKey = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
-float SystemAge = 4.0;//life span of the particle system
+vector color1;
+vector color2;
+string texture;
 string sound = "1339a082-66bb-4d4b-965a-c3f13da18492";
-float VOLUME = 1.0;  // 0.0 = silent to 1.0 = full volume
+float SystemAge = 4.0;//life span of the particle system
 float SystemSafeSet = 0.00;//prevents erroneous particle emissions
 integer preloadFace = 2;
-integer FIRE_CMD = 1;
+
+#include "lib.lsl"
 
 makeParticles(vector color)
 {
@@ -20,7 +21,7 @@ makeParticles(vector color)
     | PSYS_PART_FOLLOW_VELOCITY_MASK
     | PSYS_PART_EMISSIVE_MASK,
     PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
-    PSYS_SRC_TEXTURE,           textureKey,
+    PSYS_SRC_TEXTURE,           texture,
     PSYS_SRC_MAX_AGE,           SystemSafeSet,
     PSYS_PART_MAX_AGE,          5.0,
     PSYS_SRC_BURST_RATE,        0.02,
@@ -29,8 +30,8 @@ makeParticles(vector color)
     PSYS_SRC_BURST_SPEED_MIN,   12.0,
     PSYS_SRC_BURST_SPEED_MAX,   14.0,
     PSYS_SRC_ACCEL,             <0.5,0.0,-2.0>,
-    PSYS_PART_START_COLOR,      color,
-    PSYS_PART_END_COLOR,        color,
+    PSYS_PART_START_COLOR,      color1,
+    PSYS_PART_END_COLOR,        color2,
     PSYS_PART_START_ALPHA,      1.0,
     PSYS_PART_END_ALPHA,        0.3,
     PSYS_PART_START_SCALE,      <1.5,1.5,0.0>,
@@ -39,37 +40,37 @@ makeParticles(vector color)
     PSYS_SRC_ANGLE_END,         0,
     PSYS_SRC_OMEGA,             <0.0,0.0,0.0>
     ]);
-} 
+}
 
 fire()
 {
-    integer soundChan = 556;
-    llRegionSay(soundChan, sound);
-    llPlaySound(sound, VOLUME );
-    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,1.0,PRIM_FULLBRIGHT,ALL_SIDES,TRUE]); 
+   // llPlaySound(sound, VOLUME );
+    llTriggerSound(sound, VOLUME);
+    repeatSound(sound);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0,PRIM_FULLBRIGHT,ALL_SIDES,TRUE,PRIM_COLOR,ALL_SIDES,color1,1.0]);
     SystemSafeSet = SystemAge;
-    makeParticles(color);
+    makeParticles(color1);
     llSleep(SystemAge);
     SystemSafeSet = 0.0;
     llParticleSystem([]);
-    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0,PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0,PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
     }
 
 default
 {
     state_entry()
     {
-        //textureKey = llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
-       llSetTexture(textureKey,preloadFace);
        llParticleSystem([]);
     }
 
-    link_message( integer sender, integer num, string msg, key target )
+    link_message( integer sender, integer num, string msg, key id )
     {
-        if ( num == FIRE_CMD )
+        if ( num & FIRE_CMD ) //to allow for future packing more data into num
         {
-            //color = (vector)msg;
-            fire();
+           color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
+           color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
+           texture = id;
+           fire();
         }
     }
 
