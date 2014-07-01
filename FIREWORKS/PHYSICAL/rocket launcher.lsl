@@ -71,9 +71,9 @@ default
 
 msgHandler(string sender, string msg)
 {
-      if (access == OWNER) && (!(sender == owner))
+      if ((access == OWNER) && (!(sender == owner)))
           return;
-      if (access == GROUP) && (!llDetectedGroup(0))
+      if ((access == GROUP) && (!llDetectedGroup(0)))
          return;
 		 
       if ( msg == "fire" )
