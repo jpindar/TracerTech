@@ -10,25 +10,15 @@ string SOUND = "0f76aca8-101c-48db-998c-6018faf14b62"; // a click sound
 string color = "<1.0,1.0,1.0>";
 key owner;
 integer handle;
-integer FIRE_CMD = 1;
 string group;
 integer chatChan;
 integer newChan;
-integer PUBLIC = 0;
-integer GROUP = 1;
-integer OWNER = 2;
 integer access;
-key textureKey ="";
+key texture ="";
 key id = "";
 integer preloadFace = 2;
 
 #include "lib.lsl"
-
-fire()  //this is the only message that goes to the particle script
-{
-    debugSay("firing");
-    llMessageLinked( LINK_SET,FIRE_CMD, color, textureKey);
-}
 
 default
 {
@@ -38,7 +28,7 @@ default
    state_entry()
    {
       llSetTexture(textureKey,preloadFace);
-      //id = llGetOwner();
+      owner = llGetOwner();
       chatChan = objectDescToInt();
       access = PUBLIC;
       handle = llListen( chatChan, "","", "" );
@@ -63,15 +53,15 @@ default
             access = OWNER;
          }
       }
-      if (access = owner) && (!(id = owner))
+      if (access == OWNER) && (!(id == owner))
           return;
-      if (access = GROUP) && (!llDetectedGroup(0))
+      if (access == GROUP) && (!llDetectedGroup(0))
          return;
       if (msg == "fire")
       {
          fire();
       }
-      else if ( msg == "hide")
+      else if (msg == "hide")
       {
           llSetLinkAlpha(LINK_ALL,0.0, ALL_SIDES);
           llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
@@ -83,9 +73,8 @@ default
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
-         if ((chan = ((integer)llDeleteSubString(msg, 0, 11))) < 0)
-            chan = 0;
-         setObjectDesc((string)chan);
+         chatChan = ((integer)llDeleteSubString(msg, 0, llStringLength("set channel")));
+         setObjectDesc((string)chatChan);
          llResetScript();
       }
       else
@@ -95,7 +84,6 @@ default
    }
 }
 
-
 sendMsg(string msg)
 {
    //llSay(chatChan,msg);
@@ -103,4 +91,9 @@ sendMsg(string msg)
    llSay(DEBUG_CHANNEL,msg); 
 }
 
+fire()  //this is the only message that goes to the particle script
+{
+    debugSay("firing");
+    llMessageLinked( LINK_SET,FIRE_CMD, color, textureKey);
+}
 
