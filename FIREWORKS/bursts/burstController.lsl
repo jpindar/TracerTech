@@ -5,9 +5,10 @@
 //it link messages to the actual particle script
 // it listens on the description channel then shows, hides etc.
 ////////////////////////////
+#include "lib.lsl"
+
 float glowOnAmount = 0.0; //or 0.05
-string SOUND = "0f76aca8-101c-48db-998c-6018faf14b62"; // a click sound
-string color1 = "<1.00,0.00,0.00>";
+string color1 = COLOR_RED;
 string color2 = "<1.00,1.00,0.00>";
 string texture;
 key owner;
@@ -16,8 +17,6 @@ integer chatChan;
 integer newChan;
 integer access;
 integer preloadFace = 2;
-
-#include "lib.lsl"
 
 default
 {
@@ -75,12 +74,14 @@ msgHandler(string sender, string msg)
       else if (msg == "hide")
       {
           llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-          llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
+          llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+           llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
       }
       if ( msg == "show" )
       {
          llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-         llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+         llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+         llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
@@ -101,15 +102,15 @@ msgHandler(string sender, string msg)
 
 sendMsg(string msg)
 {
-   //llSay(chatChan,msg);
+   #if defined REMOTE_CONTROLLER
+      lSay(chatChan,msg);
+   #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   //debugSay(msg);
 }
 
 fire()  //this is the only message that goes to the particle script
 {
     string fireMsg = (string)color1 + (string)color2;
-   // debugSay("sending fire linkmessage" + fireMsg + texture);
     llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
    //llMessageLinked( LINK_SET, num, color1, texture);
    //llMessageLinked( LINK_SET, num, color2, texture);

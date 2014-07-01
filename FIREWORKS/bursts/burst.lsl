@@ -6,8 +6,8 @@
 
 vector color1;
 vector color2;
-string texture = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
-string sound ="a2b1025e-1c8a-4dfb-8868-c14a8bed8116";
+string texture = TEXTURE_CLASSIC;
+string sound = SOUND_BURST1;
 vector lightColor;
 float intensity = 1.0;
 float radius = 20;
@@ -49,7 +49,9 @@ fire()
    llTriggerSound(sound, VOLUME);
    repeatSound(sound);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0,PRIM_FULLBRIGHT,ALL_SIDES,TRUE,PRIM_COLOR,ALL_SIDES,color1,1.0]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
    SystemSafeSet = SystemAge;
    makeParticles(color1,color2);
    llSleep(1);
@@ -57,8 +59,10 @@ fire()
    llSleep(SystemAge);
    SystemSafeSet = 0.0;
    llParticleSystem([]);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0,PRIM_FULLBRIGHT,ALL_SIDES,FALSE,PRIM_COLOR,ALL_SIDES,<1.0,1.0,1.0>,1.0]);
-}
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,1.0]);
+   }
 
 default
 {
