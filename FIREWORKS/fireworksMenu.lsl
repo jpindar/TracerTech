@@ -12,7 +12,6 @@ string group;
 integer chatChan;
 integer menuChan;
 integer newChan;
-
 integer access;
 
 #include "lib.lsl"
@@ -81,10 +80,9 @@ default
       }
       if(button=="fire")
       {
-          llSay(DEBUG_CHANNEL,"firing");
+          debugSay("menu firing");
           sendMsg("fire");
       }
-
       if(button=="show")
       {
          sendMsg("show");
@@ -145,9 +143,9 @@ state changeChannel
 
 sendMsg(string msg)
 {
-   llSay(chatChan,msg);  
-   llMessageLinked(LINK_SET, 0, msg, "");   
-   llSay(DEBUG_CHANNEL,msg); 
+   //llSay(chatChan,msg);  
+   llMessageLinked(LINK_SET, 0, msg, "");
+   debugSay(msg); 
 }
 
 
