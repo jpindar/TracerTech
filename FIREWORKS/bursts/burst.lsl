@@ -5,11 +5,11 @@
 
 #include "lib.lsl"
 
-integer FIRE_CMD =1;
 integer preloadFace = 2;
 string texture = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
 string sound ="a2b1025e-1c8a-4dfb-8868-c14a8bed8116";
-vector color = <1.0,1.0,1.0>; //normally overrifden by the controller
+vector color1;
+vector color2;
 // SystemSafeSet prevents erroneous particle emissions
 float SystemSafeSet = 0.00;
 // SystemAge is the life span of the particle system
@@ -29,8 +29,8 @@ makeParticles(vector color)
     PSYS_PART_MAX_AGE, 5.0,
     PSYS_PART_START_SCALE, <0.5, 0.5, 0.0>,
     PSYS_PART_END_SCALE,   <0.5, 0.5, 0.0>,
-    PSYS_PART_START_COLOR, color,
-    PSYS_PART_END_COLOR, color,
+    PSYS_PART_START_COLOR, color1,
+    PSYS_PART_END_COLOR, color2,
     PSYS_PART_START_ALPHA, 1.0,
     PSYS_PART_END_ALPHA, 0.1,
     PSYS_SRC_BURST_PART_COUNT, 500,
@@ -44,8 +44,6 @@ makeParticles(vector color)
 
 fire()
 {
-   //texture = texture_key;
-   //color = (vector)msg;
    integer soundChan = 556;
    llRegionSay(soundChan, sound);
    llPlaySound(sound, 1.0);
@@ -69,9 +67,12 @@ default
 
     link_message( integer n, integer num, string msg, key foo)
     {
-        if (num == FIRE_CMD)
+        if (num & FIRE_CMD)
         {
-           //color = (vector)msg;
+            //color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
+            //color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
+            color1 = (vector)msg;
+            color2 = (vector)msg;
            fire();
         }
     }
