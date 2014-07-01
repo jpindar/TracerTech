@@ -33,18 +33,20 @@ default
 
     link_message(integer sender, integer num, string str, key id)
     {
+      llSay(MY_DEBUG_CHAN,"Heard link msg  ");
        msgHandler(owner, str); 
     }
     
     listen( integer chan, string name, key id, string msg )
     {
+      llSay(MY_DEBUG_CHAN,"Heard chat msg ");  
        msgHandler(id, msg);
     }
 }
 
 msgHandler(string sender, string msg)
    {
-      llSay(DEBUG_CHANNEL,"Heard "+msg);
+       llSay(MY_DEBUG_CHAN,"heard " + msg +" from" + sender);
       llSetTimerEvent(0);
       if (sender == owner)
       {
@@ -100,13 +102,13 @@ msgHandler(string sender, string msg)
 sendMsg(string msg)
 {
    llMessageLinked(LINK_SET, 0, msg, "");
-   llSay(DEBUG_CHANNEL,msg); 
+  llSay(MY_DEBUG_CHAN,msg);  
 }
 
 fire()
 {
     string fireMsg = (string)color1 + (string)color2;
-    llSay(DEBUG_CHANNEL,"sending fire linkmessage" + fireMsg + texture);
+    llSay(MY_DEBUG_CHAN,"sending fire linkmessage" + fireMsg + texture);
     llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
 }
 
