@@ -1,15 +1,16 @@
-//Fireworks Fountain v1.14
+/////////////////////////
+//Fireworks Fountain emitter v1.20
 //Tracer Ping July 2014
+///////////////////////////
+#include "lib.lsl"
 
 vector color1;
 vector color2;
 string texture;
 string sound = "1339a082-66bb-4d4b-965a-c3f13da18492";
+integer preloadFace = 2;
 float SystemAge = 4.0;//life span of the particle system
 float SystemSafeSet = 0.00;//prevents erroneous particle emissions
-integer preloadFace = 2;
-
-#include "lib.lsl"
 
 makeParticles(vector color)
 {
@@ -60,6 +61,7 @@ default
 {
     state_entry()
     {
+      // llSetTexture(texture,preloadFace);
        llParticleSystem([]);
     }
 
@@ -74,8 +76,6 @@ default
         }
     }
 
-
 }
-
 
 
