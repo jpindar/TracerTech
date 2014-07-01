@@ -8,10 +8,8 @@ list buttonsAll=["channel","reset","foo", "fire","hide","show"];
 key owner;
 key toucher;
 integer handle;
-string group;
 integer chatChan;
 integer menuChan;
-integer newChan;
 integer access;
 
 #include "lib.lsl"
@@ -114,39 +112,36 @@ default
 
 state changeChannel
 {
-     state_entry()
-    {
-        integer menuChan2 = randomChan();
-        llTextBox(toucher,"enter new channel",menuChan2);
-        integer handle2=llListen(menuChan2,"",toucher,"");
-        llSetTimerEvent(10);
-    }
-    
-    listen(integer channel,string name,key toucher,string msg)
-    { 
-        {
-           llSetTimerEvent(0);
-           newChan = (integer)msg;
-           msg = "set channel " + (string)newChan;
-           sendMsg(msg);
-           chatChan = newChan;
-           setObjectDesc((string)chatChan);
-           state default;
-        }
-    }   
-      
+   state_entry()
+   {
+      integer menuChan2 = randomChan();
+      llTextBox(toucher,"enter new channel",menuChan2);
+      integer handle2=llListen(menuChan2,"",toucher,"");
+      llSetTimerEvent(10);
+   }
+
+   listen(integer channel,string name,key toucher,string msg)
+   {
+      llSetTimerEvent(0);
+      integer newChan = (integer)msg;
+      msg = "set channel " + (string)newChan;
+      sendMsg(msg);
+      chatChan = newChan;
+      setObjectDesc((string)chatChan);
+      state default;
+   }
+
    timer()
    {
-       state default;
+      state default;
    }
 }
 
 sendMsg(string msg)
 {
-   //llSay(chatChan,msg);  
+   #if defined REMOTE_MENU
+      llSay(chatChan,msg);
+   #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg); 
 }
-
-
 
