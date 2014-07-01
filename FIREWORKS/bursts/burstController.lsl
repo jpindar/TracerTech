@@ -7,7 +7,8 @@
 ////////////////////////////
 float glowOnAmount = 0.0; //or 0.05
 string SOUND = "0f76aca8-101c-48db-998c-6018faf14b62"; // a click sound
-string color = "<1.0,1.0,1.0>";
+string color1 = "<1.00,0.00,0.00>";
+string color2 = "<1.00,1.00,0.00>";
 string texture;
 key owner;
 integer handle;
@@ -36,20 +37,17 @@ default
 
    link_message(integer sender, integer num, string str, key id)
    {
-     debugSay("Heard link msg");
      msgHandler(owner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )
    {
-     debugSay("Heard chat msg");
      msgHandler(id, msg);
    }
 }
 
 msgHandler(string sender, string msg)
    {
-      debugSay("heard " + msg +" from" + sender);
       llSetTimerEvent(0);
       if (sender == owner)
       {
@@ -82,7 +80,7 @@ msgHandler(string sender, string msg)
       if ( msg == "show" )
       {
          llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-         llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE, PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+         llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, glowOnAmount]);
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
@@ -105,12 +103,16 @@ sendMsg(string msg)
 {
    //llSay(chatChan,msg);
    llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg);
+   //debugSay(msg);
 }
 
 fire()  //this is the only message that goes to the particle script
 {
-    debugSay("firing");
-    llMessageLinked( LINK_SET,FIRE_CMD, color, texture);
+    string fireMsg = (string)color1 + (string)color2;
+   // debugSay("sending fire linkmessage" + fireMsg + texture);
+    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
+   //llMessageLinked( LINK_SET, num, color1, texture);
+   //llMessageLinked( LINK_SET, num, color2, texture);
+   //llMessageLinked( LINK_SET, num, color3, texture);
 }
 
