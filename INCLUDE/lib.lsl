@@ -7,8 +7,7 @@
 #define GROUP 1
 #define OWNER 2
 
-#define TEXTURE_CLASSIC "6189b78f-c7e2-4508-9aa2-0881772c7e27"
-//string TEXTURE_CLASSIC = "6189b78f-c7e2-4508-9aa2-0881772c7e27";//"classic", also standard fountain texture
+#define TEXTURE_CLASSIC "6189b78f-c7e2-4508-9aa2-0881772c7e27" //"classic", also standard fountain texture
 
 //these colors must be strings in thi exact format 
 //because I don't want to bother writing a message parser
@@ -36,7 +35,6 @@ integer randomChan()
 
 repeatSound(key soundKey)
 {
-    //integer soundChan = 556;
     llRegionSay(SOUND_REPEAT_CHAN, soundKey);
 }
 
