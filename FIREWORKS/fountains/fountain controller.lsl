@@ -2,7 +2,9 @@
 //fireworks fountain controller v1.20
 //Tracer Ping 2013
 ////////////////////////////
-string color1 = "<1.00,0.00,0.00>";
+#include "lib.lsl"
+
+string color1 = COLOR_RED;
 string color2 = "<1.00,1.00,0.00>";
 string texture;
 key owner;
@@ -11,8 +13,6 @@ integer chatChan;
 integer newChan;
 integer access;
 integer preloadFace = 2;
-
-#include "lib.lsl"
 
 default
 {
@@ -32,20 +32,20 @@ default
 
    link_message(integer sender, integer num, string str, key id)
    {
-     debugSay("Heard link msg");
+     //debugSay("Heard link msg");
      msgHandler(owner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )
    {
-     debugSay("Heard chat msg");
+     //debugSay("Heard chat msg");
      msgHandler(id, msg);
    }
 }
 
 msgHandler(string sender, string msg)
    {
-      debugSay("heard " + msg +" from" + sender);
+      //debugSay("heard " + msg +" from" + sender);
       llSetTimerEvent(0);
       if (sender == owner)
       {
@@ -66,19 +66,21 @@ msgHandler(string sender, string msg)
           return;
       if ((access == GROUP) && (!llDetectedGroup(0)))
          return;
-      if (msg == "fire" )
+      if (msg == "fire")
       {
          fire();
       }
       else if (msg == "hide")
       {
           llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE, PRIM_GLOW, ALL_SIDES, 0.0]);
+          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+          //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
       }
       if ( msg == "show" )
       {
-         llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-        // llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE, PRIM_GLOW, ALL_SIDES, 0.00]);
+          llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+          //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
+		  //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.00]);
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
@@ -99,9 +101,11 @@ msgHandler(string sender, string msg)
 
 sendMsg(string msg)
 {
-   //llSay(chatChan,msg);
+   #if defined REMOTE_MENU
+      llSay(chatChan,msg);
+   #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg);
+   //debugSay(msg);
 }
 
 fire()  //this is the only message that goes to the particle script
