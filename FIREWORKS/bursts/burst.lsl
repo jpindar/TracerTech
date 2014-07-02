@@ -62,7 +62,7 @@ fire()
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,1.0]);
-   }
+}
 
 default
 {
@@ -76,7 +76,7 @@ default
 
     link_message( integer sender, integer num, string msg, key id )
     {
-        if (num & FIRE_CMD) //to allow for future packing more data into num
+        if ( num & FIRE_CMD ) //to allow for future packing more data into num
         {
            color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
            color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
