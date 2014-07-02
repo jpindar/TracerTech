@@ -32,20 +32,17 @@ default
 
    link_message(integer sender, integer num, string str, key id)
    {
-     //debugSay("Heard link msg");
      msgHandler(owner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )
    {
-     //debugSay("Heard chat msg");
      msgHandler(id, msg);
    }
 }
 
 msgHandler(string sender, string msg)
    {
-      //debugSay("heard " + msg +" from" + sender);
       llSetTimerEvent(0);
       if (sender == owner)
       {
@@ -80,7 +77,7 @@ msgHandler(string sender, string msg)
       {
           llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
           //llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
-		  //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.00]);
+          //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.00]);
       }
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
