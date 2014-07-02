@@ -11,6 +11,7 @@ string sound = SOUND_FOUNTAIN1;
 integer preloadFace = 2;
 float SystemAge = 4.0;//life span of the particle system
 float SystemSafeSet = 0.00;//prevents erroneous particle emissions
+float speed = 10;
 
 makeParticles(vector color)
 {
@@ -32,8 +33,8 @@ makeParticles(vector color)
        PSYS_SRC_BURST_PART_COUNT,  10.0,
        PSYS_SRC_ACCEL,             <0.5,0.0,-2.0>,
        PSYS_SRC_OMEGA,             <0.0,0.0,0.0>
-       PSYS_SRC_BURST_SPEED_MIN,   12.0,
-       PSYS_SRC_BURST_SPEED_MAX,   14.0,
+       PSYS_SRC_BURST_SPEED_MIN,   (1.2*speed),
+       PSYS_SRC_BURST_SPEED_MAX,   (1.4*speed),
        PSYS_PART_FLAGS,0|
           PSYS_PART_EMISSIVE_MASK |
           PSYS_PART_INTERP_COLOR_MASK |
@@ -48,7 +49,7 @@ fire()
    // llPlaySound(sound, VOLUME );
     llTriggerSound(sound, VOLUME);
     repeatSound(sound);
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
+    GLOW_ON;
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
     SystemSafeSet = SystemAge;
@@ -56,7 +57,7 @@ fire()
     llSleep(SystemAge);
     SystemSafeSet = 0.0;
     llParticleSystem([]);
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
+    GLOW_OFF;
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
     }
