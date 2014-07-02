@@ -75,7 +75,7 @@ msgHandler(string sender, string msg)
       {
           llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
           llSetPrimitiveParams([PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
-           llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+          llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
       }
       if ( msg == "show" )
       {
