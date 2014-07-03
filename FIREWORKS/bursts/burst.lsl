@@ -42,7 +42,7 @@ makeParticles(vector color1, vector color2)
        PSYS_PART_EMISSIVE_MASK |
        PSYS_PART_FOLLOW_VELOCITY_MASK |
        PSYS_PART_INTERP_COLOR_MASK |
-       PSYS_PART_INTERP_SCALE_MASK,
+       PSYS_PART_INTERP_SCALE_MASK
     ]);
 }
 
