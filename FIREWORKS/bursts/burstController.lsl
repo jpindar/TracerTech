@@ -9,7 +9,7 @@
 ////////////////////////////
 #include "lib.lsl"
 
-float glowOnAmount = 0.0; //or 0.05
+float glowOnAmount = 0.05;
 string color1 = COLOR_RED;
 string color2 = COLOR_RED;
 string texture;
@@ -37,48 +37,48 @@ default
 
    link_message(integer sender, integer num, string str, key id) //from the menu script
    {
-       //llOwnerSay("recieved link message " + str);
+       debugSay("recieved link message " + str);
        msgHandler(myOwner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )// from an avatar
    {
-       //llOwnerSay("recieved message " + msg + " on channel " + (string) chan);
+       debugSay("recieved message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
 
 msgHandler(string sender, string msg)
    {
-      //llOwnerSay("msghandler recieved message <" + msg +">");
+      debugSay("msghandler recieved message <" + msg +">");
       llSetTimerEvent(0);
       msg = llToLower(msg);
       if (sender == myOwner)
       {
          if(msg == "public")
          {
-            //llOwnerSay("setting access = public");
+            debugSay("setting access = public");
             access = ACCESS_PUBLIC;
          }
          else if(msg == "group")
          {
-            //llOwnerSay("setting access = group only");
+            debugSay("setting access = group only");
             access = ACCESS_GROUP;
          }
          else if(msg == "owner")
          {
-             //llOwnerSay("setting access == owner only");
+             debugSay("setting access == owner only");
              access = ACCESS_OWNER;
          }
       }
-      if ((access == ACCESS_OWNER) && (!(sender == myOwner)))
+      if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
           return;
       if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
          return;
-      //llOwnerSay("obeying");  
+      debugSay("obeying");  
       if (msg == "fire")
       {
-          //llOwnerSay("controller firing");
+          debugSay("controller firing");
           fire();
       }
       else if (msg == "hide")
@@ -90,7 +90,7 @@ msgHandler(string sender, string msg)
       else if (msg == "show" )
       {
           llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-          //llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+          llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
       }
       else if (llGetSubString(msg, 0, 10) == "set channel")
       {
