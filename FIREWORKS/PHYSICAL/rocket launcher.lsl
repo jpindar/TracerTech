@@ -24,8 +24,7 @@ fire()
     string rocket;
     integer i;
 
-    //llPlaySound(sound,1);
-    llTriggerSound(sound,1);
+    llPlaySound(sound,1);
     repeatSound(sound);
     integer n = llGetInventoryNumber(INVENTORY_OBJECT);
     rotation rot = llGetRot();
