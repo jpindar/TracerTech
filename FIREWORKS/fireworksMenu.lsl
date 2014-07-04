@@ -4,7 +4,7 @@
 /////////////////////////////
 string menutext="\nChoose One:";
 list buttonsOwner=["channel","reset","foo","owner","group","public", "fire","hide","show"];
-list buttonsAll=["channel","reset","foo", "fire","hide","show"];
+list buttonsAll=["fire"];
 key owner;
 key toucher;
 integer handle;
@@ -17,14 +17,13 @@ integer access;
 default
 {
    on_rez(integer n){llResetScript();}
-   changed(integer change){if(change & CHANGED_OWNER) llResetScript();}
 
    state_entry()
    {
       chatChan = objectDescToInt();
       menuChan = randomChan();
       owner=llGetOwner();
-      access = PUBLIC;
+      access = ACCESS_PUBLIC;
    }
 
    touch_start(integer num)
@@ -34,11 +33,11 @@ default
       {
           llDialog(toucher,menutext,buttonsOwner,menuChan);
       }
-      else if ((access == GROUP) && (llDetectedGroup(0)))
+      else if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
       {
           llDialog(toucher,menutext,buttonsAll,menuChan);
       }
-      else if ((access == PUBLIC)) 
+      else if ((access == ACCESS_PUBLIC)) 
       {
           llDialog(toucher,menutext,buttonsAll,menuChan);
       }
@@ -58,27 +57,28 @@ default
    listen(integer chan,string name,key id,string button)  //listen to dialog box
    {
       llSetTimerEvent(0);
+      llListenRemove(handle);
       if (toucher == owner)
       {
          if(button == "public")
          {
-            access = PUBLIC;
+            access = ACCESS_PUBLIC;
             sendMsg("PUBLIC");
          }
          else if(button == "group")
          {
-            access = GROUP;
+            access = ACCESS_GROUP;
             sendMsg("GROUP");
          }
          else if(button == "owner")
          {
-            access = OWNER;
+            access = ACCESS_OWNER;
             sendMsg("OWNER");
          }
       }
       if(button=="fire")
       {
-          debugSay("menu firing");
+          llOwnerSay("menu firing");
           sendMsg("fire");
       }
       if(button=="show")
@@ -97,14 +97,6 @@ default
       {
           sendMsg("reset");
           llResetScript();
-      }
-      if(button=="Cancel")
-      {
-         llListenRemove(handle);
-      }
-      else
-      {
-         llListenRemove(handle);
       }
    }
 }
