@@ -12,7 +12,6 @@ integer handle;
 integer chatChan;
 integer newChan;
 integer access;
-integer preloadFace = 2;
 
 default
 {
@@ -27,22 +26,25 @@ default
       access = PUBLIC;
       handle = llListen(chatChan, "","", "" );
       llOwnerSay("listening on channel "+(string)chatChan);
-      llSetTexture(texture,preloadFace);
+      llMessageLinked(LINK_SET, PRELOAD_TEXTURE_CMD, "", texture);
    }
 
    link_message(integer sender, integer num, string str, key id)
    {
+     debugSay("Heard link msg");
      msgHandler(owner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )
    {
+     debugSay("Heard chat msg");
      msgHandler(id, msg);
    }
 }
 
 msgHandler(string sender, string msg)
    {
+      debugSay("heard " + msg +" from" + sender);
       llSetTimerEvent(0);
       if (sender == owner)
       {
@@ -98,7 +100,7 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   //debugSay(msg);
+   debugSay(msg);
 }
 
 fire()  //this is the only message that goes to the particle script
