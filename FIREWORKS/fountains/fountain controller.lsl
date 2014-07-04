@@ -90,10 +90,6 @@ msgHandler(string sender, string msg)
           sendMsg("reset");
           llResetScript();
       }
-      else
-      {
-         llListenRemove(handle);
-      }
 }
 
 sendMsg(string msg)
