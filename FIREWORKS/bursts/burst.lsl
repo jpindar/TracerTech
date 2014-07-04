@@ -28,7 +28,7 @@ makeParticles(vector color1, vector color2)
     PSYS_PART_START_ALPHA, 1.0,
     PSYS_PART_END_ALPHA, 0.1,
     PSYS_PART_START_SCALE, <0.5, 0.5, 0.0>,
-    PSYS_PART_END_SCALE,   <0.5, 0.5, 0.0>,	
+    PSYS_PART_END_SCALE,   <0.5, 0.5, 0.0>,
     PSYS_SRC_TEXTURE, texture,
     PSYS_SRC_MAX_AGE, SystemSafeSet,
     PSYS_PART_MAX_AGE, 5.0,
@@ -48,17 +48,16 @@ makeParticles(vector color1, vector color2)
 
 fire()
 {
-   // llPlaySound(sound, VOLUME );
    llTriggerSound(sound, VOLUME);
    repeatSound(sound);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
+   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
    SystemSafeSet = SystemAge;
    makeParticles(color1,color2);
    llSleep(1);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,radius,falloff]);
+   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,radius,falloff]);
    llSleep(SystemAge);
    SystemSafeSet = 0.0;
    llParticleSystem([]);
