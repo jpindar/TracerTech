@@ -90,7 +90,7 @@ default
         rezParam = p;
         integer t = p & 0xFF;
         float bouy = (p & 0xFF00) / 16; 
-        llSetBuoyancy(bouy/10);
+        llSetBuoyancy(bouy/100);
         //llCollisionSound("", 1.0);  //  Disable collision sounds
         llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
         llSetLinkPrimitiveParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
