@@ -3,9 +3,9 @@
 #define MY_DEBUG_CHAN 557
 #define SOUND_REPEAT_CHAN 556
 
-#define PUBLIC 0
-#define GROUP 1
-#define OWNER 2
+#define ACCESS_PUBLIC 0
+#define ACCESS_GROUP 1
+#define ACCESS_OWNER 2
 #define FIRE_CMD 1
 #define PRELOAD_TEXTURE_CMD 2
 
@@ -27,6 +27,10 @@
 #define SOUND_FOUNTAIN1 "1339a082-66bb-4d4b-965a-c3f13da18492"
 #define SOUND_CLICK1 "0f76aca8-101c-48db-998c-6018faf14b62"
 #define SOUND_BURST1 "a2b1025e-1c8a-4dfb-8868-c14a8bed8116"
+#define SOUND_PUREBOOM "6a9751cf-3170-4de4-b629-2453593dc751"
+#define SOUND_2 "ef63dd5d-b158-443b-88cf-c6fd79931bb8"
+#define SOUND_CRACKLE1 "ad1cb1d3-1805-4d93-b4db-47be024a99ed"
+#define SOUND_CRACKLE2 "29bb5045-1bae-4402-bd0e-1df86a5a2bef"
 
 float VOLUME = 1.0;  // 0.0 = silent to 1.0 = full volume
 
@@ -36,6 +40,16 @@ float systemSafeSet = 0.00;//prevents erroneous particle emissions
 
 #define GLOW_ON llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0])
 #define GLOW_OFF llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0])
+
+integer sameOwner(key id)
+{
+if (id == llGetOwner())
+  return TRUE;
+else if (llGetOwnerKey(id) == llGetOwner())
+  return TRUE;
+else 
+  return FALSE;  
+}
 
 integer randomChan()
 {
