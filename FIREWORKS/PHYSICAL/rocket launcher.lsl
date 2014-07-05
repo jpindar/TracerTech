@@ -10,12 +10,12 @@ string sound = SOUND_ROCKETLAUNCH1;
 float speed = 15;  //8 to 25
 integer payloadParam = 3;//typically time before explosion, typically  1 to 10 
 integer payloadIndex = 0; 
-integer payloadParam2 = 0;// for future expansion - a color index perhaps?
+integer payloadParam2 = 12; //typically bouyancy * 100
 float heightOffset = 0.6;
 float glowOnAmount = 0.0; //or 0.05
 integer chatChan;
 integer handle;
-integer access;
+integer access = ACCESS_PUBLIC;
 key owner = "";
 integer preloadFace = 2;
 
@@ -72,11 +72,11 @@ default
 
 msgHandler(string sender, string msg)
 {
-      if ((access == OWNER) && (!(sender == owner)))
+      if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
           return;
-      if ((access == GROUP) && (!llDetectedGroup(0)))
+      if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
          return;
-		 
+      
       if ( msg == "fire" )
       {
          fire();
@@ -96,7 +96,7 @@ msgHandler(string sender, string msg)
       else if (llToLower(llGetSubString(msg, 0, 10)) == "set channel")
       {
          chatChan = ((integer)llDeleteSubString(msg, 0, llStringLength("set channel")));
-         llSetObjectDesc((string)chatChan);
+         setObjectDesc((string)chatChan);
          llResetScript();
       }
 }
