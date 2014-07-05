@@ -3,7 +3,7 @@
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
 string menutext="\nChoose One:";
-list buttonsOwner=["channel","reset","foo","owner","group","public", "fire","hide","show"];
+list buttonsOwner=["owner","group","public","hide","show","channel", "fire"];
 list buttonsAll=["fire"];
 key owner;
 key toucher;
@@ -78,7 +78,7 @@ default
       }
       if(button=="fire")
       {
-          llOwnerSay("menu firing");
+          debugSay("menu firing");
           sendMsg("fire");
       }
       if(button=="show")
@@ -135,5 +135,6 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
+   debugSay(msg); 
 }
 
