@@ -11,6 +11,14 @@
 
 
 #define TEXTURE_CLASSIC "6189b78f-c7e2-4508-9aa2-0881772c7e27" //"classic", also standard fountain texture
+#define TEXTURE_SPIKESTAR "bda1445f-0e59-4328-901b-a6335932179b"
+#define TEXTURE_FOXFIRE "952fc0fe-f879-47bc-8450-bc816f817f10" //uncertain TOS
+//string texture1 = "65411eda-0414-4302-895a-7bef02a96dd8";
+//string texture1 = "5ae147e5-081f-40fb-8d49-1da4e88d45bf";
+//string texture2 = "65411eda-0414-4302-895a-7bef02a96dd8";
+//string texture3 = "ef63dd5d-b158-443b-88cf-c6fd79931bb8";
+//string texture4 = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
+//string texture5 = "bda1445f-0e59-4328-901b-a6335932179b";
 
 //these colors must be strings in thi exact format 
 //because I don't want to bother writing a message parser
@@ -56,9 +64,9 @@ integer randomChan()
    return (integer)(llFrand(-1000000000.0) - 1000000000.0);
 }
 
-repeatSound(key soundKey)
+repeatSound(key sound, float volume)
 {
-    llRegionSay(SOUND_REPEAT_CHAN, soundKey);
+    llRegionSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
 }
 
 debugSay(string msg)
