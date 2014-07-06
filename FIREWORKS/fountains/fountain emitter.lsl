@@ -8,10 +8,11 @@ vector color1;
 vector color2;
 string texture;
 string sound = SOUND_FOUNTAIN1;
-integer preloadFace = 2;
 float SystemAge = 4.0;//life span of the particle system
 float SystemSafeSet = 0.00;//prevents erroneous particle emissions
 float speed = 10;
+float omega = 0;
+float volume = 1.0;
 
 makeParticles(vector color)
 {
@@ -32,7 +33,7 @@ makeParticles(vector color)
        PSYS_SRC_BURST_RATE,        0.02,
        PSYS_SRC_BURST_PART_COUNT,  10.0,
        PSYS_SRC_ACCEL,             <0.5,0.0,-2.0>,
-       PSYS_SRC_OMEGA,             <0.0,0.0,0.0>,
+       PSYS_SRC_OMEGA,             <0.0,0.0,omega>,
        PSYS_SRC_BURST_SPEED_MIN,   (1.2*speed),
        PSYS_SRC_BURST_SPEED_MAX,   (1.4*speed),
        PSYS_PART_FLAGS,0|
