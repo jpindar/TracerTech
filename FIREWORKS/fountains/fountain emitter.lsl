@@ -4,8 +4,8 @@
 ///////////////////////////
 #include "lib.lsl"
 
-vector color1;
-vector color2;
+vector color1 =(vector)COLOR_RED;
+vector color2 =(vector)COLOR_RED;
 string texture;
 string sound = SOUND_FOUNTAIN1;
 float SystemAge = 4.0;//life span of the particle system
@@ -74,10 +74,13 @@ default
     {
         if ( num & FIRE_CMD ) //to allow for future packing more data into num
         {
-           color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
-           color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
-           texture = id;
-           fire();
+           if (llStringLength(msg) > 0)
+           {
+              color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
+              color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
+           }
+        texture = id;
+        fire();
         }
     }
 
