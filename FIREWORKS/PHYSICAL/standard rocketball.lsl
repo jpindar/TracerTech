@@ -4,6 +4,7 @@
 // goes in the launcher
 ////////////////////////
 #include "lib.lsl"
+integer debug = FALSE;
 
 integer effectsType = 4; 
 string texture = TEXTURE_CLASSIC;
@@ -48,7 +49,8 @@ boom()
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,primColor,0.0]);
     //llSetAlpha(0.0,ALL_SIDES);
-    makeParticles1(color1,color2,texture);
+    makeParticles4(color1,color2,texture); //tested:1, 4
+    //makeParticles2(color1,color2,texture);
     llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
     llPlaySound(sound1,1);
     //llSetStatus(STATUS_PHYSICS, FALSE);
@@ -72,7 +74,7 @@ default
     {
         rezParam = p;
         integer t = p & 0xFF;
-        float bouy = (p & 0xFF00) / 16; 
+        float bouy = (p & 0xFF00) / 256; 
         llSetBuoyancy(bouy/100);
         //llCollisionSound("", 1.0);  //  Disable collision sounds
         llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
