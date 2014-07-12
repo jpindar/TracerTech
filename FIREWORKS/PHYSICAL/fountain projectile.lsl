@@ -23,11 +23,14 @@ float primSize = 0.3;
 string sound1 = SOUND_FOUNTAIN1;
 
 float SystemSafeSet = 0.00;//prevents erroneous particle emissions
-float SystemAge = 1;//life span of the particle system
+float SystemAge = 99;//life span of the particle system
 float speed = 10;
+integer time;
 
 makeParticles(vector color)
 {
+    SystemSafeSet = SystemAge;
+    debugSay("fire");
     llParticleSystem([
        PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
        PSYS_SRC_BURST_RADIUS,      0.3,
@@ -54,7 +57,8 @@ makeParticles(vector color)
           PSYS_PART_INTERP_SCALE_MASK |
           //PSYS_PART_FOLLOW_SRC_MASK |
           PSYS_PART_FOLLOW_VELOCITY_MASK
-    ]);
+    ]);    debugSay("fireend");
+    
 }
 
 fire()
@@ -66,6 +70,7 @@ fire()
     SystemSafeSet = SystemAge;
     llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
     makeParticles(color1);
+    debugSay("boom");
     llSleep(SystemAge);
     SystemSafeSet = 0.0;
     llParticleSystem([]);
@@ -75,7 +80,7 @@ fire()
        if (rezParam >0)
        {
          llDie();
-	 }
+     }
     }
 
 default
@@ -89,6 +94,7 @@ default
    {
         rezParam = p;
         integer t = p & 0xFF;
+        time = t;
         float bouy = (p & 0xFF00) / 16; 
         llSetBuoyancy(bouy/100);
         //llCollisionSound("", 1.0);  //  Disable collision sounds
@@ -111,13 +117,9 @@ default
         float friction = 0.9;
         float density = 500;
         llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-
-       llSleep(param);
+       llSleep(1);
        fire();
-
-   }   
-
-
+   }
 }
 
 
