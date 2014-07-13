@@ -58,7 +58,6 @@ makeParticles(vector color)
           //PSYS_PART_FOLLOW_SRC_MASK |
           PSYS_PART_FOLLOW_VELOCITY_MASK
     ]);    debugSay("fireend");
-    
 }
 
 fire()
@@ -67,6 +66,7 @@ fire()
     //repeatSound(sound2);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
     SystemSafeSet = SystemAge;
     llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
     makeParticles(color1);
@@ -80,8 +80,8 @@ fire()
        if (rezParam >0)
        {
          llDie();
-     }
-    }
+       }
+}
 
 default
 {
@@ -95,6 +95,7 @@ default
         rezParam = p;
         integer t = p & 0xFF;
         time = t;
+        //SystemAge =t*2;
         float bouy = (p & 0xFF00) / 16; 
         llSetBuoyancy(bouy/100);
         //llCollisionSound("", 1.0);  //  Disable collision sounds
@@ -117,8 +118,8 @@ default
         float friction = 0.9;
         float density = 500;
         llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-       llSleep(1);
-       fire();
+        llSleep(1);
+        fire();
    }
 }
 
