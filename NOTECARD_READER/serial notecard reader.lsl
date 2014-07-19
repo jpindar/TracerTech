@@ -22,12 +22,12 @@ default
         if ((MyQuery1 == query_id) && (data != EOF))
         {
                 process(index, data);
-                MyQuery1 = llGetNotecardLine(notecardName, index++);
+                MyQuery1 = llGetNotecardLine(notecardName, ++index);
         }
     }
 }
 
-process(integer index, string data)
+process(integer index, string line)
 {
-                llSay(0, "Line " + (string) index + " " + data);
+                llSay(0, "Line " + (string) index + " " + line);
 }
