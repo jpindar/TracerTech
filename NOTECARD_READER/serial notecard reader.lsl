@@ -21,8 +21,13 @@ default
     {
         if ((MyQuery1 == query_id) && (data != EOF))
         {
-                llSay(0, "Line " + (string) index + " " + data);
+                process(index, data);
                 MyQuery1 = llGetNotecardLine(notecardName, index++);
         }
     }
+}
+
+process(integer index, string data)
+{
+                llSay(0, "Line " + (string) index + " " + data);
 }
