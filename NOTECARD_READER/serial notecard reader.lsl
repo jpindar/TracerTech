@@ -29,5 +29,14 @@ default
 
 process(integer index, string line)
 {
-                llSay(0, "Line " + (string) index + " " + line);
+  integer i;
+  string target = ":";
+  string data1;
+  string data2;
+
+  llSay(0, "Line " + (string) index + " " + line);
+  i = llSubStringIndex(line, target);  
+  data1 = llGetSubString(line,0,i-1);
+  data2 = llGetSubString(line,i+1, llStringLength(line));
+  llSay(0, "<" + data1 + "><" + data2+ ">");
 }
