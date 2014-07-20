@@ -1,4 +1,6 @@
-#define LIB_H
+
+#ifndef LIB_H
+   #define LIB_H
 
 
 #define MY_DEBUG_CHAN 557
@@ -8,7 +10,7 @@
 #define ACCESS_OWNER 2
 #define FIRE_CMD 1
 #define PRELOAD_TEXTURE_CMD 2
-
+#define READ_NOTECARD_CMD 3
 
 #define TEXTURE_CLASSIC "6189b78f-c7e2-4508-9aa2-0881772c7e27" //"classic", also standard fountain texture
 #define TEXTURE_SPIKESTAR "bda1445f-0e59-4328-901b-a6335932179b"
@@ -42,8 +44,11 @@
 #define SOUND_CRACKLE2 "29bb5045-1bae-4402-bd0e-1df86a5a2bef"
 //string sound1 ="6a9751cf-3170-4de4-b629-2453593dc751";
 //string sound2 ="ef63dd5d-b158-443b-88cf-c6fd79931bb8";
-//float VOLUME = 1.0;  // 0.0 = silent to 1.0 = full volume
+float VOLUME = 1.0;  // 0.0 = silent to 1.0 = full volume
 
-//float systemAge;//life span of the particle system
-//float systemSafeSet = 0.00;//prevents erroneous particle emissions
+float systemAge;//life span of the particle system
+float systemSafeSet = 0.00;//prevents erroneous particle emissions
+
+#endif
+
 
