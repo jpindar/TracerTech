@@ -1,4 +1,7 @@
 
+#ifndef LIB_H
+   #include "libh.lsl"
+#endif
 
 #define GLOW_ON llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0])
 #define GLOW_OFF llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0])
@@ -50,10 +53,10 @@ string getInventoryTexture()
     return llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
 }
 
-list mergeLists(list newlist, oldList)
+list mergeLists(list newList, list oldList)
 {
   integer length;
-  list key1;
+  list keyword;
   integer ptr;
   integer i;
   list subList;      
@@ -62,9 +65,9 @@ list mergeLists(list newlist, oldList)
   {
       subList = llList2List(newList,i,i+1);
       // llSay(0, llList2CSV(subList));
-      key1 = llList2List(subList,0,0);  // 
+      keyword = llList2List(subList,0,0);  // 
       //llSay(0, llList2CSV(key1));
-      ptr = llListFindList(oldList,key1);  //case sensitive, unfortunately
+      ptr = llListFindList(oldList,keyword);  //case sensitive, unfortunately
       //if (ptr != -1)//llSay(0,(string)ptr);
       oldList = llListReplaceList(oldList,subList,ptr, ptr+1);
    }
