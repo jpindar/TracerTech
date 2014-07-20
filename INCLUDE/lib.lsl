@@ -1,7 +1,7 @@
 
-#ifndef LIB_H
-   #include "libh.lsl"
-#endif
+//#ifndef LIB_H
+  // #include "libh.lsl"
+//#endif
 
 #define GLOW_ON llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0])
 #define GLOW_OFF llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0])
