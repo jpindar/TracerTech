@@ -3,8 +3,8 @@
 // listens for commands on either a chat channel
 // or a link message
 //////////////////////
+integer debug = TRUE;
 #include "lib.lsl"
-//#define DEBUG
 
 string sound = SOUND_ROCKETLAUNCH1;
 float speed = 15;  //8 to 25
@@ -24,7 +24,7 @@ fire()
     string rocket;
     integer i;
 
-    llPlaySound(sound,1);
+    llTriggerSound(sound,1);
     repeatSound(sound);
     integer n = llGetInventoryNumber(INVENTORY_OBJECT);
     rotation rot = llGetRot();
