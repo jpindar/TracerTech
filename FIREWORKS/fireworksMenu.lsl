@@ -8,7 +8,6 @@ list buttonsAll=["fire"];
 key owner;
 key toucher;
 integer handle;
-integer chatChan;
 integer menuChan;
 integer access;
 
@@ -17,10 +16,10 @@ integer access;
 default
 {
    on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
    state_entry()
    {
-      chatChan = objectDescToInt();
       menuChan = randomChan();
       owner=llGetOwner();
       access = ACCESS_PUBLIC;
@@ -35,7 +34,7 @@ default
       }
       else if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
       {
-          llDialog(toucher,menutext,buttonsAll,menuChan);
+          llDialog(toucher,menutext,buttonsOwner,menuChan);
       }
       else if ((access == ACCESS_PUBLIC)) 
       {
@@ -118,8 +117,7 @@ state changeChannel
       integer newChan = (integer)msg;
       msg = "set channel " + (string)newChan;
       sendMsg(msg);
-      chatChan = newChan;
-      setObjectDesc((string)chatChan);
+      setObjectDesc((string)newChan);
       state default;
    }
 
