@@ -9,12 +9,11 @@ vector color2 =(vector)COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 string sound = SOUND_FOUNTAIN1;
 vector lightColor = (vector)COLOR_WHITE;
-float SystemAge = 4.0;//life span of the particle system
-float SystemSafeSet = 0.00;//prevents erroneous particle emissions
+float SystemAge = 4.0;
+float SystemSafeSet = 0.00;
 float speed = 10;
 float omega = 0;
 float volume = 1.0;
-
 
 default
 {
@@ -25,7 +24,7 @@ default
 
     link_message( integer sender, integer num, string msg, key id )
     {
-        if (num & FIRE_CMD) //to allow for future packing more data into num
+        if ( num & FIRE_CMD ) //to allow for packing more data into num
         {
            if (llStringLength(msg) > 0)
            {
@@ -36,9 +35,7 @@ default
            fire();
         }
     }
-
 }
-
 
 fire()
 {
@@ -49,7 +46,7 @@ fire()
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
     llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
     SystemSafeSet = SystemAge;
-    makeParticles(color1);
+    makeParticles(color1,color2);
     llSleep(SystemAge);
     SystemSafeSet = 0.0;
     llParticleSystem([]);
