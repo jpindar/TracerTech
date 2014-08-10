@@ -13,9 +13,11 @@ float glowOnAmount = 0.0;
 string color1 = COLOR_RED;
 string color2 = COLOR_RED;
 string texture;
+integer preloadPrim = 2;
+integer preloadFace = 2;
 key myOwner; 
 integer handle;
-integer chatChan;
+integer chatChan = 999;
 integer newChan;
 integer access = ACCESS_OWNER;
 
@@ -26,9 +28,9 @@ default
    state_entry()
    {
       texture = TEXTURE_CLASSIC;
-      chatChan = objectDescToInt();
       myOwner = llGetOwner();
       access = ACCESS_OWNER;
+      chatChan = getChatChan();
       handle = llListen(chatChan, "","", "" );
       llOwnerSay("listening on channel "+(string)chatChan);
       llMessageLinked(LINK_SET, PRELOAD_TEXTURE_CMD, "", texture);
