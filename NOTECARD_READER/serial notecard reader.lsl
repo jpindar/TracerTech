@@ -1,30 +1,40 @@
 string notecardName = "TEST";  //can be a UUID
 integer index;
-key MyQuery1;
+key Query1;
 string myData;
 list newList; 
+integer done = FALSE;
+#include "libh.lsl"
+#include "lib.lsl" 
  
 default
 {
     state_entry()
     {
-        notecardName = getNotecardName();
+        readNotecard()
     }
 
-    touch_start(integer total_number)
-    {
-        index = 0;
-        MyQuery1 = llGetNotecardLine(notecardName, index);
-    }
-    
     dataserver(key query_id, string data)
     {
-        if ((MyQuery1 == query_id) && (data != EOF) && (data != ""))
+        if ((Query1 == query_id) && (data != EOF) && (data != ""))
         {
-                process(index, data);
-                MyQuery1 = llGetNotecardLine(notecardName, ++index);
+            process(index, data);
+            Query1 = llGetNotecardLine(notecardName, index++);
+        }
+        if ((data == EOF) || (data == ""))
+        {
+            done = TRUE;
+            //llSay(0,llList2CSV(newList));
+            //llMessageLinked(LINK_SET,0,llList2CSV(newList),"");
         }
     }
+}
+
+readNotecard()
+{
+        notecardName = getNotecardName();
+        index = 0;
+       Query1 = llGetNotecardLine(notecardName, index++);
 }
 
 process(integer index, string line)
