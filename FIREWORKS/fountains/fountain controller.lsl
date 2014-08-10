@@ -12,14 +12,18 @@
 float glowOnAmount = 0.0;
 string color1 = COLOR_RED;
 string color2 = COLOR_RED;
-string texture;
+string texture = TEXTURE_CLASSIC;
 integer preloadPrim = 2;
 integer preloadFace = 2;
-key myOwner; 
+key myOwner;
 integer handle;
-integer chatChan = 999;
+integer chatChan = -999;
 integer newChan;
 integer access = ACCESS_OWNER;
+key Query1;
+string Data;
+integer index = 0;
+integer done = FALSE;
 
 default
 {
@@ -28,32 +32,32 @@ default
 
    state_entry()
    {
-      texture = TEXTURE_CLASSIC;
       myOwner = llGetOwner();
-      access = ACCESS_OWNER;
+      llSetLinkTexture(preloadPrim,texture,preloadFace);
       chatChan = getChatChan();
       handle = llListen(chatChan, "","", "" );
       llOwnerSay("listening on channel "+(string)chatChan);
-      llMessageLinked(LINK_SET, PRELOAD_TEXTURE_CMD, "", texture);
    }
 
    link_message(integer sender, integer num, string str, key id) //from the menu script
    {
-       debugSay("heard link message " + str);
-       msgHandler(myOwner, str); 
+      //debugSay("heard link message " + (string)num + str);
+      msgHandler(myOwner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )// from an avatar
    {
-       debugSay("got message " + msg + " on channel " + (string) chan);
+       //debugSay("got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
 
+#include "readNotecardToList.lsl"
+
 msgHandler(string sender, string msg)
    {
       debugSay("got message <" + msg +">");
-      llSetTimerEvent(0);
+      //llSetTimerEvent(0);
       msg = llToLower(msg);
       if (sender == myOwner)
       {
@@ -90,12 +94,6 @@ msgHandler(string sender, string msg)
       {
           llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
           llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
-      }
-      else if (llGetSubString(msg, 0, 10) == "set channel")
-      {
-         chatChan = ((integer)llDeleteSubString(msg, 0, llStringLength("set channel")));
-         setObjectDesc((string)chatChan);
-         llResetScript();
       }
 }
 
