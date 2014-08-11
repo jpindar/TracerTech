@@ -3,8 +3,10 @@
   #include "libh.lsl"
 #endif
 
-#define GLOW_ON llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0])
-#define GLOW_OFF llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0])
+glow(integer prim, float  amount)
+{
+    llSetLinkPrimitiveParamsFast(prim,[PRIM_GLOW,ALL_SIDES,amount]);
+}
 
 integer sameOwner(key id)
 {
@@ -14,6 +16,11 @@ else if (llGetOwnerKey(id) == llGetOwner())
   return TRUE;
 else 
   return FALSE;  
+}
+
+setChatChan(integer chan)
+{
+   
 }
 
 integer randomChan()
@@ -29,8 +36,8 @@ repeatSound(key sound, float volume)
 debugSay(string msg)
 {
 //if (debug)
-//   llOwnerSay(msg);
-   llSay(MY_DEBUG_CHAN,msg);
+  llOwnerSay(msg);
+   //llSay(MY_DEBUG_CHAN,msg);
 }
 
 integer objectDescToInt()
@@ -53,6 +60,19 @@ string getInventoryTexture()
     return llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
 }
 
+
+string getNotecardName()
+{
+  string s = "";
+  s = llGetInventoryName(INVENTORY_NOTECARD,0);
+  if (llGetInventoryKey(s) == NULL_KEY)
+      {
+        llOwnerSay("no notecard found");
+      } 
+  return s;    
+}
+
+/*
 list mergeLists(list newList, list oldList)
 {
   integer length;
@@ -116,10 +136,12 @@ list list_cast(list in)
             if(llSubStringIndex(d,".") != -1)
             {
                 out += (float)d;
-            }else
+            }
+			else
             {
                 integer lold = (integer)d;
-                if((string)lold == d)out += lold;
+                if((string)lold == d)
+				    out += lold;
                 else
                 {
                     key kold = (key)d;
@@ -133,5 +155,21 @@ list list_cast(list in)
     }
  
     return out;   
- }  
-   
+ } 
+*/ 
+
+integer getChatChan2()
+{
+   integer n;
+	integer ptr = llListFindList(notecardList,["chatChan"]);
+	if (ptr > -1) n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+	return n;
+}
+float getVolume()
+{
+    float f;
+    integer ptr = llListFindList(notecardList,["volume"]);
+	if (ptr > -1) f = llList2Float(notecardList,ptr+1);
+	return f;
+}
+
