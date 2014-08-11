@@ -17,12 +17,10 @@ integer preloadPrim = 2;
 integer preloadFace = 2;
 key myOwner;
 integer handle;
-integer chatChan = -999;
+integer chatChan = UNKNOWN;
 integer newChan;
 integer access = ACCESS_OWNER;
 key Query1;
-string Data;
-integer index = 0;
 integer done = FALSE;
 
 default
@@ -34,6 +32,7 @@ default
    {
       myOwner = llGetOwner();
       llSetLinkTexture(preloadPrim,texture,preloadFace);
+      if(done == FALSE) state readNotecardToList;
       chatChan = getChatChan();
       handle = llListen(chatChan, "","", "" );
       llOwnerSay("listening on channel "+(string)chatChan);
@@ -42,7 +41,7 @@ default
    link_message(integer sender, integer num, string str, key id) //from the menu script
    {
       //debugSay("heard link message " + (string)num + str);
-      msgHandler(myOwner, str); 
+       msgHandler(myOwner, str); 
    }
 
    listen( integer chan, string name, key id, string msg )// from an avatar
@@ -55,46 +54,46 @@ default
 #include "readNotecardToList.lsl"
 
 msgHandler(string sender, string msg)
+{
+   //debugSay("got message <" + msg +">");
+   //llSetTimerEvent(0);
+   msg = llToLower(msg);
+   if (sender == myOwner)
    {
-      debugSay("got message <" + msg +">");
-      //llSetTimerEvent(0);
-      msg = llToLower(msg);
-      if (sender == myOwner)
+      if(msg == "public")
       {
-         if(msg == "public")
-         {
-            debugSay("setting access = public");
-            access = ACCESS_PUBLIC;
-         }
-         else if(msg == "group")
-         {
-            debugSay("setting access = group only");
-            access = ACCESS_GROUP;
-         }
-         else if(msg == "owner")
-         {
-             debugSay("setting access == owner only");
-             access = ACCESS_OWNER;
-         }
+         debugSay("setting access = public");
+         access = ACCESS_PUBLIC;
       }
-      if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
-          return;
-      if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
-         return;
-      if (msg == "fire")
+      else if(msg == "group")
       {
-          fire();
+         debugSay("setting access = group only");
+         access = ACCESS_GROUP;
       }
-      else if (msg == "hide")
+      else if(msg == "owner")
       {
-          llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-          llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+          debugSay("setting access == owner only");
+          access = ACCESS_OWNER;
       }
-      else if (msg == "show" )
-      {
-          llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-          llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
-      }
+   }
+   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+       return;
+   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
+      return;
+   if (msg == "fire")
+   {
+       fire();
+   }
+   else if (msg == "hide")
+   {
+       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
+       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+   }
+   else if (msg == "show" )
+   {
+       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowOnAmount]);
+   }
 }
 
 sendMsg(string msg)
@@ -109,7 +108,7 @@ sendMsg(string msg)
 fire()  //this is the only message that goes to the particle script
 {
     string fireMsg = (string)color1 + (string)color2;
-    debugSay("sending fire linkmessage" + fireMsg + texture);
+    //debugSay("sending fire linkmessage" + fireMsg + texture);
     llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
     //llMessageLinked( LINK_SET, FIRE_CMD, COLOR_RED+COLOR_WHITE, texture);
     //llMessageLinked( LINK_SET, FIRE_CMD, COLOR_WHITE+COLOR_WHITE, texture);
