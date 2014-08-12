@@ -51,6 +51,7 @@ default
    }
 }
 
+//alas, this has to be after the default state
 #include "readNotecardToList.lsl"
 
 msgHandler(string sender, string msg)
