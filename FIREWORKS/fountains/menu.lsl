@@ -2,9 +2,9 @@
 //fireworks menu v1.0
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
-list buttonsOwner=["owner","group","public","fire","hide","show"];
-list buttonsGroup=["hide","show","fire"];
-list buttonsPublic=["fire"];
+list buttonsOwner=["fire","hide","show"];
+//list buttonsGroup=["hide","show","fire"];
+//list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
@@ -30,21 +30,7 @@ default
    {
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       toucher=llDetectedKey(0);
-      if (toucher == owner)
-      {
-          llDialog(toucher,menuText,buttonsOwner,menuChan);
-      }
-      else if (llSameGroup(toucher))
-      {
-           if (access == ACCESS_GROUP)
-               llDialog(toucher,menuText,buttonsOwner,menuChan);
-           else
-              llDialog(toucher,menuText,buttonsPublic,menuChan);
-      }
-      else if (access == ACCESS_PUBLIC)
-      {
-          llDialog(toucher,menuText,buttonsPublic,menuChan);
-      }
+      llDialog(toucher,menuText,buttonsOwner,menuChan);
       handle=llListen(menuChan,"",toucher,"");
       llSetTimerEvent(timeout); 
    }
@@ -111,6 +97,6 @@ sendMsg(string msg)
     //  llSay(chatChan,msg); 
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg); 
+   //debugSay(msg); 
 }
 
