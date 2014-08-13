@@ -10,8 +10,8 @@
 #include "lib.lsl"
 
 float glowOnAmount = 0.0;
-string color1 = COLOR_RED;
-string color2 = COLOR_RED;
+string color1 = COLOR_WHITE;
+string color2 = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 integer preloadPrim = 2;
 integer preloadFace = 2;
@@ -59,28 +59,6 @@ msgHandler(string sender, string msg)
    //debugSay("got message <" + msg +">");
    //llSetTimerEvent(0);
    msg = llToLower(msg);
-   if (sender == myOwner)
-   {
-      if(msg == "public")
-      {
-         debugSay("setting access = public");
-         access = ACCESS_PUBLIC;
-      }
-      else if(msg == "group")
-      {
-         debugSay("setting access = group only");
-         access = ACCESS_GROUP;
-      }
-      else if(msg == "owner")
-      {
-          debugSay("setting access == owner only");
-          access = ACCESS_OWNER;
-      }
-   }
-   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
-       return;
-   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
-      return;
    if (msg == "fire")
    {
        fire();
