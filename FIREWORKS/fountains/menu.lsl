@@ -72,7 +72,7 @@ default
       }
       if(button=="fire")
       {
-          debugSay("menu firing");
+          //debugSay("menu firing");
           sendMsg("fire");
       }
       if(button=="show")
