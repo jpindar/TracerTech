@@ -18,11 +18,6 @@ else
   return FALSE;  
 }
 
-setChatChan(integer chan)
-{
-   
-}
-
 integer randomChan()
 {
    return (integer)(llFrand(-1000000000.0) - 1000000000.0);
@@ -70,6 +65,23 @@ string getNotecardName()
         llOwnerSay("no notecard found");
       } 
   return s;    
+}
+
+integer getChatChan()
+{
+   integer n = 0;
+   integer ptr = llListFindList(notecardList,["channel"]);
+   if (ptr > -1)
+       n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+   return n;
+}
+float getVolume()
+{
+    float f;
+    integer ptr = llListFindList(notecardList,["volume"]);
+    if (ptr > -1)
+        f = llList2Float(notecardList,ptr+1);
+    return f;
 }
 
 /*
@@ -158,18 +170,4 @@ list list_cast(list in)
  } 
 */ 
 
-integer getChatChan2()
-{
-   integer n;
-	integer ptr = llListFindList(notecardList,["chatChan"]);
-	if (ptr > -1) n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
-	return n;
-}
-float getVolume()
-{
-    float f;
-    integer ptr = llListFindList(notecardList,["volume"]);
-	if (ptr > -1) f = llList2Float(notecardList,ptr+1);
-	return f;
-}
 
