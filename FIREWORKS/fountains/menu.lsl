@@ -3,13 +3,10 @@
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
 list buttonsOwner=["fire","hide","show"];
-//list buttonsGroup=["hide","show","fire"];
-//list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
 integer menuChan;
-integer access;
 integer chatChan;
 integer timeout = 10;
 
@@ -22,8 +19,6 @@ default
    state_entry()
    {
       menuChan = randomChan();
-      owner=llGetOwner();
-      access = ACCESS_PUBLIC;
    }
 
    touch_start(integer num)
@@ -52,27 +47,8 @@ default
    {
       llSetTimerEvent(0);
       llListenRemove(handle);
-      if (toucher == owner)
-      {
-         if(button == "public")
-         {
-            access = ACCESS_PUBLIC;
-            sendMsg("PUBLIC");
-         }
-         else if(button == "group")
-         {
-            access = ACCESS_GROUP;
-            sendMsg("GROUP");
-         }
-         else if(button == "owner")
-         {
-            access = ACCESS_OWNER;
-            sendMsg("OWNER");
-         }
-      }
       if(button=="fire")
       {
-          //debugSay("menu firing");
           sendMsg("fire");
       }
       if(button=="show")
@@ -83,20 +59,14 @@ default
       {
          sendMsg("hide");
       }
-      else if(button=="reset")
-      {
-          sendMsg("reset");
-          llResetScript();
-      }
    }
 }
 
 sendMsg(string msg)
 {
    #if defined REMOTE_MENU
-    //  llSay(chatChan,msg); 
+      llSay(chatChan,msg); 
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   //debugSay(msg); 
 }
 
