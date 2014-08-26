@@ -15,7 +15,7 @@ string color2 = COLOR_WHITE;
 string color3 = COLOR_BLUE;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
-integer preloadPrim = 2;
+string preloadPrimName = "base";
 integer preloadFace = 2;
 key owner;
 integer handle;
@@ -30,7 +30,7 @@ default
 
    state_entry()
    {
-      llSetLinkTexture(preloadPrim,texture,preloadFace);
+      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       if(doneReadingNotecard == FALSE) state readNotecardToList;
       chatChan = getChatChan();
       owner = llGetOwner();
@@ -82,10 +82,10 @@ fire()
     string fireMsg = color1+color2+color3;
     //debugSay("sending fire linkmessage" + fireMsg + texture);
     llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
-    //llMessageLinked(LINK_SET, FIRE_CMD, COLOR_RED+COLOR_WHITE, texture);
+    //llMessageLinked(LINK_SET, FIRE_CMD, color1+color1, texture);
     //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, COLOR_WHITE+COLOR_WHITE, texture);
+    //llMessageLinked( LINK_SET, FIRE_CMD, color2+color2, texture);
     //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, COLOR_BLUE+COLOR_WHITE, texture);
+    //llMessageLinked( LINK_SET, FIRE_CMD, color3+color3, texture);
 }
 
