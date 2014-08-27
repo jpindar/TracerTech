@@ -34,23 +34,34 @@ default
        llSay(0,"rebooting");
        //llPreloadSound(sound);
        //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
-       if(doneReadingNotecard == FALSE) state readNotecardToList;
-       chan = getChatChan();
-       volume = getVolume();
-       speed = getSpeed();
-       llOwnerSay((string)chan);
-       llOwnerSay((string)volume);
+       #ifdef NOTECARD_IN_THIS_PRIM
+           if(doneReadingNotecard == FALSE) state readNotecardToList;
+           chan = getChatChan();
+           volume = getVolume();
+           speed = getSpeed();
+           llOwnerSay((string)chan);
+           llOwnerSay((string)volume);
+       #endif
    }
 
    touch_start(integer total_number)
     {
-        llMessageLinked(LINK_SET,chan,"fire","");
+        llMessageLinked(LINK_SET,FIRE_CMD,"whatever","");
         llOwnerSay("touched");
     }
 
-    link_message(integer sender, integer channel, string message, key id)
+    link_message(integer sender, integer num, string message, key id)
     {
-      if(channel==chan && message=="fire")
+        if (num & RETURNING_NOTECARD_DATA)
+        {
+            notecardList = llCSV2List(msg);
+            //chan = getChatChan();
+            volume = getVolume();
+            speed = getSpeed();
+            llOwnerSay((string)chan);
+            llOwnerSay((string)volume);
+       }
+        if ( num & FIRE_CMD ) //to allow for packing more data into num
         {
             fire();
         }
