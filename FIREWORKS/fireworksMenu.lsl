@@ -4,7 +4,7 @@
 /////////////////////////////
 string menutext="\nChoose One:";
 list buttonsOwner=["owner","group","public","hide","show","channel", "fire"];
-list buttonsAll=["fire"];
+list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
@@ -32,16 +32,14 @@ default
       {
           llDialog(toucher,menutext,buttonsOwner,menuChan);
       }
-      else if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
+      else
+      if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
       {
           llDialog(toucher,menutext,buttonsOwner,menuChan);
       }
       else if ((access == ACCESS_PUBLIC)) 
       {
-          llDialog(toucher,menutext,buttonsAll,menuChan);
-      }
-      else
-      {
+          llDialog(toucher,menutext,buttonsPublic,menuChan);
       }
       handle=llListen(menuChan,"",toucher,"");
       llSetTimerEvent(10); 
