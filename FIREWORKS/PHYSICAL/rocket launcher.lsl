@@ -4,21 +4,22 @@
 // listens for commands on either a chat channel
 // or a link message
 ////////////////////////////
+#define NOTECARD_IN_THIS_PRIM
+/////////////////////
 #include "lib.lsl"
+integer debug = TRUE;
 string sound = SOUND_ROCKETLAUNCH1;
 float speed = 15;  //8 to 25 // 20
 integer payloadIndex = 0; 
-integer payloadParam = 3;//typically time before explosion, typically  1 to 10 
+integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
 integer payloadParam2 = 12; //typically bouyancy * 100, typically 3 to 12
-float heightOffset = 0.6;
-float glowAmount = 0.0; //or 0.05
+float zOffset = 0.6;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
 integer handle;
 integer chatChan = UNKNOWN;
 key id = "";
-integer delay = 1;
 
 default
 {
@@ -27,20 +28,22 @@ default
 
    state_entry()
    {
+      //llPreloadSound(sound);
       llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
-      if(doneReadingNotecard == FALSE) state readNotecardToList;
-      chatChan = getChatChan();
-      owner = llGetOwner();
-      //id  = owner;
-      handle = llListen( chatChan, "",id, "" );
-      llOwnerSay("listening on channel "+(string)chatChan);
+      #ifdef NOTECARD_IN_THIS_PRIM
+         if(doneReadingNotecard == FALSE) state readNotecardToList;
+         chatChan = getChatChan();
+         owner = llGetOwner();
+         //id  = owner;
+         handle = llListen( chatChan, "",id, "" );
+         llOwnerSay("listening on channel "+(string)chatChan);
+      #endif
    }
 
-   //link mmessages come from the menu script
-   link_message(integer sender, integer num, string str, key id)
+   //link messages come from the menu script
+   link_message(integer sender, integer num, string msg, key id)
    {
-       //debugSay("heard link message " + (string)num + str);
-       msgHandler(owner, str); 
+       msgHandler(owner, msg); 
    }
 
    //chat comes from trigger or avatar
@@ -75,17 +78,16 @@ msgHandler(string sender, string msg)
 fire()
 {
    string rocket;
-   integer packedParam =  payloadParam + (payloadParam2*256);
+   integer packedParam =  payloadParam1 + (payloadParam2*256);
    integer i;
 
-   llTriggerSound(sound,volume);
+  
+    llPlaySound(sound,volume);
    repeatSound(sound, volume);
    integer n = llGetInventoryNumber(INVENTORY_OBJECT);
    rotation rot = llGetRot();
-   vector pos = llGetPos()+ (<0.0,0.0,heightOffset> * rot);
-   vector vel = <0,0,speed> * rot;
-   //rot.z = -rot.z;
-   //rot.x = -rot.x;
+   vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
+   vector vel = <0,0,speed>*rot;
    for (i = 0; i<n; i++)
    {
        rocket = llGetInventoryName(INVENTORY_OBJECT,i);
