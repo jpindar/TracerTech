@@ -7,9 +7,8 @@
 /////////////////////
 #include "lib.lsl"
 integer debug = TRUE;
-
-key sound = SOUND_PUREBOOM;
-key burstTexture = TEXTURE_SPIKESTAR;
+string sound = SOUND_PUREBOOM;
+string smokeTexture;
 string lightColor = COLOR_WHITE;
 //key payload = "0e86ed9c-eaf9-4f75-8b6f-1956cb5d6436";
 float speed = 30;  //8 to 20
@@ -20,7 +19,7 @@ float zOffset = 2.0;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 //469014d2-c9f9-4908-bbfd-f73ab3eee343
-integer chan = UNKNOWN;
+integer chatChan = UNKNOWN;
 
 default
 {
@@ -29,17 +28,19 @@ default
 
    state_entry()
    {
-       //llPreloadSound(sound);
-       //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
-       #ifdef NOTECARD_IN_THIS_PRIM
-           if(doneReadingNotecard == FALSE) state readNotecardToList;
-           //chan = getChatChan();
-           volume = getVolume();
-           speed = getSpeed();
-           payloadParam2 = getBouyancy();
-           llOwnerSay("speed " + (string)speed);
-           llOwnerSay("volume " + (string)volume);
-       #endif
+      //llPreloadSound(sound);
+      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
+      #ifdef NOTECARD_IN_THIS_PRIM
+         if(doneReadingNotecard == FALSE) state readNotecardToList;
+         //chatChan = getChatChan();
+         volume = getVolume();
+         speed = getSpeed();
+         payloadParam2 = getBouyancy();
+         llOwnerSay("speed " + (string)speed);
+         llOwnerSay("volume " + (string)volume);
+         //handle = llListen( chatChan, "",id, "" );
+         //llOwnerSay("listening on channel "+(string)chatChan);
+      #endif
    }
 
    // touch_start(integer total_number)
@@ -48,28 +49,32 @@ default
    //     llOwnerSay("touched");
    // }
 
-    link_message(integer sender, integer num, string msg, key id)
-    {
-        if (num & RETURNING_NOTECARD_DATA)
-        {
-            notecardList = llCSV2List(msg);
-            //chan = getChatChan();
-            volume = getVolume();
-            speed = getSpeed();
-            payloadParam2 = getBouyancy();
-            llOwnerSay((string)speed);
-            llOwnerSay((string)volume);
-       }
-        if ( num & FIRE_CMD ) //to allow for packing more data into num
-        {
-            fire();
-        }
-
-    }
+   link_message(integer sender, integer num, string msg, key id)
+   {
+      #if ndef NOTECARD_IN_THIS_PRIM
+      if (num & RETURNING_NOTECARD_DATA)
+      {
+         notecardList = llCSV2List(msg);
+         //chan = getChatChan();
+         volume = getVolume();
+         speed = getSpeed();
+         payloadParam2 = getBouyancy();
+         llOwnerSay((string)speed);
+         llOwnerSay((string)volume);
+      }
+      #endif
+      if ( num & FIRE_CMD ) //to allow for packing more data into num
+      {
+         fire();
+      }
+      else
+      {
+         msgHandler(owner, msg);
+      }
+   }
 
     timer()
     {
-        //llMessageLinked(LINK_SET,(integer)llGetObjectDesc(),"fireworkreload","");
         llSetTimerEvent(0);
     }
 }
@@ -89,27 +94,23 @@ msgHandler(string sender, string msg)
 
 fire()
 {
-    string rocket;
-    integer packedParam =  payloadParam1 + (payloadParam2*256);
-    integer i;
-    float pitch = 0;
+   string rocket;
+   integer packedParam =  payloadParam1 + (payloadParam2*256);
+   integer i;
+   float pitch = 0;
 
-    llPlaySound(sound,volume);
-    repeatSound(sound,volume);
-    integer n = llGetInventoryNumber(INVENTORY_OBJECT);
-    //llSetTimerEvent(10);
-    rotation rot = llGetRot();
-    vector pos = llGetPos();
-    //rez a distance along the the barrel axis
-    //pos = pos + llRot2Up(rot);// postion + unit? vector offset
-    pos = pos + (<0.0,0.0,zOffset> * rot); //postion = position + (vector * rotation)
-
-    //rotate projectile and launch velocity away from barrel axis
-    rot = (rot* llEuler2Rot( <0,pitch,0> * DEG_TO_RAD));
-    vector vel = <0,0,speed>*rot;
-    for (i = 0; i<n; i++)
-    {
-        rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-        llRezObject(rocket,pos,vel,rot, packedParam);
-    }
+   llPlaySound(sound,volume);
+   repeatSound(sound,volume);
+   integer n = llGetInventoryNumber(INVENTORY_OBJECT);
+   rotation rot = llGetRot();
+   //rez a distance along the the barrel axis
+   vector pos = llGetPos() + (<0.0,0.0,zOffset> * rot); //postion = position + (vector * rotation)
+   //rotate projectile and launch velocity away from barrel axis
+   rot = (rot* llEuler2Rot( <0,pitch,0> * DEG_TO_RAD));
+   vector vel = <0,0,speed>*rot;
+   for (i = 0; i<n; i++)
+   {
+       rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+       llRezObject(rocket,pos,vel,rot, packedParam);
+   }
 }
