@@ -8,7 +8,7 @@
 #include "lib.lsl"
 integer debug = TRUE;
 
-key sound = SOUND_ROCKETLAUNCH1;
+key sound = SOUND_PUREBOOM;
 key burstTexture = TEXTURE_SPIKESTAR;
 string lightColor = COLOR_WHITE;
 //key payload = "0e86ed9c-eaf9-4f75-8b6f-1956cb5d6436";
@@ -16,8 +16,7 @@ float speed = 30;  //8 to 20
 integer payloadIndex = 0; 
 integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
 integer payloadParam2 = 5; //typically bouyancy * 100, typically 3 to 12
-float zOffset = 0.6;
-
+float zOffset = 2.0;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 //469014d2-c9f9-4908-bbfd-f73ab3eee343
