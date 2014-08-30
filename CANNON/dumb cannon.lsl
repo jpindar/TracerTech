@@ -3,7 +3,7 @@
 //copyright Tracer Tech aka Tracer Ping 2014
 //this goes in the barrel
 //////////////////////
-
+#define NOTECARD_IN_THIS_PRIM
 /////////////////////
 #include "lib.lsl"
 integer debug = TRUE;
@@ -14,15 +14,14 @@ string lightColor = COLOR_WHITE;
 //key payload = "0e86ed9c-eaf9-4f75-8b6f-1956cb5d6436";
 float speed = 30;  //8 to 20
 integer payloadIndex = 0; 
-integer payloadParam = 3;//typically time before explosion, typically  1 to 10 
-integer payloadParam2 = 12; //typically bouyancy * 100, typically 3 to 12
-float heightOffset = 0.6;
+integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
+integer payloadParam2 = 5; //typically bouyancy * 100, typically 3 to 12
+float zOffset = 0.6;
 
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 //469014d2-c9f9-4908-bbfd-f73ab3eee343
 integer chan = UNKNOWN;
-float volume = 1.0;
 
 default
 {
@@ -31,26 +30,26 @@ default
 
    state_entry()
    {
-       llSay(0,"rebooting");
        //llPreloadSound(sound);
        //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
        #ifdef NOTECARD_IN_THIS_PRIM
            if(doneReadingNotecard == FALSE) state readNotecardToList;
-           chan = getChatChan();
+           //chan = getChatChan();
            volume = getVolume();
            speed = getSpeed();
-           llOwnerSay((string)chan);
-           llOwnerSay((string)volume);
+           payloadParam2 = getBouyancy();
+           llOwnerSay("speed " + (string)speed);
+           llOwnerSay("volume " + (string)volume);
        #endif
    }
 
-   touch_start(integer total_number)
-    {
-        llMessageLinked(LINK_SET,FIRE_CMD,"whatever","");
-        llOwnerSay("touched");
-    }
+   // touch_start(integer total_number)
+   // {
+   //     llMessageLinked(LINK_SET,FIRE_CMD,"whatever","");
+   //     llOwnerSay("touched");
+   // }
 
-    link_message(integer sender, integer num, string message, key id)
+    link_message(integer sender, integer num, string msg, key id)
     {
         if (num & RETURNING_NOTECARD_DATA)
         {
@@ -58,7 +57,8 @@ default
             //chan = getChatChan();
             volume = getVolume();
             speed = getSpeed();
-            llOwnerSay((string)chan);
+            payloadParam2 = getBouyancy();
+            llOwnerSay((string)speed);
             llOwnerSay((string)volume);
        }
         if ( num & FIRE_CMD ) //to allow for packing more data into num
@@ -91,8 +91,9 @@ msgHandler(string sender, string msg)
 fire()
 {
     string rocket;
-    integer packedParam =  payloadParam + (payloadParam2*256);
+    integer packedParam =  payloadParam1 + (payloadParam2*256);
     integer i;
+    float pitch = 0;
 
     llPlaySound(sound,volume);
     repeatSound(sound,volume);
@@ -100,9 +101,12 @@ fire()
     //llSetTimerEvent(10);
     rotation rot = llGetRot();
     vector pos = llGetPos();
-    vector offset = llRot2Up(rot);
-    pos = pos + offset;
-    //    vector pos = llGetPos()+ (<0.0,0.0,heightOffset> * rot);
+    //rez a distance along the the barrel axis
+    //pos = pos + llRot2Up(rot);// postion + unit? vector offset
+    pos = pos + (<0.0,0.0,zOffset> * rot); //postion = position + (vector * rotation)
+
+    //rotate projectile and launch velocity away from barrel axis
+    rot = (rot* llEuler2Rot( <0,pitch,0> * DEG_TO_RAD));
     vector vel = <0,0,speed>*rot;
     for (i = 0; i<n; i++)
     {
