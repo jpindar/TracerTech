@@ -28,8 +28,8 @@ float endAlpha = 0;
 vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
 float life = 1;
-float SystemSafeSet = 0.00;
-float SystemAge = 1.0;
+float systemSafeSet = 0.00;
+float systemAge = 1.0;
 
 #include "effectslib.lsl"
 
@@ -107,7 +107,7 @@ boom()
 {
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    debugSay("boom");
-   SystemSafeSet = SystemAge;
+   systemSafeSet = systemAge;
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
 
@@ -115,8 +115,8 @@ boom()
 
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
-   llSleep(SystemAge);
-   SystemSafeSet = 0.0;
+   llSleep(systemAge);
+   systemSafeSet = 0.0;
    llParticleSystem([]);
    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
    llSleep(life);
