@@ -37,15 +37,15 @@ default
 {
    on_rez(integer p)
    {
-       float bouy = 5;
+       float bouy = 5/100;
        rezParam = p; //save for later
-       integer t = p & 0xFF;
+       float t = (p & 0xFF)/10;
        p = p / 0x100;
        integer p2 = p & 0xFF;
        if (p2 > 0)
-          bouy = p2;
+          bouy = p2/100;
        debugSay("rezzed, param1 = " +(string)t +"param2 = " + (string)p2);   
-       llSetBuoyancy(bouy/100);
+       llSetBuoyancy(bouy);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
        setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
@@ -58,8 +58,8 @@ default
        float friction = 0.9;
        float density = 500;
        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-       if (t<1)  //because 0 means no timer effect
-           t = 1;
+       //if (t==0)  //because 0 means no timer effect
+       //    t = 0.01;
        llSetTimerEvent(t);
    }
 
