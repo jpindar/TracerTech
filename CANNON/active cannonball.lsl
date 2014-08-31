@@ -6,7 +6,7 @@
 #include "lib.lsl"
 integer debug = FALSE;
 integer effectsType = 4; 
-string texture = TEXTURE_CLASSIC;
+string texture = TEXTUREGOLDFIREBALLS1;
 integer rezParam;
 string particleColor = COLOR_GOLD;
 string color1 = COLOR_GOLD;
@@ -27,9 +27,9 @@ float startAlpha = 1;
 float endAlpha = 0;
 vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
-float life = 1;
+float particleSpeed = 3;
 float systemSafeSet = 0.00;
-float systemAge = 1.0;
+float systemAge = 0.1;
 
 #include "effectslib.lsl"
 
@@ -38,18 +38,19 @@ default
    on_rez(integer p)
    {
        float bouy = 5;
-       rezParam = p;
+       rezParam = p; //save for later
        integer t = p & 0xFF;
-       integer p2 = (p & 0xFF00) / 256;
+       p = p / 0x100;
+       integer p2 = p & 0xFF;
        if (p2 > 0)
           bouy = p2;
+       debugSay("rezzed, param1 = " +(string)t +"param2 = " + (string)p2);   
        llSetBuoyancy(bouy/100);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
        setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
-       setParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,primGlow]);
+       glow(LINK_THIS,primGlow);
        setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
-       setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
        setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
        integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
        float gravity = 0.8;
@@ -99,8 +100,6 @@ default
       boom();
    }
    #endif
-
-
 }
 
 boom()
@@ -108,6 +107,7 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    debugSay("boom");
    systemSafeSet = systemAge;
+   setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
 
@@ -119,7 +119,7 @@ boom()
    systemSafeSet = 0.0;
    llParticleSystem([]);
    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
-   llSleep(life);
+   llSleep(systemAge);
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
