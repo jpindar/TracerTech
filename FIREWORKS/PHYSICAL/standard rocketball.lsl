@@ -62,11 +62,14 @@ default
        llSetTimerEvent(t);
    }
 
-   state_entry()
+   timer()
    {
-      llParticleSystem([]);
+       debugSay("timed out");
+       llSetTimerEvent(0);
+       boom();
    }
 
+   #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
        integer f = 0;
@@ -95,13 +98,8 @@ default
       debugSay("collision with land");
       boom();
    }
+   #endif
 
-   timer()
-   {
-       debugSay("timed out");
-       llSetTimerEvent(0);
-       boom();
-   }
 
 }
 
