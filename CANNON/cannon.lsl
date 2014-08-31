@@ -10,7 +10,6 @@ integer debug = TRUE;
 string sound = SOUND_PUREBOOM;
 string smokeTexture;
 string lightColor = COLOR_WHITE;
-//key payload = "0e86ed9c-eaf9-4f75-8b6f-1956cb5d6436";
 float speed = 30;  //8 to 20
 integer payloadIndex = 0; 
 integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
@@ -18,7 +17,6 @@ integer payloadParam2 = 5; //typically bouyancy * 100, typically 3 to 12
 float zOffset = 2.0;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
-//469014d2-c9f9-4908-bbfd-f73ab3eee343
 integer chatChan = UNKNOWN;
 
 default
@@ -32,12 +30,13 @@ default
       //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
-         //chatChan = getChatChan();
          volume = getVolume();
          speed = getSpeed();
+         payloadParam1 = getFlightTime();
          payloadParam2 = getBouyancy();
          llOwnerSay("speed " + (string)speed);
          llOwnerSay("volume " + (string)volume);
+         //chatChan = getChatChan();
          //handle = llListen( chatChan, "",id, "" );
          //llOwnerSay("listening on channel "+(string)chatChan);
       #endif
@@ -69,7 +68,7 @@ default
       }
       else
       {
-         msgHandler(owner, msg);
+         msgHandler(llGetOwner(), msg);
       }
    }
 
