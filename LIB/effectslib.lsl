@@ -1,5 +1,24 @@
 
-
+makeParticles(integer effectsType, vector color1, vector color2, string texture)
+{
+   //debugSay("effectType = " + (string)effectsType);
+   systemSafeSet = systemAge;
+   switch(effectsType)
+   {
+       case 1: {makeParticles1(color1, color2, texture); break;}	  
+       case 2: {makeParticles2(color1, color2, texture); break;}
+       case 3: {makeParticles3(color1, color2, texture); break;}
+       case 4: {makeParticles4(color1, color2, texture); break;}
+       case 5: {makeParticles5(color1, color2, texture); break;}
+       case 6: {makeParticles6(color1, color2, texture); break;}
+       case 7: {makeParticles7(color1, color2, texture); break;}
+       case 8: {makeParticles8(color1, color2, texture); break;}
+       case 9: {makeParticles9(color1, color2, texture); break;}
+       case 10: {makeParticles10(color1, color2, texture); break;}
+      // case 11: {makeParticles11(color1, color2, texture); break;}
+	}	  
+   systemSafeSet = 0.0;  
+}
 
 makeParticles1(vector color1, vector color2, string texture)
 {
@@ -37,8 +56,8 @@ makeParticles1(vector color1, vector color2, string texture)
 
 makeParticles2(vector color1, vector color2, string texture)
 {
-        SystemAge =0.9;
-        SystemSafeSet = SystemAge;
+        systemAge =0.9;
+        systemSafeSet = systemAge;
         llParticleSystem([
         PSYS_SRC_TEXTURE, texture,
         PSYS_PART_START_SCALE, <0.5, 0.5, FALSE>,
@@ -50,7 +69,7 @@ makeParticles2(vector color1, vector color2, string texture)
         PSYS_SRC_BURST_PART_COUNT, 500,
         PSYS_SRC_BURST_RATE, 0.2,
         PSYS_PART_MAX_AGE, 5.0,
-        PSYS_SRC_MAX_AGE, SystemAge,
+        PSYS_SRC_MAX_AGE, systemAge,
         PSYS_SRC_PATTERN, 2,
         PSYS_SRC_BURST_SPEED_MIN, 2.0,
         PSYS_SRC_BURST_SPEED_MAX, 2.0,
@@ -66,8 +85,8 @@ makeParticles2(vector color1, vector color2, string texture)
 
 makeParticles3(vector color1, vector color2, string texture)
     {
-        SystemAge =0.871257;//life span of the particle system
-        SystemSafeSet = SystemAge;
+        systemAge =0.871257;//life span of the particle system
+        systemSafeSet = systemAge;
         llParticleSystem([
         0, 291, //PSYS_PART_FLAGS=256+32+2+1=PSYS_PART_EMISSIVE_MASK+PSYS_PART_FOLLOW_VELOCITY_MASK+PSYS_PART_INTERP_SCALE_MASK+PSYS_PART_INTERP_COLOR_MASK
         9, 2, // PSYS_SRC_PATTERN, PSYS_SRC_PATTERN_EXPLODE
@@ -96,8 +115,8 @@ makeParticles3(vector color1, vector color2, string texture)
 	
 makeParticles4(vector color1, vector color2, string texture)
     { 
-	float SystemAge = 1.75;
-        SystemSafeSet = SystemAge;
+	float systemAge = 1.75;
+        systemSafeSet = systemAge;
         //texture = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
         llParticleSystem([
         PSYS_SRC_TEXTURE, texture,
@@ -110,10 +129,10 @@ makeParticles4(vector color1, vector color2, string texture)
         PSYS_SRC_BURST_PART_COUNT, 500,
         PSYS_SRC_BURST_RATE, 0.2,
         PSYS_PART_MAX_AGE, 5.0,
-        PSYS_SRC_MAX_AGE, SystemSafeSet,
+        PSYS_SRC_MAX_AGE, systemSafeSet,
         PSYS_SRC_PATTERN, 2,
-        PSYS_SRC_BURST_SPEED_MIN, 1.5,// or 2
-        PSYS_SRC_BURST_SPEED_MAX, 1.5,// or 2
+        PSYS_SRC_BURST_SPEED_MIN, (1.5*particleSpeed),// or 2
+        PSYS_SRC_BURST_SPEED_MAX, (1.5*particleSpeed),// or 2
         PSYS_SRC_BURST_RADIUS, 0.0,
         PSYS_SRC_ACCEL, <0.0,0.0, -0.3 >,
         PSYS_PART_FLAGS, ( 0
@@ -126,8 +145,8 @@ makeParticles4(vector color1, vector color2, string texture)
 
 makeParticles5(vector color1, vector color2, string texture)
 {
-    float SystemAge = 1.75;
-        SystemSafeSet = SystemAge;
+    float systemAge = 1.75;
+        systemSafeSet = systemAge;
         llParticleSystem([
            PSYS_PART_FLAGS,0
          | PSYS_PART_INTERP_COLOR_MASK
@@ -136,7 +155,7 @@ makeParticles5(vector color1, vector color2, string texture)
          | PSYS_PART_FOLLOW_VELOCITY_MASK,
          PSYS_SRC_PATTERN, 2,
          PSYS_SRC_TEXTURE, texture,
-         PSYS_SRC_MAX_AGE, SystemSafeSet,
+         PSYS_SRC_MAX_AGE, systemSafeSet,
          PSYS_PART_MAX_AGE, 5.0,
          PSYS_PART_START_SCALE, <0.5, 0.5,0.0>,
          PSYS_PART_END_SCALE,   <0.5, 0.5,0.0>,
@@ -155,7 +174,7 @@ makeParticles5(vector color1, vector color2, string texture)
 
 makeParticles6(vector color1, vector color2, string texture)
 {
-        SystemSafeSet = SystemAge;
+        systemSafeSet = systemAge;
         llParticleSystem([
         PSYS_SRC_TEXTURE, texture,
         PSYS_PART_START_SCALE, <0.5, 0.5, FALSE>,
@@ -167,7 +186,7 @@ makeParticles6(vector color1, vector color2, string texture)
         PSYS_SRC_BURST_PART_COUNT, 500,
         PSYS_SRC_BURST_RATE, 0.2,
         PSYS_PART_MAX_AGE, 5.0,
-        PSYS_SRC_MAX_AGE, SystemAge,
+        PSYS_SRC_MAX_AGE, systemAge,
         PSYS_SRC_PATTERN, 2,
         PSYS_SRC_BURST_SPEED_MIN, 2.0,
         PSYS_SRC_BURST_SPEED_MAX, 2.0,
