@@ -93,9 +93,23 @@ default
       {
          debugSay("timed out");
          llSetTimerEvent(0);
-          boom();
+         boom();
+         return;
        }
-   }
+      vector pos=llGetPos(); 
+      if (llVecDist(pos,lastPos)<0.001)   //if you stop for any reason (edge of world)
+      {
+         debugSay("stopped moving");
+         llSetTimerEvent(0);
+         boom();
+         return;
+       }
+      float wat=llWater(ZERO_VECTOR); //how high the water is
+      //if (last.z>wat && pos.z<=wat) //did I pass through the water surface?
+      {
+      }
+      lastPos=pos;
+   }//end timer
 
 #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
