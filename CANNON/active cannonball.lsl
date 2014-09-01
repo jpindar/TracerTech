@@ -30,16 +30,34 @@ vector endSize = <1.9,1.9,1.9>;
 float particleSpeed = 3;
 float systemSafeSet = 0.00;
 float systemAge = 0.1;
+#define FLYING 0
+integer mode=FLYING;  //mode for using timer, 0 is flying, 1 is dying
+vector lastPos;    //where I was last tick
 
 #include "effectslib.lsl"
 
 default
 {
+   state_entry()
+   {
+      llOwnerSay("reset");
+      llSetStatus(STATUS_PHYSICS,TRUE);
+      llSetStatus(STATUS_PHANTOM,FALSE);
+      llParticleSystem([]);
+    }
+
    on_rez(integer p)
    {
+       llOwnerSay("rezzed" + (string)p);
+       llSetTimerEvent(0);
+       if (p == 0)
+          {
+              llSay(0,"not rezzed");
+              return;
+          }
        float bouy = 5/100;
        rezParam = p; //save for later
-       float t = (p & 0xFF)/10;
+       float t = ((float)(p & 0xFF))/10;
        p = p / 0x100;
        integer p2 = p & 0xFF;
        if (p2 > 0)
@@ -58,25 +76,30 @@ default
        float friction = 0.9;
        float density = 500;
        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
+       mode=FLYING;
+       lastPos=llGetPos();
        //if (t==0)  //because 0 means no timer effect
        //    t = 0.01;
+       //llSetTimerEvent(0.09);  //check often for water
+
        llSetTimerEvent(t);
    }
 
    timer()
    {
-       debugSay("timed out");
-       llSetTimerEvent(0);
+      if (llGetStartParameter()==0) return;
+      if (mode!=FLYING){llDie();}
+      debugSay("timed out");
+      llSetTimerEvent(0);
        boom();
    }
 
-   #ifdef EXPLODE_ON_COLLISION
+#ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
        integer f = 0;
        key id;
        vector spd;
-
        debugSay(llGetScriptName() + ": collision ");
        debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
        for (f=0; f<n; f++)
@@ -84,7 +107,6 @@ default
            debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
        }
        f = 0;
-
        do
        {
           // if (llVecMag(llDetectedVel(f)) >= breakSpeed)
@@ -99,7 +121,7 @@ default
       debugSay("collision with land");
       boom();
    }
-   #endif
+#endif
 }
 
 boom()
@@ -110,9 +132,7 @@ boom()
    setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
-
    makeParticles((vector)color1,(vector)color2,texture);
-
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
    llSleep(systemAge);
@@ -121,6 +141,7 @@ boom()
    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
    llSleep(systemAge);
    llSetTimerEvent(0);
+   mode=!FLYING; //then die
    if (rezParam !=0)
    {
        llSetStatus(STATUS_PHYSICS, FALSE);
@@ -128,5 +149,6 @@ boom()
        llDie();
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
+
 }
 
