@@ -3,9 +3,21 @@
   #include "libh.lsl"
 #endif
 
+debugSay(string msg)
+{
+//if (debug)
+  llOwnerSay(msg);
+   //llSay(MY_DEBUG_CHAN,msg);
+}
+
 glow(integer prim, float  amount)
 {
     llSetLinkPrimitiveParamsFast(prim,[PRIM_GLOW,ALL_SIDES,amount]);
+}
+
+fullbright(integer prim, integer on)
+{
+    llSetLinkPrimitiveParamsFast(prim,[PRIM_FULLBRIGHT,ALL_SIDES,on]);
 }
 
 integer sameOwner(key id)
@@ -26,13 +38,6 @@ integer randomChan()
 repeatSound(key sound, float volume)
 {
     llRegionSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
-}
-
-debugSay(string msg)
-{
-//if (debug)
-  llOwnerSay(msg);
-   //llSay(MY_DEBUG_CHAN,msg);
 }
 
 integer objectDescToInt()
@@ -56,13 +61,16 @@ string getInventoryTexture()
 }
 
 
-string getNotecardName()
+string getNotecardName(string d)
 {
-  string s = "";
-  s = llGetInventoryName(INVENTORY_NOTECARD,0);
-  if (llGetInventoryKey(s) == NULL_KEY)
+  string s = d;
+  if (s == "")
+       s = llGetInventoryName(INVENTORY_NOTECARD,0);
+  //llOwnerSay("looking for notecard <" + s + ">");   
+  if (llGetInventoryType(s) == INVENTORY_NONE)
       {
-        llOwnerSay("no notecard found");
+        llOwnerSay("notecard '" + d + "' not found");
+        s = "";
       } 
   return s;    
 }
@@ -75,13 +83,86 @@ integer getChatChan()
        n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
    return n;
 }
+
 float getVolume()
 {
-    float f;
+    float f = 1.0;
     integer ptr = llListFindList(notecardList,["volume"]);
     if (ptr > -1)
         f = llList2Float(notecardList,ptr+1);
     return f;
+}
+
+float getSpeed()
+{
+    #define DEFAULT_SPEED 20.0;
+    float f = DEFAULT_SPEED;
+    integer ptr = llListFindList(notecardList,["speed"]);
+    if (ptr > -1)
+        f = llList2Float(notecardList,ptr+1);
+    return f;
+}
+integer getFlightTime()
+{
+    #define DEFAULT_TIME 3;
+    integer f = DEFAULT_TIME;
+    integer ptr = llListFindList(notecardList,["flighttime"]);
+    if (ptr > -1)
+        f = llList2Integer(notecardList,ptr+1);
+    return f;
+}
+
+integer getBouyancy()
+{
+    #define DEFAULT_BOUY 5;
+    integer f = DEFAULT_BOUY;
+    integer ptr = llListFindList(notecardList,["bouyancy"]);
+    if (ptr > -1)
+        f = llList2Integer(notecardList,ptr+1);
+    return f;
+}
+integer getLinkWithName(string name) {
+    integer i = llGetLinkNumber() != 0;   // Start at zero (single prim) or 1 (two or more prims)
+    integer x = llGetNumberOfPrims() + i; // [0, 1) or [1, llGetNumberOfPrims()]
+    for (; i < x; ++i)
+        if (llGetLinkName(i) == name)
+        {
+            return i; // Found it! Exit loop early with result
+         }
+    return -1; // No prim with that name, return -1.
+}
+
+list getLinknumberList()
+    {
+	linknumberList = [];
+    integer i = llGetLinkNumber() != 0;   // Start at zero (single prim) or 1 (two or more prims)
+    integer x = llGetNumberOfPrims() + i; // [0, 1) or [1, llGetNumberOfPrims()]
+    for (; i < x; ++i)
+    {
+         linknumberList = linknumberList + llGetLinkName(i) + i;
+    }
+    return linknumberList;
+}
+
+integer getLinknumber(string name)
+{
+    integer n;
+    integer ptr = llListFindList(linknumberList,(list)name);
+    if (ptr > -1)
+        n = llList2Integer(linknumberList,ptr+1);
+    return n;
+}
+
+list getLinknumbers(list names)
+{
+    integer i;
+    list foo;
+    integer len = llGetListLength( names);
+    for (i=0; i<len;i++)
+    {
+        foo = foo + getLinknumber(llList2String(names,i));
+    }
+    return foo;
 }
 
 /*
