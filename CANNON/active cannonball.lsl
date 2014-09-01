@@ -45,6 +45,7 @@ default
       llOwnerSay("reset");
       llSetStatus(STATUS_PHYSICS,TRUE);
       llSetStatus(STATUS_PHANTOM,FALSE);
+      setParamsFast(0,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
       llParticleSystem([]);
     }
 
@@ -105,8 +106,18 @@ default
          return;
        }
       float wat=llWater(ZERO_VECTOR); //how high the water is
-      //if (last.z>wat && pos.z<=wat) //did I pass through the water surface?
+      if (lastPos.z>wat && pos.z<=wat) //did I pass through the water surface?
       {
+           llSetStatus(STATUS_PHYSICS,FALSE); //stop where you are
+           //interpolate your position back to water's surface
+           pos=lastPos+(pos-lastPos)*(lastPos.z-wat)/(lastPos.z-pos.z);
+           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_ROTATION,ZERO_ROTATION]);//rotate to 0 so the particle explosion goes up
+           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos]);//sit on the surface
+          // llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR, 0, <0,0,0>, 0.0]);//become invisible, so they only see particles
+           llSetStatus(STATUS_PHANTOM,TRUE);
+           llSay(0,"splash");
+           llSetTimerEvent(2);//give the particles and sound time to happen
+           mode=!FLYING; //then die
       }
       lastPos=pos;
    }//end timer
@@ -146,7 +157,7 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //debugSay("boom");
    systemSafeSet = systemAge;
-   setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   //setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
    makeParticles((vector)color1,(vector)color2,texture);
