@@ -48,7 +48,6 @@ default
 
    on_rez(integer p)
    {
-       llOwnerSay("rezzed" + (string)p);
        llSetTimerEvent(0);
        if (p == 0)
           {
@@ -62,7 +61,7 @@ default
        integer p2 = p & 0xFF;
        if (p2 > 0)
           bouy = p2/100;
-       debugSay("rezzed, param1 = " +(string)t +"param2 = " + (string)p2);   
+       debugSay("rezzed, param1 = " +(string)t +" param2 = " + (string)p2);   
        llSetBuoyancy(bouy);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
@@ -127,7 +126,7 @@ default
 boom()
 {
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
-   debugSay("boom");
+   //debugSay("boom");
    systemSafeSet = systemAge;
    setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
