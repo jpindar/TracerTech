@@ -30,6 +30,8 @@ vector endSize = <1.9,1.9,1.9>;
 float particleSpeed = 3;
 float systemSafeSet = 0.00;
 float systemAge = 0.1;
+float flightTime;
+
 #define FLYING 0
 integer mode=FLYING;  //mode for using timer, 0 is flying, 1 is dying
 vector lastPos;    //where I was last tick
@@ -56,12 +58,12 @@ default
           }
        float bouy = 5/100;
        rezParam = p; //save for later
-       float t = ((float)(p & 0xFF))/10;
+       flightTime = ((float)(p & 0xFF))/10;
        p = p / 0x100;
        integer p2 = p & 0xFF;
        if (p2 > 0)
           bouy = p2/100;
-       debugSay("rezzed, param1 = " +(string)t +" param2 = " + (string)p2);   
+       debugSay("rezzed, param1 = " +(string)flightTime +" param2 = " + (string)p2);   
        llSetBuoyancy(bouy);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
@@ -79,18 +81,20 @@ default
        lastPos=llGetPos();
        //if (t==0)  //because 0 means no timer effect
        //    t = 0.01;
-       //llSetTimerEvent(0.09);  //check often for water
-
-       llSetTimerEvent(t);
+       llResetTime();
+       llSetTimerEvent(0.09);  //check often for water
    }
 
    timer()
    {
       if (llGetStartParameter()==0) return;
       if (mode!=FLYING){llDie();}
-      debugSay("timed out");
-      llSetTimerEvent(0);
-       boom();
+      if (llGetTime()>flightTime)
+      {
+         debugSay("timed out");
+         llSetTimerEvent(0);
+          boom();
+       }
    }
 
 #ifdef EXPLODE_ON_COLLISION
