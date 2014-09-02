@@ -32,6 +32,7 @@ float systemSafeSet = 0.00;
 float systemAge = 0.1;
 float flightTime;
 
+#define EXPLODE_ON_COLLISION
 #define FLYING 0
 integer mode=FLYING;  //mode for using timer, 0 is flying, 1 is dying
 vector lastPos;    //where I was last tick
@@ -116,6 +117,7 @@ default
           // llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR, 0, <0,0,0>, 0.0]);//become invisible, so they only see particles
            llSetStatus(STATUS_PHANTOM,TRUE);
            llSay(0,"splash");
+           makeSplash();
            llSetTimerEvent(2);//give the particles and sound time to happen
            mode=!FLYING; //then die
       }
@@ -180,3 +182,27 @@ boom()
 
 }
 
+makeSplash()
+{
+           llParticleSystem([
+               PSYS_PART_FLAGS, PSYS_PART_INTERP_COLOR_MASK|PSYS_PART_INTERP_SCALE_MASK|PSYS_PART_WIND_MASK|PSYS_PART_EMISSIVE_MASK ,
+               PSYS_SRC_PATTERN, PSYS_SRC_PATTERN_ANGLE_CONE,
+               PSYS_SRC_BURST_RADIUS, 0.2,
+               PSYS_SRC_ANGLE_BEGIN, 0.0,
+               PSYS_SRC_ANGLE_END, 0.4,
+               PSYS_PART_START_COLOR, <0.125,.25,.35>,    //start aquamarine
+               PSYS_PART_END_COLOR, <1,1,1>,            //fade to white
+               PSYS_PART_START_ALPHA, 1.0,                //start opaque
+               PSYS_PART_END_ALPHA, 0.0,                //fade to transparent
+               PSYS_PART_START_SCALE, <0.5,0.5,1>,     //start small
+               PSYS_PART_END_SCALE, <4.0,4.0,1>,       //end big
+               PSYS_SRC_TEXTURE,"",                    //default texture
+               PSYS_SRC_MAX_AGE, 0.3,                    //explosion emits for only this long
+               PSYS_PART_MAX_AGE, 5.0,                    //each particle lives this long
+               PSYS_SRC_BURST_RATE, 0.02,                //a value of 0 here "starves" other emitters
+               PSYS_SRC_BURST_PART_COUNT, 20,            //how many per burst
+               PSYS_SRC_ACCEL, <0,0,-4.0>,                //make them fall back down
+               PSYS_SRC_BURST_SPEED_MIN, 6.0,            //how fast they jump
+               PSYS_SRC_BURST_SPEED_MAX, 8.0
+           ]);
+}
