@@ -1,18 +1,20 @@
 /////////////////////////
-// rocketball
+// active cannonball
 // this goes in the projectile, which in turn
 // goes in the launcher
 ////////////////////////
 #include "lib.lsl"
+#define EXPLODE_ON_COLLISION
+
 integer debug = FALSE;
 integer effectsType = 4; 
-string texture = TEXTUREGOLDFIREBALLS1;
+string texture = TEXTURE_SMOKEBALL;
 integer rezParam;
-string particleColor = COLOR_GOLD;
-string color1 = COLOR_GOLD;
-string color2 = COLOR_GOLD;
-string primColor = COLOR_GOLD;
-string lightColor = COLOR_GOLD;
+string particleColor = COLOR_WHITE;
+string color1 = COLOR_WHITE;
+string color2 = COLOR_WHITE;
+string primColor = COLOR_WHITE;
+string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 20; //10 to 20
 float falloff = 0.02; //0.02 to 0.75
@@ -32,7 +34,6 @@ float systemSafeSet = 0.00;
 float systemAge = 0.1;
 float flightTime;
 
-#define EXPLODE_ON_COLLISION
 #define FLYING 0
 integer mode=FLYING;  //mode for using timer, 0 is flying, 1 is dying
 vector lastPos;    //where I was last tick
@@ -46,32 +47,36 @@ default
       llOwnerSay("reset");
       llSetStatus(STATUS_PHYSICS,TRUE);
       llSetStatus(STATUS_PHANTOM,FALSE);
+      glow(LINK_THIS,0.0);
+      setParamsFast(0,[PRIM_COLOR,ALL_SIDES,<0.5,0.5,0.5>,1.0]);
       setParamsFast(0,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
       llParticleSystem([]);
     }
 
    on_rez(integer p)
    {
+    #define DEBUG_MASK 0x01
        llSetTimerEvent(0);
        if (p == 0)
           {
               llSay(0,"not rezzed");
               return;
           }
-       float bouy = 5/100;
        rezParam = p; //save for later
-       flightTime = ((float)(p & 0xFF))/10;
-       p = p / 0x100;
-       integer p2 = p & 0xFF;
+       integer p1 = p & 0xFF; p = p / 0x100;
+       integer p2 = p & 0xFF; p = p / 0x100;
+       integer p3 = p & 0xFF; p = p / 0x100;
+       integer p4 = p & 0xFF;
+       flightTime = ((float)p1)/10;
+       float bouy = 5/100;
        if (p2 > 0)
           bouy = p2/100;
        debugSay("rezzed, param1 = " +(string)flightTime +" param2 = " + (string)p2);   
+
        llSetBuoyancy(bouy);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
        setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
-       glow(LINK_THIS,primGlow);
-       setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
        setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
        integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
        float gravity = 0.8;
@@ -79,6 +84,11 @@ default
        float friction = 0.9;
        float density = 500;
        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
+       if (p4 & DEBUG_MASK)
+       {
+          glow(LINK_THIS,primGlow);
+          setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+       }
        mode=FLYING;
        lastPos=llGetPos();
        //if (t==0)  //because 0 means no timer effect
@@ -99,7 +109,7 @@ default
          return;
        }
       vector pos=llGetPos(); 
-      if (llVecDist(pos,lastPos)<0.001)   //if you stop for any reason (edge of world)
+      if (llVecDist(pos,lastPos)<0.010)   //if you stop for any reason (edge of world)
       {
          debugSay("stopped moving");
          llSetTimerEvent(0);
@@ -112,14 +122,14 @@ default
            llSetStatus(STATUS_PHYSICS,FALSE); //stop where you are
            //interpolate your position back to water's surface
            pos=lastPos+(pos-lastPos)*(lastPos.z-wat)/(lastPos.z-pos.z);
-           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_ROTATION,ZERO_ROTATION]);//rotate to 0 so the particle explosion goes up
-           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos]);//sit on the surface
-          // llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR, 0, <0,0,0>, 0.0]);//become invisible, so they only see particles
+           //sit on the surface and rotate to 0 so the particle explosion goes up
+           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_ROTATION,ZERO_ROTATION,PRIM_POSITION,pos]);
+           llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR, 0, <0,0,0>, 0.0]);//become invisible, so they only see particles
            llSetStatus(STATUS_PHANTOM,TRUE);
-           llSay(0,"splash");
+           debugSay("splash");
            makeSplash();
            llSetTimerEvent(2);//give the particles and sound time to happen
-           mode=!FLYING; //then die
+           llDie();
       }
       lastPos=pos;
    }//end timer
@@ -156,13 +166,13 @@ default
 
 boom()
 {
-   //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
-   //debugSay("boom");
+    if (rezParam ==0)
+      return;
    systemSafeSet = systemAge;
-   //setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
-   makeParticles((vector)color1,(vector)color2,texture);
+   makeParticles(effectsType,(vector)color1,(vector)color2,texture);
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
    llSleep(systemAge);
