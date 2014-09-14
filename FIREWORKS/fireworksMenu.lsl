@@ -25,8 +25,8 @@ default
    {
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       toucher=llDetectedKey(0);
-      llDialog(toucher,menuText,buttonsOwner,menuChan);
       handle=llListen(menuChan,"",toucher,"");
+      llDialog(toucher,menuText,buttonsOwner,menuChan);
       llSetTimerEvent(timeout); 
    }
 
