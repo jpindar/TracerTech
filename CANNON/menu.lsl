@@ -7,7 +7,6 @@ key owner;
 key toucher;
 integer handle;
 integer menuChan;
-integer chatChan;
 integer timeout = 10;
 
 #include "lib.lsl"
@@ -15,10 +14,12 @@ integer timeout = 10;
 default
 {
    on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_OWNER) llResetScript();}
 
    state_entry()
    {
       menuChan = randomChan();
+      owner=llGetOwner();
    }
 
    touch_start(integer num)
@@ -37,7 +38,6 @@ default
      if (num & RETURNING_NOTECARD_DATA)
      {
         notecardList = llCSV2List(msg);
-        chatChan = getChatChan();
      }
      if (num & MAINMENU_CMD)
      {
@@ -58,10 +58,14 @@ default
 
 doMenu(key toucher)
 {
-  string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
-  llDialog(toucher,menuText,buttons1,menuChan);
-  handle=llListen(menuChan,"",toucher,"");
-  llSetTimerEvent(timeout);
+   string menuText = "Choose One:";
+
+   if ((toucher == owner) || llDetectedGroup(1))
+   {
+      llDialog(toucher,menuText,buttons1,menuChan);
+      handle=llListen(menuChan,"",toucher,"");
+      llSetTimerEvent(timeout); 
+   }
 }
 
 sendMsg(string msg)
