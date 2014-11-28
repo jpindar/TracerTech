@@ -31,6 +31,7 @@
 #define COLOR_BLUE "<0.00,0.00,1.00>"
 #define COLOR_GOLD "<1.00,0.80,0.20>"
 #define COLOR_YELLOW "<1.00,1.00,0.00>"
+#define COLOR_HOTPINK "<1.0,0.3,0.5>"
 #define COLOR_3 "<0.00,0.80,0.20>"
 
 
