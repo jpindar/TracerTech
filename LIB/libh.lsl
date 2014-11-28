@@ -46,6 +46,8 @@
 #define COLOR_ORANGE "<1.00,0.50,0.00>"
 #define COLOR_PURPLE "<1.00,0.00,1.00>"
 #define COLOR_3 "<0.00,0.80,0.20>"
+#define COLOR_HOTPINK "<1.0,0.3,0.5>"
+
 //string color = "<0.42,0.017,0.59>";
 
 #define SOUND_ROCKETLAUNCH1 "0718a9e6-4632-48f2-af66-664196d7597d"
