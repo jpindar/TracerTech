@@ -55,7 +55,7 @@ default
 
    on_rez(integer p)
    {
-    #define DEBUG_MASK 0x01
+       #define DEBUG_MASK 0x01
        llSetTimerEvent(0);
        if (p == 0)
           {
@@ -72,11 +72,11 @@ default
        if (p2 > 0)
           bouy = p2/100;
        debugSay("rezzed, param1 = " +(string)flightTime +" param2 = " + (string)p2);   
-
        llSetBuoyancy(bouy);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
        setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
+       setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
        setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
        integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
        float gravity = 0.8;
@@ -87,7 +87,6 @@ default
        if (p4 & DEBUG_MASK)
        {
           glow(LINK_THIS,primGlow);
-          setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
        }
        mode=FLYING;
        lastPos=llGetPos();
@@ -124,12 +123,13 @@ default
            pos=lastPos+(pos-lastPos)*(lastPos.z-wat)/(lastPos.z-pos.z);
            //sit on the surface and rotate to 0 so the particle explosion goes up
            llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_ROTATION,ZERO_ROTATION,PRIM_POSITION,pos]);
+           //faster than setAlpha?
            llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR, 0, <0,0,0>, 0.0]);//become invisible, so they only see particles
            llSetStatus(STATUS_PHANTOM,TRUE);
            debugSay("splash");
            makeSplash();
            llSetTimerEvent(2);//give the particles and sound time to happen
-           llDie();
+           mode=!FLYING; //then die
       }
       lastPos=pos;
    }//end timer
@@ -166,8 +166,13 @@ default
 
 boom()
 {
-    if (rezParam ==0)
+   if (rezParam == 0)
+   {
+      debugSay("I would boom, but I wasn't shot");
       return;
+   }
+   //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
+   //debugSay("boom");
    systemSafeSet = systemAge;
    setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
@@ -189,7 +194,6 @@ boom()
        llDie();
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
-
 }
 
 makeSplash()
