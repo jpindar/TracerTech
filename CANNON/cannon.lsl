@@ -11,9 +11,10 @@ string sound = SOUND_PUREBOOM;
 string smokeTexture;
 string lightColor = COLOR_WHITE;
 float speed = 30;  //8 to 20
+integer flightTime = 3;//typically time before explosion, typically  1 to 10 
+integer bouyancy = 5; //typically bouyancy * 100, typically 3 to 12
+float pitch = 0;
 integer payloadIndex = 0; 
-integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
-integer payloadParam2 = 5; //typically bouyancy * 100, typically 3 to 12
 float zOffset = 2.5;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
@@ -32,8 +33,9 @@ default
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          volume = getVolume();
          speed = getSpeed();
-         payloadParam1 = getFlightTime();
-         payloadParam2 = getBouyancy();
+         flightTime = getFlightTime();
+         bouyancy = getBouyancy();
+         pitch = getPitch();
          llOwnerSay("speed " + (string)speed);
          llOwnerSay("volume " + (string)volume);
          //chatChan = getChatChan();
@@ -57,7 +59,7 @@ default
          //chan = getChatChan();
          volume = getVolume();
          speed = getSpeed();
-         payloadParam2 = getBouyancy();
+         bouyancy = getBouyancy();
          llOwnerSay((string)speed);
          llOwnerSay((string)volume);
       }
@@ -94,9 +96,8 @@ msgHandler(string sender, string msg)
 fire()
 {
    string rocket;
-   integer packedParam =  payloadParam1 + (payloadParam2*256);
+   integer packedParam =  flightTime + (bouyancy*256);
    integer i;
-   float pitch = 0;
 
    llPlaySound(sound,volume);
    repeatSound(sound,volume);
