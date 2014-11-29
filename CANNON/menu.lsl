@@ -6,7 +6,6 @@ list buttons1=["fire"];
 key owner;
 key toucher;
 integer handle;
-integer menuChan;
 integer chatChan;
 integer timeout = 10;
 
@@ -18,7 +17,6 @@ default
 
    state_entry()
    {
-      menuChan = randomChan();
       owner=llGetOwner();
    }
 
@@ -59,8 +57,9 @@ default
 
 doMenu(key toucher)
 {
-  string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
-
+   string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+   integer menuChan = randomChan();
+   
    if ((toucher == owner) || llDetectedGroup(1))
    {
       llDialog(toucher,menuText,buttons1,menuChan);
