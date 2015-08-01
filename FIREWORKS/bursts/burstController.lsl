@@ -14,10 +14,10 @@ string color1 = COLOR_WHITE;
 string color2 = COLOR_WHITE;
 string color3 = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
+float glowAmount = 0.0;
 key owner; 
 string preloadPrimName = "preloader";
 integer preloadFace = 0;
-float glowAmount = 0.0;
 integer handle;
 integer chatChan = UNKNOWN;
 key id = "";
@@ -32,14 +32,14 @@ default
    {
       llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       if(doneReadingNotecard == FALSE) state readNotecardToList;
-      chatChan = getChatChan();
+      chatChan = getChatChan(notecardList);
       owner = llGetOwner();
-      //id  = owner;
+      //id  = llGetOwner();
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
    }
 
-   //link mmessages come from the menu script
+   //link messages come from the menu script
    link_message(integer sender, integer num, string str, key id) //from the menu script
    {
        //debugSay("heard link message " + (string)num + str);
@@ -88,13 +88,15 @@ sendMsg(string msg)
 
 fire()
 {
-    string fireMsg = color1+color2+color3;
-    //debugSay("sending fire linkmessage" + fireMsg + texture);
-    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
-    //llMessageLinked(LINK_SET, FIRE_CMD, color1+color1, texture);
-    //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, color2+color2, texture);
-    //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, color3+color3, texture);
+    //string fireMsg1 = color1+color2+color3;
+    string fireMsg1 = color1+color1+color1;
+    fireMsg2 = color2+color2+color2;
+    fireMsg3 = color3+color3+color3;
+
+    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
+    llSleep(delay);
+    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
+    llSleep(delay);
+    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg3, texture);
 }
 
