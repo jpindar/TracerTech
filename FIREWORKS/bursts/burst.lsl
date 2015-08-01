@@ -8,10 +8,10 @@
 string color1; 
 string color2;
 string color3;
-string lightColor = COLOR_WHITE;
-string texture = TEXTURE_CLASSIC;
+string lightColor;
+string texture;
 string sound = SOUND_BURST1;
-float glowAmount = 1.0;
+float glowAmount = 1.0; // or 0.2
 integer emitter = LINK_THIS;
 float intensity = 1.0;
 float radius = 20;
@@ -53,19 +53,19 @@ default
 fire()
 {
    float oldAlpha = llGetAlpha(ALL_SIDES);
-   llSetLinkPrimitiveParams(emitter,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   //fast or not?
+   llSetLinkPrimitiveParamsFast(emitter,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
    glow(emitter,glowAmount);
    integer numOfEmitters = 1;
    // llPlaySound(sound, volume/numOfEmitters);
    llTriggerSound(sound, volume/numOfEmitters);
    repeatSound(sound,volume/numOfEmitters);
-   SystemSafeSet = SystemAge;
    makeParticles(emitter,color1,color2);
    llSleep(0.5);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    glow(emitter,0.0);
-   llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   setParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
    llSleep(SystemAge+1);// +1?
    SystemSafeSet = 0.0;
    llLinkParticleSystem(emitter,[]);
@@ -99,6 +99,7 @@ makeParticles(integer link, string color1, string color2)
        PSYS_PART_FOLLOW_VELOCITY_MASK |
        PSYS_PART_INTERP_COLOR_MASK |
        PSYS_PART_INTERP_SCALE_MASK
+        // | PSYS_PART_WIND_MASK
     ]);
    SystemSafeSet = 0.0;
 }
