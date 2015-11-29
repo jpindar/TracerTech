@@ -1,22 +1,26 @@
 ///////////////////////////
-// rocket launcher v2.0   2014/8/30
-//copyright Tracer Tech aka Tracer Ping 2014
+// rocket launcher v2.1   2015/11/29
+// copyright Tracer Tech aka Tracer Ping 2014
 // listens for commands on either a chat channel
 // or a link message
 ////////////////////////////
 #define NOTECARD_IN_THIS_PRIM
 /////////////////////
 #include "lib.lsl"
-integer debug = TRUE;
+//integer debug = TRUE;
 string sound = SOUND_ROCKETLAUNCH1;
-float speed = 15;  //8 to 25 // 20
+list parameters = [15,3,12];//speed, flight time, bouyancy
+//list parameters = [20,2,3];//speed, flight time, bouyancy
+//speed typically 8 to 25 //15, 20
+//payloadParam1, typ. flight time,  typically  1 to 10 , 2
+//payloadParam2 typically bouyancy * 100, typically 3 to 12
 integer payloadIndex = 0; 
-integer payloadParam1 = 3;//typically time before explosion, typically  1 to 10 
-integer payloadParam2 = 12; //typically bouyancy * 100, typically 3 to 12
 float zOffset = 0.6;
+float glowOnAmount = 0.0; //or 0.05
+integer access = ACCESS_PUBLIC;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
-key owner;
+key owner = "";
 integer handle;
 integer chatChan = UNKNOWN;
 key id = "";
@@ -29,10 +33,10 @@ default
    state_entry()
    {
       //llPreloadSound(sound);
-      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
+      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
-         chatChan = getChatChan();
+         chatChan = getChatChan(notecardList);
          owner = llGetOwner();
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
@@ -59,6 +63,10 @@ default
 
 msgHandler(string sender, string msg)
 {
+   //if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+   //    return;
+   //if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
+   //   return;
    //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
@@ -78,14 +86,16 @@ msgHandler(string sender, string msg)
 fire()
 {
    string rocket;
-   integer packedParam =  payloadParam1 + (payloadParam2*256);
+   integer packedParam;
    integer i;
-
-  
-    llPlaySound(sound,volume);
-   repeatSound(sound, volume);
+   float speed;
+   llPlaySound(sound,volume);
+   repeatSound(sound,volume);
    integer n = llGetInventoryNumber(INVENTORY_OBJECT);
    rotation rot = llGetRot();
+   speed = llList2Float(parameters,0);
+   packedParam = llList2Integer(parameters, 1)+(llList2Integer(parameters,2)*256);
+   //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
    for (i = 0; i<n; i++)
