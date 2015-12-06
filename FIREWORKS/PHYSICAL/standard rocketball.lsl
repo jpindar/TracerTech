@@ -39,7 +39,7 @@ default
    {
        float bouy = 5;
        rezParam = p;
-       integer t = p & 0xFF;
+       float t = ((float)(p & 0xFF))/10.0;
        integer p2 = (p & 0xFF00) / 256;
        integer p3 = (p & 0xFF0000);
        if (p & DEBUG_MASK)
@@ -67,7 +67,13 @@ default
            t = 1;
         if (rezParam>0)
           llSetTimerEvent(t);
+       debugSay("time is " + (string)t + " param2 is " + (string) bouy);
    }
+
+    state_entry()
+    {
+       llParticleSystem([]);
+    }
 
    timer()
    {
