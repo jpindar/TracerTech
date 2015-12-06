@@ -1,5 +1,5 @@
 ////////////////////////
-//fireworks menu v1.0
+//fireworks menu v1.1
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
 //string menutext="\nChoose One:";
@@ -12,7 +12,7 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-
+integer menuMode = 1;
 #include "lib.lsl"
  
 default
@@ -31,8 +31,15 @@ default
       integer timeout = 10;
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       toucher=llDetectedKey(0);
+      if (menuMode == 0)
+      {
+          sendMsg("fire");
+      }
+      else
+      {
+          llDialog(toucher,menuText,buttonsOwner,menuChan);
+      }
       handle=llListen(menuChan,"",toucher,"");
-      llDialog(toucher,menuText,buttonsOwner,menuChan);
       llSetTimerEvent(timeout); 
    }
 
@@ -49,6 +56,7 @@ default
      {
          notecardList = llCSV2List(msg);
          chatChan = getChatChan(notecardList);
+         menuMode = getMenuMode(notecardList);
      }
    }
 
@@ -83,6 +91,6 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   //debugSay(msg); 
+   debugSay(msg); 
 }
 
