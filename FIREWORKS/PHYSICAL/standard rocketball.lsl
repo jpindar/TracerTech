@@ -41,6 +41,12 @@ default
        rezParam = p;
        integer t = p & 0xFF;
        integer p2 = (p & 0xFF00) / 256;
+       integer p3 = (p & 0xFF0000);
+       if (p & DEBUG_MASK)
+         debug = TRUE;
+       else
+         debug = FALSE;;
+       debugSay("rezParam = " +(string) p); 
        if (p2 > 0)
           bouy = p2;
        llSetBuoyancy(bouy/100);
