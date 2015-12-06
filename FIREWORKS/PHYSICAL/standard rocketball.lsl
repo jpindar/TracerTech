@@ -65,7 +65,8 @@ default
        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
        if (t<1)  //because 0 means no timer effect
            t = 1;
-       llSetTimerEvent(t);
+        if (rezParam>0)
+          llSetTimerEvent(t);
    }
 
    timer()
@@ -94,7 +95,8 @@ default
        {
           // if (llVecMag(llDetectedVel(f)) >= breakSpeed)
            {
-               boom();
+              if (rezParam>0)
+                  boom();
            }
        } while (++f < n);
    }
@@ -102,7 +104,8 @@ default
    land_collision_start(vector pos)
    {
       debugSay("collision with land");
-      boom();
+      if (rezParam>0)
+         boom();
    }
    #endif
 
