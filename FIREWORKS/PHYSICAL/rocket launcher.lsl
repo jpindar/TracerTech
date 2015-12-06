@@ -96,6 +96,8 @@ fire()
    rotation rot = llGetRot();
    speed = llList2Float(parameters,0);
    packedParam = llList2Integer(parameters, 1)+(llList2Integer(parameters,2)*256);
+   //uncomment next line to make payload say debug messages
+   //packedParam = packedParam | DEBUG_MASK;
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
