@@ -11,19 +11,19 @@ key toucher;
 integer handle;
 integer chatChan;
 integer menuChan;
-integer access;
+integer access = ACCESS_PUBLIC;
 integer menuMode = 1;
 #include "lib.lsl"
  
 default
 {
    on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
    state_entry()
    {
       menuChan = randomChan();
       owner=llGetOwner();
-      access = ACCESS_PUBLIC;
    }
 
    touch_start(integer num)
