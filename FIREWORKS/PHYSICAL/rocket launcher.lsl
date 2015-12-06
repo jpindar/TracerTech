@@ -38,6 +38,7 @@ default
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          chatChan = getChatChan(notecardList);
          owner = llGetOwner();
+         volume = getVolume();
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
