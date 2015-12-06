@@ -37,7 +37,7 @@ makeParticles1(vector color1, vector color2, string texture)
             PSYS_PART_START_SCALE,<0.500000,0.500000,0.000000>,
             PSYS_PART_END_SCALE,<0.500000,0.600000,0.000000>,
             PSYS_SRC_TEXTURE,texture,
-            PSYS_SRC_MAX_AGE,0,
+            PSYS_SRC_MAX_AGE,systemSafeSet,
             PSYS_PART_MAX_AGE,5,
             PSYS_SRC_BURST_RATE,0.3,
             PSYS_SRC_BURST_PART_COUNT,20,
@@ -69,7 +69,7 @@ makeParticles2(vector color1, vector color2, string texture)
         PSYS_SRC_BURST_PART_COUNT, 500,
         PSYS_SRC_BURST_RATE, 0.2,
         PSYS_PART_MAX_AGE, 5.0,
-        PSYS_SRC_MAX_AGE, systemAge,
+        PSYS_SRC_MAX_AGE, systemSafeSet,
         PSYS_SRC_PATTERN, 2,
         PSYS_SRC_BURST_SPEED_MIN, 2.0,
         PSYS_SRC_BURST_SPEED_MAX, 2.0,
@@ -96,7 +96,7 @@ makeParticles3(vector color1, vector color2, string texture)
         22, 0.01, // PSYS_SRC_ANGLE_BEGIN
         23, 0.174714, // PSYS_SRC_ANGLE_END
         2, 1, // PSYS_PART_START_ALPHA
-        19, 0.871257, // PSYS_SRC_MAX_AGE
+        19, systemSafeSet, // PSYS_SRC_MAX_AGE
         7, 2.221704, // PSYS_PART_MAX_AGE
         13, 0.03, // PSYS_SRC_BURST_RATE
         17, 1.259999, // PSYS_SRC_BURST_SPEED_MIN
@@ -115,13 +115,14 @@ makeParticles3(vector color1, vector color2, string texture)
 	
 makeParticles4(vector color1, vector color2, string texture)
     { 
+    /*
 	float systemAge = 1.75;
         systemSafeSet = systemAge;
         //texture = "6189b78f-c7e2-4508-9aa2-0881772c7e27";
         llParticleSystem([
         PSYS_SRC_TEXTURE, texture,
         PSYS_PART_START_SCALE, <0.5, 0.5, FALSE>,
-        PSYS_PART_END_SCALE,   <0.5, 0.5, FALSE>,
+        PSYS_PART_END_SCALE,   <2.0, 2.0, FALSE>,
         PSYS_PART_START_COLOR, color1,
         PSYS_PART_END_COLOR, color2,
         PSYS_PART_START_ALPHA, 1.0,
@@ -141,6 +142,7 @@ makeParticles4(vector color1, vector color2, string texture)
                      | PSYS_PART_EMISSIVE_MASK
                      | PSYS_PART_FOLLOW_VELOCITY_MASK)
         ]);
+	*/
     }
 
 makeParticles5(vector color1, vector color2, string texture)
@@ -186,7 +188,7 @@ makeParticles6(vector color1, vector color2, string texture)
         PSYS_SRC_BURST_PART_COUNT, 500,
         PSYS_SRC_BURST_RATE, 0.2,
         PSYS_PART_MAX_AGE, 5.0,
-        PSYS_SRC_MAX_AGE, systemAge,
+        PSYS_SRC_MAX_AGE, systemSafeSet,
         PSYS_SRC_PATTERN, 2,
         PSYS_SRC_BURST_SPEED_MIN, 2.0,
         PSYS_SRC_BURST_SPEED_MAX, 2.0,

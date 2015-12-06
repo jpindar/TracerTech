@@ -5,8 +5,8 @@
 
 debugSay(string msg)
 {
-//if (debug)
-  llOwnerSay(msg);
+   if (debug)
+   llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
 }
 
@@ -75,10 +75,19 @@ string getNotecardName(string d)
   return s;    
 }
 
-integer getChatChan()
+integer getChatChan(list notecardList)
 {
    integer n = 0;
    integer ptr = llListFindList(notecardList,["channel"]);
+   if (ptr > -1)
+       n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+   return n;
+}
+
+integer getMenuMode(list notecardList)
+{
+   integer n = -1;
+   integer ptr = llListFindList(notecardList,["menu"]);
    if (ptr > -1)
        n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
    return n;
@@ -102,6 +111,16 @@ float getSpeed()
         f = llList2Float(notecardList,ptr+1);
     return f;
 }
+
+float getDelay(list notecardList)
+{
+    #define DEFAULT_DELAY 20.0;
+    float f = DEFAULT_DELAY;
+    integer ptr = llListFindList(notecardList,["delay"]);
+    if (ptr > -1)
+        f = llList2Float(notecardList,ptr+1);
+    return f;
+}
 integer getFlightTime()
 {
     #define DEFAULT_TIME 3;
@@ -121,6 +140,17 @@ integer getBouyancy()
         f = llList2Integer(notecardList,ptr+1);
     return f;
 }
+
+integer getPitch()
+{
+    #define DEFAULT_PITCH 0;
+    integer f = DEFAULT_PITCH;
+    integer ptr = llListFindList(notecardList,["pitch"]);
+    if (ptr > -1)
+        f = llList2Integer(notecardList,ptr+1);
+    return f;
+}
+
 integer getLinkWithName(string name) {
     integer i = llGetLinkNumber() != 0;   // Start at zero (single prim) or 1 (two or more prims)
     integer x = llGetNumberOfPrims() + i; // [0, 1) or [1, llGetNumberOfPrims()]
