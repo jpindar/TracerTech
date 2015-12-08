@@ -22,12 +22,15 @@ state readNotecardToList
 
     dataserver(key query_id, string data)
     {
-        if ((Query1 == query_id) && (data != EOF) && (data != ""))
+	    //   if ((Query1 == query_id) && (data != EOF) && (data != ""))    
+        if ((Query1 == query_id) && (data != EOF) )
         {
-            notecardList = notecardList + llCSV2List(data);
+		    if ((llSubStringIndex(data,"//") == -1) && (data != ""))  
+                notecardList = notecardList + llCSV2List(data);
             Query1 = llGetNotecardLine(notecardName, notecardLineIndex++);
         }
-        if ((data == EOF) || (data == ""))
+		//        if ((data == EOF) || (data == ""))
+        if ((data == EOF) )
         {
             doneReadingNotecard = TRUE;
 		    //debugSay(llList2CSV(notecardList));
