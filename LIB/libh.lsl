@@ -11,8 +11,8 @@
 
 #define ACCESS_PUBLIC 1
 #define ACCESS_GROUP 2
-#define ACCESS_GROUP_ONLY 4
-#define ACCESS_OWNER 8
+//#define ACCESS_GROUP_ONLY 4
+#define ACCESS_OWNER 3
 
 #define FIRE_CMD 1
 #define PRELOAD_TEXTURE_CMD 2
