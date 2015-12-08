@@ -93,6 +93,24 @@ integer getMenuMode(list notecardList)
    return n;
 }
 
+integer getexplodeOnCollision(list notecardList)
+{
+   integer n = 0;
+   integer ptr = llListFindList(notecardList,["collision"]);
+   if (ptr > -1)
+       n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+   return n;
+}
+
+integer getAccess(list notecardList)
+{
+   integer n = ACCESS_PUBLIC;
+   integer ptr = llListFindList(notecardList,["access"]);
+   if (ptr > -1)
+       n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+   return n;
+}
+
 float getVolume()
 {
     float f = 1.0;
