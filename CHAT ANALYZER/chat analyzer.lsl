@@ -13,7 +13,8 @@ default
 
    listen( integer chan, string name, key id, string msg )
    {
-      llSay(DEBUG_CHANNEL, "ch "+(string)chan +" <"+name+"><"+(string)id+"><"+msg+">");
+      //llSay(DEBUG_CHANNEL, "chan "+(string)chan +" <" + name +"> <"+(string)id+"><"+msg+">");
+      llOwnerSay("chan "+(string)chan +" <" + name +"> "+(string)id+ " <" + msg +">");
    }
 
 
