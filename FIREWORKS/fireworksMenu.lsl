@@ -3,10 +3,10 @@
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
 list buttonsOwner=["fire","hide","show"];
+//list buttonsGroup=["hide","show","fire"];
+//list buttonsPublic=["fire"];
 key owner;
-key toucher;
 integer handle;
-integer menuChan;
 integer chatChan;
 integer timeout = 10;
 
@@ -16,14 +16,12 @@ default
 {
    on_rez(integer n){llResetScript();}
 
-   state_entry()
-   {
-      menuChan = randomChan();
-   }
-
    touch_start(integer num)
    {
+      key toucher;
+      integer timeout = 10;
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+      integer menuChan = randomChan();
       toucher=llDetectedKey(0);
       handle=llListen(menuChan,"",toucher,"");
       llDialog(toucher,menuText,buttonsOwner,menuChan);
@@ -38,9 +36,12 @@ default
    
   link_message( integer sender, integer num, string msg, key id )
   {
+     list notecardList;
      if (num & RETURNING_NOTECARD_DATA)
-        notecardList = llCSV2List(msg);
-     chatChan = getChatChan();
+     {
+         notecardList = llCSV2List(msg);
+         chatChan = getChatChan(notecardList);
+     }
    }
 
    listen(integer chan,string name,key id,string button)  //listen to dialog box
