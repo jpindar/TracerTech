@@ -1,5 +1,5 @@
 ///////////////////////////
-// rocket launcher v2.1   2015/11/29
+// rocket launcher v2.2   2015/12/05
 // copyright Tracer Tech aka Tracer Ping 2014
 // listens for commands on either a chat channel
 // or a link message
@@ -9,10 +9,10 @@
 #include "lib.lsl"
 //integer debug = TRUE;
 string sound = SOUND_ROCKETLAUNCH1;
-list parameters = [15,3,12];//speed, flight time, bouyancy
+list parameters = [17,19,12];//speed, flight time, bouyancy
 //list parameters = [20,2,3];//speed, flight time, bouyancy
 //speed typically 8 to 25 //15, 20
-//payloadParam1, typ. flight time,  typically  1 to 10 , 2
+//payloadParam1, typ. flight time*10,  typically  10 to 20
 //payloadParam2 typically bouyancy * 100, typically 3 to 12
 integer payloadIndex = 0; 
 float zOffset = 0.6;
@@ -24,6 +24,7 @@ key owner = "";
 integer handle;
 integer chatChan = UNKNOWN;
 key id = "";
+integer explodeOnCollision = 0;
 
 default
 {
@@ -39,6 +40,8 @@ default
          chatChan = getChatChan(notecardList);
          owner = llGetOwner();
          volume = getVolume();
+         explodeOnCollision = getexplodeOnCollision(notecardList);
+         access = getAccess(notecardList);
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
@@ -54,6 +57,11 @@ default
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
+       if ((access == ACCESS_OWNER) && (!sameOwner(id)) )
+          return;
+       if ((access == ACCESS_GROUP) && (!llSameGroup(id)) )
+          if(owner != id)
+              return;
        //debugSay("got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
@@ -64,10 +72,6 @@ default
 
 msgHandler(string sender, string msg)
 {
-   //if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
-   //    return;
-   //if ((access == ACCESS_GROUP) && (!llSameGroup(sender)))
-   //   return;
    //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
@@ -98,6 +102,10 @@ fire()
    packedParam = llList2Integer(parameters, 1)+(llList2Integer(parameters,2)*256);
    //uncomment next line to make payload say debug messages
    //packedParam = packedParam | DEBUG_MASK;
+   #if defined EXPLODE_ON_COLLISION
+   if (explodeOnCollision >0)
+      packedParam = packedParam | COLLISION_MASK;
+   #endif
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
