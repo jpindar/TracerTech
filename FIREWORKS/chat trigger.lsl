@@ -2,17 +2,23 @@
 // Tracer Tech
 // sample chat trigger script
 // reads channel from prim's description
-// or object's description
 /////////////////////////
+
 integer channel;
+key owner;
+key toucher;
 
 default
 {
     touch_start(integer n)
     {
-	    //channel = (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC]), 0);
+        owner=llGetOwner();
+        toucher=llDetectedKey(0);
         channel = (integer)llGetObjectDesc();
+        // if (toucher == owner) 
+        //if (llSameGroup(toucher))
         llRegionSay(channel, "fire");    
     }
 
 }
+
