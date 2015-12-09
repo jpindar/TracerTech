@@ -1,5 +1,5 @@
 /////////////////////////
-// rocketball
+// rocketball 2.1
 // this goes in the projectile, which in turn
 // goes in the launcher
 ////////////////////////
@@ -132,7 +132,7 @@ boom()
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
 
-   makeParticles((vector)color1,(vector)color2,texture);
+   makeParticles(effectsType,(vector)color1,(vector)color2,texture);
 
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
@@ -140,6 +140,7 @@ boom()
 
    llParticleSystem([]);
    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
+   llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llSleep(life);
    llSetTimerEvent(0);
    if (rezParam !=0)
