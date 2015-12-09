@@ -1,17 +1,18 @@
 ////////////////////////
-//fireworks menu v1.1
+//fireworks menu v1.2
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
 //string menutext="\nChoose One:";
 list buttonsOwner=["fire","hide","show"];
 //list buttonsGroup=["hide","show","fire"];
+list buttonsAll=["fire"];
 //list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
 integer chatChan;
 integer menuChan;
-integer access = ACCESS_PUBLIC;
+integer access;
 integer menuMode = 1;
 #include "lib.lsl"
  
@@ -24,20 +25,51 @@ default
    {
       menuChan = randomChan();
       owner=llGetOwner();
+      access = ACCESS_PUBLIC;
    }
 
    touch_start(integer num)
    {
       integer timeout = 10;
-      string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+      //string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+      string menuText  ="_";
+      //llOwnerSay("access = "+(string)access);
       toucher=llDetectedKey(0);
-      if (menuMode == 0)
+      if (toucher == owner)
       {
-          sendMsg("fire");
+          if (menuMode == 0)
+          {
+             sendMsg("fire");
+           }
+           else
+           {
+              llDialog(toucher,menuText,buttonsOwner,menuChan);
+           }
       }
-      else
+      else if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
       {
-          llDialog(toucher,menuText,buttonsOwner,menuChan);
+          //else if ((access == ACCESS_GROUP) && (llDetectedGroup(0)))
+          if (menuMode == 0)
+          {
+             sendMsg("fire");
+          }
+          else
+          {
+             llDialog(toucher,menuText,buttonsAll,menuChan);
+          }
+          //llOwnerSay("access = group");
+      }
+      else if ((access == ACCESS_PUBLIC)) 
+      {
+          if (menuMode == 0)
+          {
+             sendMsg("fire");
+          }
+          else
+          {
+              llDialog(toucher,menuText,buttonsAll,menuChan);
+          }
+          //llOwnerSay("access = public");
       }
       handle=llListen(menuChan,"",toucher,"");
       llSetTimerEvent(timeout); 
@@ -57,6 +89,8 @@ default
          notecardList = llCSV2List(msg);
          chatChan = getChatChan(notecardList);
          menuMode = getMenuMode(notecardList);
+         access = getAccess(notecardList);
+         //llOwnerSay("access = "+(string)access);
      }
    }
 
@@ -91,6 +125,8 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
+   //llMessageLinked(LINK_SET, 0, msg, "");
+   //llMessageLinked(LINK_SET, 0, msg, "");
    debugSay(msg); 
 }
 
