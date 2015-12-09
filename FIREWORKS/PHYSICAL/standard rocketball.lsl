@@ -3,6 +3,7 @@
 // this goes in the projectile, which in turn
 // goes in the launcher
 ////////////////////////
+#define EXPLODE_ON_COLLISION
 #include "lib.lsl"
 integer effectsType = 2;  //1to 4
 
@@ -30,6 +31,7 @@ vector endSize = <1.9,1.9,1.9>;
 float life = 1;
 float SystemSafeSet = 0.00;
 float systemAge = 1.0;
+integer explodeOnCollision = 0;
 
 #include "effectslib.lsl"
 
@@ -45,8 +47,10 @@ default
        if (p & DEBUG_MASK)
          debug = TRUE;
        else
-         debug = FALSE;;
-       debugSay("rezParam = " +(string) p); 
+         debug = FALSE;
+       if (p & COLLISION_MASK)
+           explodeOnCollision = 1; 
+       //debugSay("rezParam = " +(string) p); 
        if (p2 > 0)
           bouy = p2;
        llSetBuoyancy(bouy/100);
@@ -88,7 +92,8 @@ default
        integer f = 0;
        key id;
        vector spd;
-
+       if (explodeOnCollision==0)
+         return;
        debugSay(llGetScriptName() + ": collision ");
        debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
        for (f=0; f<n; f++)
@@ -109,6 +114,8 @@ default
 
    land_collision_start(vector pos)
    {
+      if (explodeOnCollision==0)
+         return;
       debugSay("collision with land");
       if (rezParam>0)
          boom();
