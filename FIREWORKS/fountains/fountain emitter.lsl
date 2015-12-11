@@ -55,7 +55,6 @@ fire()
     llSetLinkPrimitiveParamsFast(emitter,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
     llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
     glow(emitter,1.0);
-    SystemSafeSet = SystemAge;
     makeParticles(emitter,color1,color2);
     llSleep(SystemAge);
     SystemSafeSet = 0.0;
@@ -67,6 +66,7 @@ fire()
 
 makeParticles(integer link, string color1, string color2)
 {
+    SystemSafeSet = SystemAge;
     llLinkParticleSystem(link,[
     PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
     PSYS_SRC_BURST_RADIUS,      0.35, // 0.3 to 0.4
@@ -94,5 +94,6 @@ makeParticles(integer link, string color1, string color2)
        //PSYS_PART_FOLLOW_SRC_MASK |
        PSYS_PART_FOLLOW_VELOCITY_MASK
     ]);
+   SystemSafeSet = 0.0;
 }
 
