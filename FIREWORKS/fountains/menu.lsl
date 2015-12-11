@@ -25,8 +25,8 @@ default
    {
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       toucher=llDetectedKey(0);
-      llDialog(toucher,menuText,buttonsOwner,menuChan);
       handle=llListen(menuChan,"",toucher,"");
+      llDialog(toucher,menuText,buttonsOwner,menuChan);
       llSetTimerEvent(timeout); 
    }
 
@@ -65,8 +65,9 @@ default
 sendMsg(string msg)
 {
    #if defined REMOTE_MENU
-      llSay(chatChan,msg); 
+      llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
+   debugSay(msg); 
 }
 
