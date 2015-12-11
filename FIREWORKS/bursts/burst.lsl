@@ -8,7 +8,7 @@
 string color1; 
 string color2;
 string color3;
-string lightColor;
+string lightColor = COLOR_WHITE;
 string texture;
 string sound = SOUND_BURST1;
 float glowAmount = 1.0; // or 0.2
@@ -98,8 +98,8 @@ makeParticles(integer link, string color1, string color2)
        PSYS_PART_EMISSIVE_MASK |
        PSYS_PART_FOLLOW_VELOCITY_MASK |
        PSYS_PART_INTERP_COLOR_MASK |
-       PSYS_PART_INTERP_SCALE_MASK
-        // | PSYS_PART_WIND_MASK
+       PSYS_PART_INTERP_SCALE_MASK |
+       PSYS_PART_WIND_MASK
     ]);
    SystemSafeSet = 0.0;
 }
