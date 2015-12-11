@@ -9,13 +9,12 @@
 ////////////////////////////
 #include "lib.lsl"
 integer debug = FALSE;
-
 string color1 = COLOR_RED;
 string color2 = COLOR_WHITE;
 string color3 = COLOR_BLUE;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
-string preloadPrimName = "base";
+string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
 integer handle;
@@ -54,7 +53,7 @@ default
    }
 }
 
-//alas, this has to be after the default state
+//this has to be after the default state
 #include "readNotecardToList.lsl"
 
 msgHandler(string sender, string msg)
@@ -70,7 +69,7 @@ msgHandler(string sender, string msg)
        llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
        llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
    }
-   else if (msg == "show" )
+   else if (msg == "show")
    {
        llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
        llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowAmount]);
@@ -79,13 +78,13 @@ msgHandler(string sender, string msg)
 
 fire()
 {
-    string fireMsg = color1+color2+color3;
-    //debugSay("sending fire linkmessage" + fireMsg + texture);
-    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
-    //llMessageLinked(LINK_SET, FIRE_CMD, color1+color1, texture);
-    //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, color2+color2, texture);
-    //llSleep(delay);
-    //llMessageLinked( LINK_SET, FIRE_CMD, color3+color3, texture);
+   string fireMsg = color1+color2+color3;
+   //debugSay("sending fire linkmessage" + fireMsg + texture);
+   llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
+   //llMessageLinked(LINK_SET, FIRE_CMD, color1+color1, texture);
+   //llSleep(delay);
+   //llMessageLinked( LINK_SET, FIRE_CMD, color2+color2, texture);
+   //llSleep(delay);
+   //llMessageLinked( LINK_SET, FIRE_CMD, color3+color3, texture);
 }
 
