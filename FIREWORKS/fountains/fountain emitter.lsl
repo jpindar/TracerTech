@@ -4,11 +4,12 @@
 ///////////////////////////
 #include "lib.lsl"
 
-vector color1 =(vector)COLOR_WHITE;
-vector color2 =(vector)COLOR_WHITE;
+string color1; 
+string color2;
+string color3;
+string lightColor = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 string sound = SOUND_FOUNTAIN1;
-vector lightColor = (vector)COLOR_WHITE;
 integer emitter = 3;
 float speed = 10; //5 to 10
 float omega = 0; //10*PI;  //0 to 10*PI
@@ -33,8 +34,8 @@ default
         {
            if (llStringLength(msg) > 0)
            {
-              color1 = (vector)llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
-              color2 = (vector)llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
+              color1 = llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
+              color2 = llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
            }
            texture = id;
            fire();
@@ -50,7 +51,7 @@ fire()
     llTriggerSound(sound, volume/numOfEmitters);
     repeatSound(sound,volume/numOfEmitters);
     llSetLinkPrimitiveParamsFast(emitter,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
-    llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
+    llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
     glow(emitter,1.0);
     SystemSafeSet = SystemAge;
     makeParticles(emitter,color1,color2);
@@ -62,15 +63,15 @@ fire()
     llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
 }
 
-makeParticles(integer link, vector color1, vector color2)
+makeParticles(integer link, string color1, string color2)
 {
     llLinkParticleSystem(link,[
     PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
     PSYS_SRC_BURST_RADIUS,      0.35, // 0.3 to 0.4
     PSYS_SRC_ANGLE_BEGIN,       PI/14, // PI/30 to PI/14
     PSYS_SRC_ANGLE_END,         0,
-    PSYS_PART_START_COLOR,      color1,
-    PSYS_PART_END_COLOR,        color2,
+    PSYS_PART_START_COLOR,      (vector)color1,
+    PSYS_PART_END_COLOR,        (vector)color2,
     PSYS_PART_START_ALPHA,      1.0,
     PSYS_PART_END_ALPHA,        0.3,
     PSYS_PART_START_SCALE,      <1.0,1.0,0.0>, //0.3 to 1.0
