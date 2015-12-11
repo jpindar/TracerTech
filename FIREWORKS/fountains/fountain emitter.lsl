@@ -10,7 +10,8 @@ string color3;
 string lightColor = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 string sound = SOUND_FOUNTAIN1;
-integer emitter = 3;
+integer emitter;
+string emitterName = "e1";
 float speed = 10; //5 to 10
 float omega = 0; //10*PI;  //0 to 10*PI
 float SystemAge = 4.5; //4 to 4.5
@@ -22,6 +23,7 @@ default
 
     state_entry()
     {
+       emitter = getLinkWithName(emitterName);
        llLinkParticleSystem(emitter,[]);
     }
 
