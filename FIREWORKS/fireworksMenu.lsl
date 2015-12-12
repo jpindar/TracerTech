@@ -7,7 +7,10 @@ list buttonsOwner=["fire","hide","show"];
 //list buttonsPublic=["fire"];
 key owner;
 integer handle;
+integer menuChan;
 integer chatChan;
+integer menuMode = 1;
+integer access;
 integer timeout = 10;
 
 #include "lib.lsl"
@@ -15,17 +18,32 @@ integer timeout = 10;
 default
 {
    on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
+
+   state_entry()
+   {
+      menuChan = randomChan();
+      owner=llGetOwner();
+      access = ACCESS_PUBLIC;
+   }
 
    touch_start(integer num)
    {
-      key toucher;
-      integer timeout = 10;
-      string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
-      integer menuChan = randomChan();
-      toucher=llDetectedKey(0);
-      handle=llListen(menuChan,"",toucher,"");
-      llDialog(toucher,menuText,buttonsOwner,menuChan);
-      llSetTimerEvent(timeout); 
+       //llOwnerSay("menumode  "+ (string)menuMode);
+      if (menuMode == 0)
+      {
+          sendMsg("fire");
+      }
+      else
+      {
+         key toucher;
+         integer timeout = 10;
+         string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+         toucher=llDetectedKey(0);
+         llDialog(toucher,menuText,buttonsOwner,menuChan);
+         handle=llListen(menuChan,"",toucher,"");
+         llSetTimerEvent(timeout); 
+      }
    }
 
    timer()
@@ -41,6 +59,7 @@ default
      {
          notecardList = llCSV2List(msg);
          chatChan = getChatChan(notecardList);
+         menuMode = getMenuMode(notecardList);
      }
    }
 
@@ -69,6 +88,6 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   //debugSay(msg); 
+   debugSay(msg); 
 }
 
