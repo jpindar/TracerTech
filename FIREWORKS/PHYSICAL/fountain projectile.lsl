@@ -3,12 +3,11 @@
 // this goes in the projectile, which in turn
 // goes in the launcher
 ////////////////////////
+///#define EXPLODE_ON_COLLISION
 #include "lib.lsl"
 
 string texture = TEXTURE_CLASSIC;
-
 integer rezParam;
-
 vector particleColor = (vector)COLOR_GOLD;
 vector color1 = (vector)COLOR_GOLD;
 vector color2 = (vector)COLOR_GOLD;
@@ -19,13 +18,76 @@ float radius = 20; //10 to 20
 float falloff = 0.02; //0.02 to 0.75
 float primGlow = 0.4;
 float breakSpeed = 10;
-float primSize = 0.3;
-string sound1 = SOUND_FOUNTAIN1;
-
-float SystemSafeSet = 0.00;//prevents erroneous particle emissions
-float SystemAge = 99;//life span of the particle system
+float primSize = 0.1;
+string sound1 = SOUND_PUREBOOM;
 float speed = 10;
 integer time;
+float SystemSafeSet = 0.00;//prevents erroneous particle emissions
+float SystemAge = 99;//life span of the particle system
+
+default
+{
+    state_entry()
+    {
+       llParticleSystem([]);
+    }
+
+   on_rez(integer p)
+   {
+       float bouy = 5;
+       rezParam = p;
+       integer t = p & 0xFF;
+       time = t;
+       SystemAge =t*2;
+       integer p2 = (p & 0xFF00) / 16; 
+       if (p2 > 0)
+          bouy = p2;
+       llSetBuoyancy(bouy/100);
+       //llCollisionSound("", 1.0);  //  Disable collision sounds
+       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+       setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
+       rotation rot = llGetRot();
+       //rot.z = -rot.z;
+       //rot.x = -rot.x;  
+       rot.y = -rot.y; 
+       llSetRot(rot); 
+       setParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,primGlow]);
+       setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+       setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+       setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
+       integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
+       float gravity = 0.8;
+       float restitution = 0.3;
+       float friction = 0.9;
+       float density = 500;
+       llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
+       llSleep(t);
+       fire();
+   }
+}
+
+fire()
+{
+    //llPlaySound(sound2, VOLUME );
+    //repeatSound(sound2);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
+    SystemSafeSet = SystemAge;
+    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
+    makeParticles(color1);
+    debugSay("boom");
+    llSleep(SystemAge);
+    SystemSafeSet = 0.0;
+    llParticleSystem([]);
+    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
+    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
+    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,0.0]);
+    if (rezParam >0)
+    {
+       llDie();
+    }
+}
 
 makeParticles(vector color)
 {
@@ -59,68 +121,4 @@ makeParticles(vector color)
           PSYS_PART_FOLLOW_VELOCITY_MASK
     ]);    debugSay("fireend");
 }
-
-fire()
-{
-    //llPlaySound(sound2, VOLUME );
-    //repeatSound(sound2);
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
-    SystemSafeSet = SystemAge;
-    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
-    makeParticles(color1);
-    debugSay("boom");
-    llSleep(SystemAge);
-    SystemSafeSet = 0.0;
-    llParticleSystem([]);
-    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
-    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
-    //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,0.0]);
-       if (rezParam >0)
-       {
-         llDie();
-       }
-}
-
-default
-{
-    state_entry()
-    {
-       llParticleSystem([]);
-    }
-
-   on_rez(integer p)
-   {
-        rezParam = p;
-        integer t = p & 0xFF;
-        time = t;
-        //SystemAge =t*2;
-        float bouy = (p & 0xFF00) / 16; 
-        llSetBuoyancy(bouy/100);
-        //llCollisionSound("", 1.0);  //  Disable collision sounds
-        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-        llSetLinkPrimitiveParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
-        rotation rot = llGetRot();
-        //   rot.z = -rot.z;
-        //rot.x = -rot.x;  
-        rot.y = -rot.y; 
-        llSetRot(rot); 
-        
-        //fullbright?
-        //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,1.0]);
-        llSetLinkPrimitiveParamsFast(0,[PRIM_COLOR,ALL_SIDES,primColor,1.0]);
-
-        llSetLinkPrimitiveParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
-        integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
-        float gravity = 0.8;
-        float restitution = 0.3;
-        float friction = 0.9;
-        float density = 500;
-        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-        llSleep(1);
-        fire();
-   }
-}
-
 
