@@ -133,6 +133,7 @@ boom()
    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
 
    makeParticles(effectsType,(vector)color1,(vector)color2,texture);
+   //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
 
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
@@ -150,4 +151,5 @@ boom()
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
 }
+
 
