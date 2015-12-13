@@ -1,30 +1,35 @@
-///////////////////////////
-// rocket launcher v2.2   2015/12/05
-// copyright Tracer Tech aka Tracer Ping 2014
-// listens for commands on either a chat channel
-// or a link message
-////////////////////////////
+/*
+* launch controller v2.2   2015/12/05
+* copyright Tracer Ping 2015
+* this goes in the main prim
+*
+* reads data from notecard and forwards it via linkmessage
+* listens for commands on either a chat channel or a link message
+*
+*rezzes and launches projectile from its inventory
+*
+*
+*/
 #define NOTECARD_IN_THIS_PRIM
-/////////////////////
 #include "lib.lsl"
-//integer debug = TRUE;
-string sound = SOUND_ROCKETLAUNCH1;
+
 list parameters = [17,19,12];//speed, flight time, bouyancy
+//list parameters = [30,30,12];//speed, flight time, bouyancy
 //list parameters = [20,2,3];//speed, flight time, bouyancy
 //speed typically 8 to 25 //15, 20
 //payloadParam1, typ. flight time*10,  typically  10 to 20
 //payloadParam2 typically bouyancy * 100, typically 3 to 12
 integer payloadIndex = 0; 
 float zOffset = 0.6;
-float glowOnAmount = 0.0; //or 0.05
-integer access = ACCESS_PUBLIC;
+string sound = SOUND_ROCKETLAUNCH1;
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
-key owner = "";
+key owner;
 integer handle;
 integer chatChan = UNKNOWN;
 key id = "";
 integer explodeOnCollision = 0;
+integer access;
 
 default
 {
@@ -57,17 +62,17 @@ default
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       if ((access == ACCESS_OWNER) && (!sameOwner(id)) )
-          return;
-       if ((access == ACCESS_GROUP) && (!llSameGroup(id)) )
-          if(owner != id)
-              return;
+      if ((access == ACCESS_OWNER) && (!sameOwner(id)) )
+         return;
+      if ((access == ACCESS_GROUP) && (!llSameGroup(id)) )
+         if(owner != id)
+            return;
        //debugSay("got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
 
-//alas, this has to be after the default state
+//this has to be after the default state
 #include "readNotecardToList.lsl"
 
 msgHandler(string sender, string msg)
