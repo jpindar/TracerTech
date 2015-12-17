@@ -2,7 +2,6 @@
 //fireworks menu v1.2
 //copyright Tracer Tech aka Tracer Ping 2014
 /////////////////////////////
-//string menutext="\nChoose One:";
 list buttonsOwner=["fire","hide","show"];
 //list buttonsGroup=["hide","show","fire"];
 list buttonsAll=["fire"];
@@ -14,6 +13,7 @@ integer chatChan;
 integer menuChan;
 integer access;
 integer menuMode = 1;
+
 #include "lib.lsl"
  
 default
@@ -110,11 +110,6 @@ default
       else if(button=="hide")
       {
          sendMsg("hide");
-      }
-      else if(button=="reset")
-      {
-          sendMsg("reset");
-          llResetScript();
       }
    }
 }
