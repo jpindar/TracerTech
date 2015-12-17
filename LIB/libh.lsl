@@ -33,6 +33,12 @@
 #define TEXTURE_SMOKEBALL_LIGHT "5d2dab53-acfa-41d6-8c77-a0cfd688e012"
 #define TEXTURE_XMARK "1e8274d8-2104-4330-9417-b8e3970dadeb"
 #define TEXTURE_FOXFIRE2 "db6446f4-df26-41d0-8f73-a536a7f9054e"
+#define TEXTURE_SNOWFLAKE1 "02256cd8-bd90-476e-a342-4dc4b685ab84"
+#define TEXTURE_SNOWFLAKE2 "d3b61f47-a55c-4b41-9cb3-e5da60993955"
+#define TEXTURE_GOLDSTAR1 "ae74cda6-dc88-489a-812a-531548e8e3b5"
+
+
+
 //"e5bc2d4e-a5a1-d075-c29a-60da0d43f448"
 // "f0797071-d608-4606-985d-9bb7f3750256"
  //39579f43-e6ff-4711-af68-925b737abc0d
@@ -62,6 +68,8 @@
 #define SOUND_CRACKLE1 "ad1cb1d3-1805-4d93-b4db-47be024a99ed"
 #define SOUND_CRACKLE2 "29bb5045-1bae-4402-bd0e-1df86a5a2bef"
 #define SOUND_RUMBLE "58edd7a4-be95-4282-a964-549eee8caf75"
+#define SOUND_WHOOSH "aa1f3484-446a-4bbb-b147-03c6e5bd8ff4"
+
 //string sound2 ="ef63dd5d-b158-443b-88cf-c6fd79931bb8";
 
 #define DEBUG_MASK     0x01000000
