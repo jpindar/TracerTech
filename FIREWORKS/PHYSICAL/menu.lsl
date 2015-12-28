@@ -1,11 +1,13 @@
-////////////////////////
-//fireworks menu v1.2
-//copyright Tracer Tech aka Tracer Ping 2014
-/////////////////////////////
+/*
+*fireworks menu v1.3
+*copyright Tracer Tech aka Tracer Ping 2015
+*
+*gets notecard data via link message
+*responds to touch
+*listens only to menu
+*/
 list buttonsOwner=["fire","hide","show"];
-//list buttonsGroup=["hide","show","fire"];
 list buttonsAll=["fire"];
-//list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
@@ -33,7 +35,6 @@ default
       integer timeout = 10;
       //string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       string menuText  ="_";
-      //llOwnerSay("access = "+(string)access);
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
@@ -55,11 +56,10 @@ default
           }
           else
           {
-             llDialog(toucher,menuText,buttonsAll,menuChan);
+             llDialog(toucher,menuText,buttonsOwner,menuChan);
           }
-          //llOwnerSay("access = group");
       }
-      else if ((access == ACCESS_PUBLIC)) 
+      else //access == ACCESS_PUBLIC 
       {
           if (menuMode == 0)
           {
@@ -69,7 +69,6 @@ default
           {
               llDialog(toucher,menuText,buttonsAll,menuChan);
           }
-          //llOwnerSay("access = public");
       }
       handle=llListen(menuChan,"",toucher,"");
       llSetTimerEvent(timeout); 
@@ -90,7 +89,6 @@ default
          chatChan = getChatChan(notecardList);
          menuMode = getMenuMode(notecardList);
          access = getAccess(notecardList);
-         //llOwnerSay("access = "+(string)access);
      }
    }
 
@@ -100,7 +98,6 @@ default
       llListenRemove(handle);
       if(button=="fire")
       {
-          debugSay("menu firing");
           sendMsg("fire");
       }
       if(button=="show")
@@ -122,6 +119,5 @@ sendMsg(string msg)
    llMessageLinked(LINK_SET, 0, msg, "");
    //llMessageLinked(LINK_SET, 0, msg, "");
    //llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg); 
 }
 
