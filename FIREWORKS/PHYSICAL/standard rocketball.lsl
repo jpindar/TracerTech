@@ -1,11 +1,11 @@
-/////////////////////////
-// rocketball 2.1
-// this goes in the projectile, which in turn
-// goes in the launcher
-////////////////////////
+/*
+* rocketball 2.2
+* this goes in the projectile, which in turn
+* goes in the launcher
+*/
 #define EXPLODE_ON_COLLISION
 #include "lib.lsl"
-integer effectsType = 2;  //1to 4
+integer effectsType = 2;
 
 string texture = TEXTURE_CLASSIC;
 integer rezParam;
@@ -15,8 +15,8 @@ string color2 = COLOR_GOLD;
 string primColor = COLOR_GOLD;
 string lightColor = COLOR_GOLD;
 float intensity = 1.0;
-float radius = 20; //10 to 20
-float falloff = 0.02; //0.02 to 0.75
+float radius = 5;
+float falloff = 0.1; //0.02 to 0.75
 float primGlow = 0.4;
 float breakSpeed = 10;
 float primSize = 0.3;
@@ -28,7 +28,7 @@ float startAlpha = 1;
 float endAlpha = 0;
 vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
-float life = 1;
+vector omega = <0.0,0.0,0.0>;
 float SystemSafeSet = 0.00;
 float systemAge = 1.0;
 integer explodeOnCollision = 0;
@@ -56,27 +56,27 @@ default
        llSetBuoyancy(bouy/100);
        //llCollisionSound("", 1.0);  //  Disable collision sounds
        llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-       setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
+       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
        setParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,primGlow]);
-       setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
-       setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-       setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
+       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+       setParamsFast(LINK_THIS,[PRIM_SIZE, <primSize,primSize,primSize>]);
        integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
        float gravity = 0.8;
        float restitution = 0.3;
        float friction = 0.9;
        float density = 500;
        llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-       if (t<1)  //because 0 means no timer effect
-           t = 1;
-        if (rezParam>0)
+       // if (t<1)  //because 0 means no timer effect
+       //     t = 1;
+       if (rezParam>0)
           llSetTimerEvent(t);
        debugSay("time is " + (string)t + " param2 is " + (string) bouy);
    }
 
     state_entry()
     {
-       llParticleSystem([]);
+       llLinkParticleSystem(LINK_THIS,[]);
     }
 
    timer()
@@ -129,20 +129,20 @@ boom()
 {
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    debugSay("boom");
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES, 0.0]);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
+   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
+   setParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES,1.0]);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
 
    makeParticles(effectsType,(vector)color1,(vector)color2,texture);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-
-   llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    llPlaySound(sound1,volume);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llSleep(systemAge);
 
-   llParticleSystem([]);
+   llLinkParticleSystem(LINK_THIS,[]);
    llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
-   llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   llSleep(life);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   llSleep(systemAge);
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
@@ -151,5 +151,4 @@ boom()
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
 }
-
 
