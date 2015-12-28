@@ -62,11 +62,6 @@ default
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-      if ((access == ACCESS_OWNER) && (!sameOwner(id)) )
-         return;
-      if ((access == ACCESS_GROUP) && (!llSameGroup(id)) )
-         if(owner != id)
-            return;
        //debugSay("got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
@@ -77,6 +72,10 @@ default
 
 msgHandler(string sender, string msg)
 {
+   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+      return;
+   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      return;
    //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
