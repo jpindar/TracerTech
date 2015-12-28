@@ -1,5 +1,5 @@
 /*
-* launch controller v2.2   2015/12/05
+* launch controller v2.3   2015/12/25
 * copyright Tracer Ping 2015
 * this goes in the main prim
 *
@@ -12,17 +12,33 @@
 */
 #define NOTECARD_IN_THIS_PRIM
 //#define LAUNCH_ROT
+//#define SPINTRAILS
+//#define SPARKBALL
 #include "lib.lsl"
 
-list parameters = [17,19,12];//speed, flight time, bouyancy
+#if defined SPARKBALL
+   list parameters = [24,1,0];//speed, flight time, bouyancy
+#elif defined SPINTRAILS
+   //list parameters = [20,2,3];//speed, flight time, bouyancy
+   list parameters = [14,2,4];//speed, flight time, bouyancy
+#else
+   list parameters = [17,19,12];//speed, flight time, bouyancy
+#endif
+//list parameters = [15,10,60];//speed, flight time, bouyancy
+//list parameters = [12,14,75];//speed, flight time, bouyancy
 //list parameters = [30,30,12];//speed, flight time, bouyancy
 //list parameters = [20,2,3];//speed, flight time, bouyancy
 //speed typically 8 to 25 //15, 20
 //payloadParam1, typ. flight time*10,  typically  10 to 20
 //payloadParam2 typically bouyancy * 100, typically 3 to 12
-integer payloadIndex = 0; 
+integer payloadIndex = 0;
 float zOffset = 0.6;
-string sound = SOUND_ROCKETLAUNCH1;
+float glowOnAmount = 0.0; //or 0.05
+#if defined SPARKBALL
+   string sound = SOUND_CRACKLE2; //3sec crackle
+#else
+   string sound = SOUND_ROCKETLAUNCH1;
+#endif
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
@@ -45,7 +61,7 @@ default
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          chatChan = getChatChan(notecardList);
          owner = llGetOwner();
-         volume = getVolume();
+         volume = getVolume(notecardList);
          explodeOnCollision = getexplodeOnCollision(notecardList);
          access = getAccess(notecardList);
          //id  = owner;
