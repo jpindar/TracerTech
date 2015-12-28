@@ -11,6 +11,7 @@
 *
 */
 #define NOTECARD_IN_THIS_PRIM
+//#define LAUNCH_ROT
 #include "lib.lsl"
 
 list parameters = [17,19,12];//speed, flight time, bouyancy
@@ -113,10 +114,15 @@ fire()
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
+   #if defined LAUNCH_ROT
+     rotation rot2 = rot;
+   #else
+      rotation rot2 = <0.0,0.0,0.0,0.0>;
+   #endif
    for (i = 0; i<n; i++)
    {
        rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-       llRezAtRoot(rocket,pos,vel, rot, packedParam);
+       llRezAtRoot(rocket,pos,vel,rot2,packedParam);
    }
 }
 
