@@ -5,7 +5,7 @@
 ///////////////////////////
 #include "lib.lsl"
 
-string color1; 
+string color1;
 string color2;
 string color3;
 string lightColor = COLOR_WHITE;
@@ -22,32 +22,35 @@ float SystemSafeSet = 0.00;
 
 default
 {
-    on_rez(integer n){llResetScript();}
+   on_rez(integer n){llResetScript();}
 
-    state_entry()
-    {
+   state_entry()
+   {
        //llPreloadSound(sound);
        llLinkParticleSystem(emitter,[]);
-    }
+   }
 
-    link_message( integer sender, integer num, string msg, key id )
-    {
-        if (num & RETURNING_NOTECARD_DATA)
-            notecardList = llCSV2List(msg);
-        volume =  getVolume();
-        if ( num & FIRE_CMD ) //to allow for packing more data into num
-        {
-           if (llStringLength(msg) > 0)
-           {
+   //link messages come from the controller
+   link_message( integer sender, integer num, string msg, key id )
+   {
+      if (num & RETURNING_NOTECARD_DATA)
+      {
+          list note = llCSV2List(msg);
+          volume =getVolume(note);
+      }
+      if ( num & FIRE_CMD ) //to allow for packing more data into num
+      {
+         if (llStringLength(msg) > 0)
+         {
               color1 = llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
               color2 = llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
               color3 = llGetSubString(msg, 32, 47); //<0.00,0.00,0.00> = 16 chars
               lightColor = color1;
-           }
+          }
            texture = id;
-           fire();
-        }
-    }
+          fire();
+      }
+   }
 }
 
 fire()
@@ -73,7 +76,7 @@ fire()
 
 makeParticles(integer link, string color1, string color2)
 {
-    SystemSafeSet = SystemAge;
+    systemSafeSet = SystemAge;
     llLinkParticleSystem(link,[
     PSYS_SRC_PATTERN, PSYS_SRC_PATTERN_EXPLODE,
     PSYS_SRC_BURST_RADIUS,0.0,
@@ -86,7 +89,7 @@ makeParticles(integer link, string color1, string color2)
     PSYS_PART_START_SCALE, <0.5, 0.5, 0.0>,
     PSYS_PART_END_SCALE,   <0.5, 0.5, 0.0>,
     PSYS_SRC_TEXTURE, texture,
-    PSYS_SRC_MAX_AGE, SystemSafeSet,
+    PSYS_SRC_MAX_AGE, systemSafeSet,
     PSYS_PART_MAX_AGE, 5.0,
     PSYS_SRC_BURST_RATE, 0.1,
     PSYS_SRC_BURST_PART_COUNT, 250,
@@ -101,6 +104,6 @@ makeParticles(integer link, string color1, string color2)
        PSYS_PART_INTERP_SCALE_MASK |
        PSYS_PART_WIND_MASK
     ]);
-   SystemSafeSet = 0.0;
+    systemSafeSet = 0.0;
 }
 

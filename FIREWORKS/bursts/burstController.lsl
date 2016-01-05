@@ -8,7 +8,6 @@
 // the menu script
 ////////////////////////////
 #include "lib.lsl"
-integer debug = FALSE;
 
 string color1 = COLOR_WHITE;
 string color2 = COLOR_WHITE;
@@ -19,7 +18,7 @@ key owner;
 string preloadPrimName = "preloader";
 integer preloadFace = 0;
 integer handle;
-integer chatChan = UNKNOWN;
+integer chatChan;
 key id = "";
 integer delay = 2;
 
@@ -40,21 +39,21 @@ default
    }
 
    //link messages come from the menu script
-   link_message(integer sender, integer num, string str, key id) //from the menu script
+   link_message(integer sender, integer num, string msg, key id)
    {
-       //debugSay("heard link message " + (string)num + str);
-       msgHandler(owner, str); 
+       debugSay("controller: got link  message " + msg );
+       msgHandler(owner, msg); 
    }
 
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       //debugSay("got message " + msg + " on channel " + (string) chan);
+       debugSay("controller: got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
 
-//alas, this has to be after the default state
+//this has to be after the default state
 #include "readNotecardToList.lsl"
 
 msgHandler(string sender, string msg)
