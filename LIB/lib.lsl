@@ -6,18 +6,24 @@
 debugSay(string msg)
 {
    if (debug)
-   llOwnerSay(msg);
+      llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
 }
 
-glow(integer prim, float  amount)
+
+setGlow(integer prim, float  amount)
 {
     llSetLinkPrimitiveParamsFast(prim,[PRIM_GLOW,ALL_SIDES,amount]);
 }
 
-fullbright(integer prim, integer on)
+setFullbright(integer prim, integer on)
 {
     llSetLinkPrimitiveParamsFast(prim,[PRIM_FULLBRIGHT,ALL_SIDES,on]);
+}
+
+setColor(integer prim, vector c, float alpha)
+{
+   llSetLinkPrimitiveParamsFast(prim,[PRIM_COLOR,ALL_SIDES,c,alpha]);
 }
 
 integer sameOwner(key id)
@@ -111,7 +117,7 @@ integer getAccess(list notecardList)
    return n;
 }
 
-float getVolume()
+float getVolume(list notecardList)
 {
     float f = 1.0;
     integer ptr = llListFindList(notecardList,["volume"]);
@@ -120,7 +126,7 @@ float getVolume()
     return f;
 }
 
-float getSpeed()
+float getSpeed(list notecardList)
 {
     #define DEFAULT_SPEED 20.0;
     float f = DEFAULT_SPEED;
@@ -139,6 +145,7 @@ float getDelay(list notecardList)
         f = llList2Float(notecardList,ptr+1);
     return f;
 }
+
 integer getFlightTime()
 {
     #define DEFAULT_TIME 3;
