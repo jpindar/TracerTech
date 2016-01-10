@@ -212,6 +212,7 @@ list getLinknumbers(list names)
 {
     integer i;
     list foo;
+    getLinknumberList();
     integer len = llGetListLength( names);
     for (i=0; i<len;i++)
     {
