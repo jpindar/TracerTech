@@ -10,6 +10,14 @@ debugSay(string msg)
    //llSay(MY_DEBUG_CHAN,msg);
 }
 
+string parseColor(list n, string c)
+{
+   string color;
+   color = getString(n,c);
+   if (llSubStringIndex(color,"<")== -1)
+       color = (string)iwNameToColor(color);
+   return color;	   
+}
 
 setGlow(integer prim, float  amount)
 {
@@ -81,6 +89,36 @@ string getNotecardName(string d)
   return s;    
 }
 
+string getString(list notecardList, string name)
+{
+   string s;
+   integer ptr = llListFindList(notecardList,[name]);
+   if (ptr > -1)
+       s = llList2String(notecardList,ptr+1);  //case sensitive, unfortunately
+   return s;
+}
+
+float getFloat(list notecardList, string name)
+{
+   float f;
+   integer ptr = llListFindList(notecardList,[name]);
+   if (ptr > -1)
+       f = llList2Float(notecardList,ptr+1);  //case sensitive, unfortunately
+   return f;
+}
+
+integer getInteger(list notecardList, string name)
+{
+   integer i = -1;
+   integer ptr = llListFindList(notecardList,[name]);
+   if (ptr > -1)
+       i = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+	else
+        i = -1;	
+   return i;
+}
+
+
 integer getChatChan(list notecardList)
 {
    integer n = 0;
@@ -114,6 +152,8 @@ integer getAccess(list notecardList)
    integer ptr = llListFindList(notecardList,["access"]);
    if (ptr > -1)
        n = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
+   else
+       n = -1;
    return n;
 }
 
