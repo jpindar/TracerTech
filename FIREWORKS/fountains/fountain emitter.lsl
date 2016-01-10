@@ -4,7 +4,7 @@
 ///////////////////////////
 #include "lib.lsl"
 
-string color1; 
+string color1;
 string color2;
 string color3;
 string lightColor = COLOR_WHITE;
@@ -13,9 +13,8 @@ string sound = SOUND_FOUNTAIN1;
 integer emitter;
 string emitterName = "e1";
 float speed = 10; //5 to 10
-float omega = 0; //10*PI;  //0 to 10*PI
-float SystemAge = 4.5; //4 to 4.5
-float SystemSafeSet = 0.00;
+float omega = 0;
+float systemAge = 4.5; //4 to 4.5
 
 default
 {
