@@ -25,7 +25,7 @@ makeParticles(integer link, string color1, string color2)
    PSYS_SRC_MAX_AGE,           systemSafeSet,
    PSYS_PART_MAX_AGE,          5.0,
    PSYS_SRC_BURST_RATE,        0.1,
-   PSYS_SRC_BURST_PART_COUNT,  250,
+    PSYS_SRC_BURST_PART_COUNT, 180,
    PSYS_SRC_ACCEL,             <0.0,0.0,-0.3>,
    PSYS_SRC_OMEGA,             <0.0,0.0,0.0>,
    PSYS_SRC_BURST_SPEED_MIN,   (1.5*speed),
