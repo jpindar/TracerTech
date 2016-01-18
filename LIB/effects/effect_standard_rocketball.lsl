@@ -1,7 +1,6 @@
 // standard rocketball
 makeParticles(integer link, string color1, string color2)
 {
-   //systemAge =0.9;
    vector particleOmega = <0.0,0.0,0.0>;
    systemSafeSet = systemAge;
    integer flags = 
