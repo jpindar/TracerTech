@@ -8,7 +8,7 @@
 // the menu script
 ////////////////////////////
 #include "lib.lsl"
-integer debug = FALSE;
+
 string color1 = COLOR_RED;
 string color2 = COLOR_WHITE;
 string color3 = COLOR_BLUE;
