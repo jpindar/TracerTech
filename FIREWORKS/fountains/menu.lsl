@@ -6,10 +6,8 @@ list buttonsOwner=["fire","hide","show"];
 key owner;
 key toucher;
 integer handle;
-integer menuChan;
 integer chatChan;
-integer timeout = 10;
-
+integer menuChan;
 #include "lib.lsl"
  
 default
@@ -23,6 +21,7 @@ default
 
    touch_start(integer num)
    {
+      integer timeout = 10;
       string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
       toucher=llDetectedKey(0);
       handle=llListen(menuChan,"",toucher,"");
@@ -39,8 +38,10 @@ default
   link_message( integer sender, integer num, string msg, key id )
   {
      if (num & RETURNING_NOTECARD_DATA)
-        notecardList = llCSV2List(msg);
-     chatChan = getChatChan();
+     {
+         list notecard = llCSV2List(msg);
+         chatChan = getInteger(notecard,"channel");
+     }
    }
 
    listen(integer chan,string name,key id,string button)  //listen to dialog box
