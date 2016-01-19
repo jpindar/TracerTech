@@ -1,14 +1,13 @@
-/////////////////////////
-// fireworks burst v2.0
-// by Tracer Ping
-// copyright July 2014
-///////////////////////////
+/*
+*Fireworks burst emitter v2.5.3
+*Tracer Ping July 2015
+*/
 #include "lib.lsl"
 
 string color1;
 string color2;
 string color3;
-string lightColor = COLOR_WHITE;
+string lightColor;
 string texture;
 string sound = SOUND_BURST1;
 float glowAmount = 1.0; // or 0.2
@@ -20,7 +19,9 @@ float speed = 1;
 float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
 integer numOfEmitters = 1;
 float oldAlpha;
+list colors;
 list emitters;
+list params;
 
 #include "effects\effect_standard_burst.lsl"
 
@@ -50,12 +51,14 @@ default
       {
          if (llStringLength(msg) > 0)
          {
-              color1 = llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
-              color2 = llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
-              color3 = llGetSubString(msg, 32, 47); //<0.00,0.00,0.00> = 16 chars
-              lightColor = color1;
+            //debugSay(" listener got: "+ msg);
+            params = llCSV2List(msg); 
+            texture = llList2String(params,0);
+            color1 = llList2String(params,1);
+            lightColor = color1;
+            colors = [color1];
+            colors += llList2String(params,2);
           }
-           texture = id;
           fire();
       }
    }
@@ -74,7 +77,11 @@ fire()
    repeatSound(sound,volume);
    for(i=0;i<numOfEmitters;i++)
    {
+      color1 = llList2String(colors,i*2);
+      color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
+      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
+      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
       setGlow(e,glowAmount);
       makeParticles(e,color1,color2);
       llSleep(0.5);

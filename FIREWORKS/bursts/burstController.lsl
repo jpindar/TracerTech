@@ -1,6 +1,6 @@
 /*
-//fireworks burst controller v2.0  2014/8/14
-//copyright Tracer Tech aka Tracer Ping 2014
+* fireworks burst controller v2.5.3
+* copyright Tracer Ping 2015
 *
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
@@ -8,9 +8,9 @@
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
-string color1 = COLOR_WHITE;
-string color2 = COLOR_WHITE;
-string color3 = COLOR_WHITE;
+string color1;
+string color2;
+string color3;
 string texture = TEXTURE_SPIKESTAR;
 //string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
@@ -101,11 +101,14 @@ sendMsg(string msg)
 
 fire()
 {
-   //string fireMsg1 = color1+color2+color3;
-   string fireMsg1 = color1+color1+color1;
-   fireMsg2 = color2+color2+color2;
-   fireMsg3 = color3+color3+color3;
+   color1 = parseColor(notecardList,"color1");
+   color2 = parseColor(notecardList,"color2");
+   //color3 = parseColor(notecardList,"color3");
 
+   string fireMsg1 = texture+","+color1+","+color2+","+color1;
+   string fireMsg2 = texture+","+color2+","+color2+","+color2;
+   string fireMsg3 = texture+","+color3+","+color3+","+color3;
+   debugSay("controller: sending fire msg");
    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
    //llSleep(delay);
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
