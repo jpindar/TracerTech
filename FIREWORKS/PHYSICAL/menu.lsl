@@ -7,7 +7,7 @@
 *listens only to menu
 */
 list buttonsOwner=["fire","hide","show"];
-list buttonsAll=["fire"];
+list buttonsPublic=["fire"];
 key owner;
 key toucher;
 integer handle;
@@ -67,7 +67,7 @@ default
           }
           else
           {
-              llDialog(toucher,menuText,buttonsAll,menuChan);
+              llDialog(toucher,menuText,buttonsPublic,menuChan);
           }
       }
       handle=llListen(menuChan,"",toucher,"");
@@ -82,13 +82,12 @@ default
    
   link_message( integer sender, integer num, string msg, key id )
   {
-     list notecardList;
      if (num & RETURNING_NOTECARD_DATA)
      {
-         notecardList = llCSV2List(msg);
-         chatChan = getChatChan(notecardList);
-         menuMode = getMenuMode(notecardList);
-         access = getAccess(notecardList);
+         list notecard = llCSV2List(msg);
+         chatChan = getInteger(notecard,"channel");
+         menuMode = getInteger(notecard,"menu");
+         access = getAccess(notecard);
      }
    }
 
