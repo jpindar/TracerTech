@@ -15,7 +15,7 @@ float glowAmount = 1.0; // or 0.2
 list emitterNames = ["e1"];
 float intensity = 1.0;
 float radius = 20;
-float falloff = 0.02;
+float falloff = 0.1;
 float speed = 1;
 float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
 integer numOfEmitters = 1;
@@ -27,10 +27,11 @@ list emitters;
 default
 {
    on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
    state_entry()
    {
-       //llPreloadSound(sound);
+      llPreloadSound(sound);
       emitters = getLinknumbers(emitterNames);
       oldAlpha = llGetAlpha(ALL_SIDES);
       allOff();
@@ -42,7 +43,8 @@ default
       if (num & RETURNING_NOTECARD_DATA)
       {
           list note = llCSV2List(msg);
-          volume =getVolume(note);
+          volume = getVolume(note);
+          wind = getInteger(note, "wind");
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
