@@ -18,7 +18,7 @@ string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
 integer handle;
-integer chatChan = UNKNOWN;
+integer chatChan;
 key id = "";
 integer delay = 2;
 
@@ -29,26 +29,26 @@ default
 
    state_entry()
    {
-      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       if(doneReadingNotecard == FALSE) state readNotecardToList;
       chatChan = getChatChan();
       owner = llGetOwner();
       //id  = owner;
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
+      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
    }
 
-   //link mmessages come from the menu script
-   link_message(integer sender, integer num, string str, key id) //from the menu script
+   //link messages come from the menu script
+   link_message(integer sender, integer num, string msg, key id)
    {
-      //debugSay("heard link message " + (string)num + str);
-       msgHandler(owner, str); 
+       debugSay("controller: got link  message " + msg );
+       msgHandler(owner, msg); 
    }
 
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       //debugSay("got message " + msg + " on channel " + (string) chan);
+       debugSay("controller: got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
