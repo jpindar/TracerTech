@@ -1,7 +1,11 @@
-////////////////////////
-//fireworks menu v1.0
-//copyright Tracer Tech aka Tracer Ping 2014
-/////////////////////////////
+/*
+*fireworks menu v1.3
+*copyright Tracer Tech aka Tracer Ping 2015
+*
+*gets notecard data via link message
+*responds to touch
+*listens only to menu
+*/
 list buttonsOwner=["fire","hide","show"];
 list buttonsPublic=["fire"];
 key owner;
@@ -10,6 +14,7 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
+//#define LINKED
 #include "lib.lsl"
  
 default
@@ -27,7 +32,7 @@ default
    touch_start(integer num)
    {
       integer timeout = 10;
-      string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
+      string menuText = "listening on channel " + (string)chatChan;
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
@@ -79,7 +84,11 @@ default
      if (num & RETURNING_NOTECARD_DATA)
      {
          list notecard = llCSV2List(msg);
+         //debugSay("got list:" + llDumpList2String(notecard,"-"));
          chatChan = getInteger(notecard,"channel");
+         menuMode = getInteger(notecard,"menu");
+         //debugSay("got menuMode = " + (string)menuMode);
+         access = getAccess(notecard);
      }
    }
 
@@ -107,7 +116,12 @@ sendMsg(string msg)
    #if defined REMOTE_MENU
       llSay(chatChan,msg);
    #endif
-   llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg); 
+   #if defined LINKED
+      llMessageLinked(LINK_THIS, 0, msg, "");
+   #else
+      llMessageLinked(LINK_SET, 0, msg, "");
+   #endif
+   //llMessageLinked(LINK_SET, 0, msg, "");
+   //llMessageLinked(LINK_SET, 0, msg, "");
 }
 
