@@ -20,6 +20,7 @@ integer preloadFace = 0;
 integer handle;
 integer chatChan;
 key id = "";
+integer access;
 integer delay = 2;
 
 default
@@ -29,13 +30,15 @@ default
 
    state_entry()
    {
-      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
-      if(doneReadingNotecard == FALSE) state readNotecardToList;
-      chatChan = getChatChan(notecardList);
-      owner = llGetOwner();
-      //id  = llGetOwner();
-      handle = llListen( chatChan, "",id, "" );
-      llOwnerSay("listening on channel "+(string)chatChan);
+         if(doneReadingNotecard == FALSE) state readNotecardToList;
+
+         chatChan = getChatChan(notecardList);
+         owner = llGetOwner();
+         access = getAccess(notecardList);
+         //id  = owner;
+         handle = llListen( chatChan, "",id, "" );
+         llOwnerSay("listening on channel "+(string)chatChan);
+         llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
    }
 
    //link messages come from the menu script
@@ -59,6 +62,11 @@ default
 msgHandler(string sender, string msg)
 {
    //debugSay("got message <" + msg +">");
+   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+      return;
+   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      return;
+   //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -69,7 +77,7 @@ msgHandler(string sender, string msg)
        llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
        llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
    }
-   else if (msg == "show" )
+   else if (msg == "show")
    {
        llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
        llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowAmount]);
