@@ -18,6 +18,7 @@ float radius = 20;
 float falloff = 0.02;
 float speed = 1;
 float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
+integer numOfEmitters = 1;
 float oldAlpha;
 list emitters;
 
@@ -60,30 +61,44 @@ default
 
 fire()
 {
+   integer i; 
    integer e;
+   string color;
+
    oldAlpha = llGetAlpha(ALL_SIDES);
-   llSetLinkPrimitiveParamsFast(emitter,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-   llSetLinkPrimitiveParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
-   glow(emitter,glowAmount);
-   integer numOfEmitters = 1;
-   // llPlaySound(sound, volume/numOfEmitters);
-   llTriggerSound(sound, volume/numOfEmitters);
-   repeatSound(sound,volume/numOfEmitters);
-   e = llList2Integer(emitters,0);
-   makeParticles(e,color1,color2);
-   llSleep(0.5);
-   setGlow(LINK_SET,0.0);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   setParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   //llPlaySound(sound, volume/numOfEmitters);
+   //repeatSound(sound,volume/numOfEmitters);
+   llPlaySound(sound, volume);
+   repeatSound(sound,volume);
+   for(i=0;i<numOfEmitters;i++)
+   {
+      e = llList2Integer(emitters,i);
+      setGlow(e,glowAmount);
+      makeParticles(e,color1,color2);
+      llSleep(0.5);
+      setGlow(LINK_SET,0.0);
+      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   }
    llSleep(systemAge);
    allOff();
 }
 
 allOff()
 {
-
-   systemSafeSet = 0.0;
-   llLinkParticleSystem(emitter,[]);
+   integer i;
+   integer e;
+   setGlow(LINK_SET,0.0);
+   for(i=0;i<numOfEmitters;i++)
+   {
+      e = llList2Integer(emitters,i);
+      setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+      llLinkParticleSystem(e,[]);
+   }
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   //setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   //llLinkParticleSystem(LINK_THIS,[]);
+   //glow(LINK_THIS,0.0);
+   //setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
 }
 
 
