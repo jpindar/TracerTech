@@ -14,8 +14,7 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-integer menuMode = 1;
-
+//#define LINKED
 #include "lib.lsl"
  
 default
@@ -33,11 +32,11 @@ default
    touch_start(integer num)
    {
       integer timeout = 10;
-      //string menuText = "on channel " + (string)chatChan + "\n\nChoose One:";
-      string menuText  ="_";
+      string menuText = "listening on channel " + (string)chatChan;
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
+          //debugSay((string)menuMode);
           if (menuMode == 0)
           {
              sendMsg("fire");
@@ -85,8 +84,10 @@ default
      if (num & RETURNING_NOTECARD_DATA)
      {
          list notecard = llCSV2List(msg);
+         //debugSay("got list:" + llDumpList2String(notecard,"-"));
          chatChan = getInteger(notecard,"channel");
          menuMode = getInteger(notecard,"menu");
+         //debugSay("got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
      }
    }
@@ -115,7 +116,11 @@ sendMsg(string msg)
    #if defined REMOTE_MENU
       llSay(chatChan,msg);
    #endif
-   llMessageLinked(LINK_SET, 0, msg, "");
+   #if defined LINKED
+      llMessageLinked(LINK_THIS, 0, msg, "");
+   #else
+      llMessageLinked(LINK_SET, 0, msg, "");
+   #endif
    //llMessageLinked(LINK_SET, 0, msg, "");
    //llMessageLinked(LINK_SET, 0, msg, "");
 }
