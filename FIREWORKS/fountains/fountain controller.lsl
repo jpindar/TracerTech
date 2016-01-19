@@ -5,8 +5,7 @@
 //it sends link messages to the actual particle script
 //it listens on the description channel then shows, hides etc.
 // should respond to chat from the user or from
-// the menu script
-////////////////////////////
+#define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
 string color1 = COLOR_RED;
@@ -20,6 +19,7 @@ key owner;
 integer handle;
 integer chatChan;
 key id = "";
+integer access;
 integer delay = 2;
 
 default
@@ -29,12 +29,17 @@ default
 
    state_entry()
    {
-      if(doneReadingNotecard == FALSE) state readNotecardToList;
-      chatChan = getChatChan();
-      owner = llGetOwner();
-      //id  = owner;
-      handle = llListen( chatChan, "",id, "" );
-      llOwnerSay("listening on channel "+(string)chatChan);
+      #ifdef NOTECARD_IN_THIS_PRIM
+         if(doneReadingNotecard == FALSE) state readNotecardToList;
+         chatChan = getChatChan(notecardList);
+         owner = llGetOwner();
+         //no volume, the emitter makes the sound
+         //no collision
+         access = getAccess(notecardList);
+         //id  = owner;
+         handle = llListen( chatChan, "",id, "" );
+         llOwnerSay("listening on channel "+(string)chatChan);
+      #endif
       llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
    }
 
@@ -58,6 +63,11 @@ default
 
 msgHandler(string sender, string msg)
 {
+   //debugSay("got message <" + msg +">");
+   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+      return;
+   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      return;
    //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
