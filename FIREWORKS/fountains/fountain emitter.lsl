@@ -10,12 +10,13 @@ string color3;
 string lightColor = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 string sound = SOUND_SPARKLE1_5S;
-integer emitter;
-string emitterName = "e1";
+list emitterNames = ["e1"];//["e1","e2","e3"];
 float speed = 10; //5 to 10
 float omega = 0;
 float systemAge = 4.5; //4 to 4.5
+integer numOfEmitters = 1;
 float oldAlpha;
+list emitters;
   #include "effects\effect_fountain1.lsl"
 
 default
@@ -23,13 +24,13 @@ default
     on_rez(integer n){llResetScript();}
    changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
-    state_entry()
-    {
+   state_entry()
+   {
        llPreloadSound(sound);
-       emitter = getLinkWithName(emitterName);
-       llLinkParticleSystem(emitter,[]);
-       setParamsFast(emitter,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
-    }
+      emitters = getLinknumbers(emitterNames);
+      oldAlpha = llGetAlpha(ALL_SIDES);
+      allOff();
+   }
 
    //link messages come from the menu script
    link_message( integer sender, integer num, string msg, key id )
@@ -57,21 +58,38 @@ default
 
 fire()
 {
+   integer i; 
+   integer e;
+
    oldAlpha = llGetAlpha(ALL_SIDES);
-    integer numOfEmitters = 1;
-    //llPlaySound(sound, volume/numOfEmitters);
-    llTriggerSound(sound, volume/numOfEmitters);
-    repeatSound(sound,volume/numOfEmitters);
-    setParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
-    glow(emitter,1.0);
-    makeParticles(emitter,color1,color2);
+   //llPlaySound(sound, volume/numOfEmitters);
+   //repeatSound(sound,volume/numOfEmitters);
+   llPlaySound(sound, volume);
+   repeatSound(sound,volume);
+   for(i=0;i<numOfEmitters;i++)
+   {
+       e = llList2Integer(emitters,i);
+       setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
+       //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
+       setGlow(e,1.0);
+       makeParticles(e,color1,color2);
+   }
    llSleep(systemAge);
    allOff();
 }
 
 allOff()
 {
-    llLinkParticleSystem(emitter,[]);
-    glow(emitter,0.0);
-    setParamsFast(emitter,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
+   integer i;
+   integer e;
+   setGlow(LINK_SET,0.0);
+   for(i=0;i<numOfEmitters;i++)
+   {
+      e = llList2Integer(emitters,i);
+      //setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor, intensity,radius,falloff]);
+      llLinkParticleSystem(e,[]);
+      setGlow(e,0.0);
+      setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
+   }
 }
+
