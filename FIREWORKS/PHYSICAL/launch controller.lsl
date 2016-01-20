@@ -43,10 +43,15 @@ string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
 integer handle;
-integer chatChan = UNKNOWN;
+integer chatChan;
 key id = "";
 integer explodeOnCollision = 0;
 integer access;
+integer numOfBalls;
+float speed;
+integer flightTime;
+integer bouyancy; 
+integer packedParam;
 
 default
 {
@@ -55,8 +60,6 @@ default
 
    state_entry()
    {
-      //llPreloadSound(sound);
-      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          chatChan = getChatChan(notecardList);
@@ -68,6 +71,17 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
       #endif
+      numOfBalls = llGetInventoryNumber(INVENTORY_OBJECT);
+      speed = llList2Float(parameters,0);
+      flightTime = llList2Integer(parameters, 1);
+      bouyancy = llList2Integer(parameters,2)*256;
+      packedParam = flightTime+bouyancy;
+      #if defined EXPLODE_ON_COLLISION
+         if (explodeOnCollision >0)
+            packedParam = packedParam | COLLISION_MASK;
+      #endif
+      llPreloadSound(sound);
+      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       vector v = llGetScale();
       zOffset = ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
    }
@@ -114,21 +128,11 @@ msgHandler(string sender, string msg)
 fire()
 {
    string rocket;
-   integer packedParam;
    integer i;
-   float speed;
-   llPlaySound(sound,volume);
-   repeatSound(sound,volume);
-   integer n = llGetInventoryNumber(INVENTORY_OBJECT);
-   rotation rot = llGetRot();
-   speed = llList2Float(parameters,0);
-   packedParam = llList2Integer(parameters, 1)+(llList2Integer(parameters,2)*256);
+
    //uncomment next line to make payload say debug messages
    //packedParam = packedParam | DEBUG_MASK;
-   #if defined EXPLODE_ON_COLLISION
-   if (explodeOnCollision >0)
-      packedParam = packedParam | COLLISION_MASK;
-   #endif
+   rotation rot = llGetRot();
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
@@ -137,10 +141,13 @@ fire()
    #else
       rotation rot2 = <0.0,0.0,0.0,0.0>;
    #endif
-   for (i = 0; i<n; i++)
+   for (i = 0; i<numOfBalls; i++)
    {
-       rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-       llRezAtRoot(rocket,pos,vel,rot2,packedParam);
+      rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+      llPlaySound(sound,volume);
+      repeatSound(sound,volume);
+      llRezAtRoot(rocket,pos,vel, rot2, packedParam);
+      llSleep(0.2);
    }
 }
 
