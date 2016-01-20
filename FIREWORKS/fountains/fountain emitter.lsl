@@ -9,7 +9,7 @@ string color2;
 string color3;
 string lightColor = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
-string sound = SOUND_FOUNTAIN1;
+string sound = SOUND_SPARKLE1_5S;
 integer emitter;
 string emitterName = "e1";
 float speed = 10; //5 to 10
@@ -21,6 +21,7 @@ float oldAlpha;
 default
 {
     on_rez(integer n){llResetScript();}
+   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
     state_entry()
     {
@@ -37,6 +38,7 @@ default
       {
          list note = llCSV2List(msg);
          volume = getVolume(note);
+          wind = getInteger(note, "wind");
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
