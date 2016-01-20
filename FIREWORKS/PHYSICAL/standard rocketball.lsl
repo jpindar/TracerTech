@@ -5,7 +5,6 @@
 */
 #define EXPLODE_ON_COLLISION
 #include "lib.lsl"
-integer effectsType = 2;
 
 string texture = TEXTURE_CLASSIC;
 integer rezParam;
@@ -33,7 +32,7 @@ float SystemSafeSet = 0.00;
 float systemAge = 1.0;
 integer explodeOnCollision = 0;
 
-#include "effectslib.lsl"
+#include "effects\effect_standard_rocketball.lsl"
 
 default
 {
