@@ -32,7 +32,7 @@
 //payloadParam1, typ. flight time*10,  typically  10 to 20
 //payloadParam2 typically bouyancy * 100, typically 3 to 12
 integer payloadIndex = 0;
-float zOffset = 0.6;
+float zOffset = 0.7;
 float glowOnAmount = 0.0; //or 0.05
 #if defined SPARKBALL
    string sound = SOUND_CRACKLE2; //3sec crackle
@@ -51,7 +51,7 @@ integer access;
 default
 {
    on_rez(integer n){llResetScript();}
-   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
+   changed(integer change){if(change &( CHANGED_INVENTORY|CHANGED_SCALE)) llResetScript();}
 
    state_entry()
    {
@@ -68,6 +68,8 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
       #endif
+      vector v = llGetScale();
+      zOffset = ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
    }
 
    //link messages come from the menu script
