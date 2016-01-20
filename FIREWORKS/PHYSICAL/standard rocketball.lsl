@@ -1,8 +1,8 @@
 /*
-* rocketball 2.2
-* this goes in the projectile, which in turn
-* goes in the launcher
+* rocketball 2.3
+* copyright Tracer Ping 2015
 */
+//#define SPIRALBALL
 #define EXPLODE_ON_COLLISION
 #include "lib.lsl"
 
@@ -27,10 +27,9 @@ float startAlpha = 1;
 float endAlpha = 0;
 vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
-vector omega = <0.0,0.0,0.0>;
-float SystemSafeSet = 0.00;
-float systemAge = 1.0;
 integer explodeOnCollision = 0;
+vector omega = <0.0,0.0,0.0>;
+float systemAge = 1.0;
 
 #include "effects\effect_standard_rocketball.lsl"
 
@@ -49,7 +48,7 @@ default
          debug = FALSE;
        if (p & COLLISION_MASK)
            explodeOnCollision = 1; 
-       //debugSay("rezParam = " +(string) p); 
+       debugSay("rezParam = " +(string)p);
        if (p2 > 0)
           bouy = p2;
        llSetBuoyancy(bouy/100);
@@ -69,8 +68,10 @@ default
        // if (t<1)  //because 0 means no timer effect
        //     t = 1;
        if (rezParam>0)
+      {
           llSetTimerEvent(t);
-       debugSay("time is " + (string)t + " param2 is " + (string) bouy);
+          debugSay("time is " + (string)t + " param2 is " + (string) bouy);
+      }
    }
 
     state_entry()
