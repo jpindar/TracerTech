@@ -1,8 +1,10 @@
 /*
-*Fireworks Fountain emitter v2.5
+*Fireworks Fountain emitter v2.5.3
 *Tracer Ping July 2014
 */
 #include "lib.lsl"
+//#define RAINFALL
+//#define MINIFOUNTAIN
 
 string color1;
 string color2;
@@ -11,32 +13,42 @@ string lightColor;
 string texture;
 string sound = SOUND_SPARKLE1_5S;
 list emitterNames = ["e1"];//["e1","e2","e3"];
-float speed = 10; //5 to 10
-float omega = 0;
-float systemAge = 4.5; //4 to 4.5
-integer numOfEmitters = 1;
 float oldAlpha;
 list colors;
 list emitters;
 list params;
+integer numOfEmitters = 1;
+float glowAmount = 1.0;
+float systemAge = 5;
 
-  #include "effects\effect_fountain1.lsl"
+#if defined RAINFALL
+   float speed = 5;
+   #include "effects\effect_fountain_rainfall1.lsl"
+#elif defined MINIFOUNTAIN
+   float speed = 10;
+   float omega = 0;
+   #include "effects\effect_mini_fountain1.lsl"
+#else
+   float speed = 10;
+   float omega = 0;
+   #include "effects\effect_fountain1.lsl"
+#endif
 
 default
 {
-    on_rez(integer n){llResetScript();}
+   on_rez(integer n){llResetScript();}
    changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
 
    state_entry()
    {
-       llPreloadSound(sound);
+      llPreloadSound(sound);
       emitters = getLinknumbers(emitterNames);
       oldAlpha = llGetAlpha(ALL_SIDES);
       allOff();
    }
 
    //link messages come from the menu script
-   link_message( integer sender, integer num, string msg, key id )
+   link_message(integer sender, integer num, string msg, key id)
    {
       if (num & RETURNING_NOTECARD_DATA)
       {
