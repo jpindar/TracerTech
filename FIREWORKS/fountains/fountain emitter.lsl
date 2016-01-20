@@ -1,14 +1,14 @@
-/////////////////////////
-//Fireworks Fountain emitter v2.0
-//Tracer Ping July 2014
-///////////////////////////
+/*
+*Fireworks Fountain emitter v2.5
+*Tracer Ping July 2014
+*/
 #include "lib.lsl"
 
 string color1;
 string color2;
 string color3;
-string lightColor = COLOR_WHITE;
-string texture = TEXTURE_CLASSIC;
+string lightColor;
+string texture;
 string sound = SOUND_SPARKLE1_5S;
 list emitterNames = ["e1"];//["e1","e2","e3"];
 float speed = 10; //5 to 10
@@ -16,7 +16,10 @@ float omega = 0;
 float systemAge = 4.5; //4 to 4.5
 integer numOfEmitters = 1;
 float oldAlpha;
+list colors;
 list emitters;
+list params;
+
   #include "effects\effect_fountain1.lsl"
 
 default
@@ -39,18 +42,20 @@ default
       {
          list note = llCSV2List(msg);
          volume = getVolume(note);
-          wind = getInteger(note, "wind");
+         wind = getInteger(note, "wind");
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
          if (llStringLength(msg) > 0)
          {
-            color1 = llGetSubString(msg, 0, 15); //<0.00,0.00,0.00> = 16 chars
-            color2 = llGetSubString(msg, 16, 31); //<0.00,0.00,0.00> = 16 chars
-            color3 = llGetSubString(msg, 32, 47); //<0.00,0.00,0.00> = 16 chars
-            //lightColor = color1;
+            //llOwnerSay(" listener got: "+ msg);
+            params = llCSV2List(msg); 
+            texture = llList2String(params,0);
+            color1 = llList2String(params,1);
+            lightColor = color1;
+            colors = [color1];
+            colors += llList2String(params,2);
          }
-         texture = id;
          fire();
       }
    }
@@ -68,6 +73,8 @@ fire()
    repeatSound(sound,volume);
    for(i=0;i<numOfEmitters;i++)
    {
+       color1 = llList2String(colors,i*2);
+       color2 = llList2String(colors,(i*2)+1);
        e = llList2Integer(emitters,i);
        setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
        //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
