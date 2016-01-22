@@ -35,7 +35,7 @@ string color2 = COLOR_BLUE;
 //payloadParam2 typically bouyancy * 100, typically 3 to 12
 
 integer payloadIndex = 0;
-float zOffset = 0.6;
+float zOffset = 0.7;
 float glowOnAmount = 0.0; //or 0.05
 #if defined SPARKBALL
    string sound = SOUND_CRACKLE2; //3sec crackle
@@ -46,22 +46,25 @@ string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
 integer handle;
-integer chatChan = UNKNOWN;
+integer chatChan;
 key id = "";
 integer explodeOnCollision = 0;
 integer access;
 string launchMsg; 
+integer numOfBalls;
+float speed;
+integer flightTime;
+integer bouyancy; 
 integer rezChan = 555;
+integer packedParam;
 
 default
 {
    on_rez(integer n){llResetScript();}
-   changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
+   changed(integer change){if(change &( CHANGED_INVENTORY|CHANGED_SCALE)) llResetScript();}
 
    state_entry()
    {
-      //llPreloadSound(sound);
-      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          chatChan = getChatChan(notecardList);
@@ -74,6 +77,22 @@ default
          llOwnerSay("listening on channel "+(string)chatChan);
          launchMsg = texture + "," + color1 + "," + color2; 
       #endif
+      numOfBalls = llGetInventoryNumber(INVENTORY_OBJECT);
+      speed = llList2Float(parameters,0);
+      flightTime = llList2Integer(parameters, 1)
+      bouyancy = llList2Integer(parameters,2)
+       packedParam = flightTime+(bouyancy<<8);
+      //uncomment next line to make payload say debug messages
+      //packedParam = packedParam | DEBUG_MASK;
+      #if defined EXPLODE_ON_COLLISION
+      if (explodeOnCollision >0)
+         packedParam = packedParam | COLLISION_MASK;
+     #endif
+
+      //llPreloadSound(sound);
+      //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
+      vector v = llGetScale();
+      zOffset = ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
    }
 
    //link messages come from the menu script
@@ -118,21 +137,10 @@ msgHandler(string sender, string msg)
 fire()
 {
    string rocket;
-   integer packedParam;
    integer i;
-   float speed;
    llPlaySound(sound,volume);
    repeatSound(sound,volume);
-   integer n = llGetInventoryNumber(INVENTORY_OBJECT);
    rotation rot = llGetRot();
-   speed = llList2Float(parameters,0);
-   packedParam = llList2Integer(parameters, 1)+(llList2Integer(parameters,2)*256);
-   //uncomment next line to make payload say debug messages
-   //packedParam = packedParam | DEBUG_MASK;
-   #if defined EXPLODE_ON_COLLISION
-   if (explodeOnCollision >0)
-      packedParam = packedParam | COLLISION_MASK;
-   #endif
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
@@ -140,8 +148,8 @@ fire()
      rotation rot2 = rot;
    #else
       rotation rot2 = <0.0,0.0,0.0,0.0>;
-   #endif     
-   for (i = 0; i<n; i++)
+   #endif
+   for (i = 0; i<numOfBalls; i++)
    {
        rocket = llGetInventoryName(INVENTORY_OBJECT,i);
        llRezAtRoot(rocket,pos,vel, rot2, packedParam);
