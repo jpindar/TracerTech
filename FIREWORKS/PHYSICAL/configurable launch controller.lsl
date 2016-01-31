@@ -71,7 +71,7 @@ default
       wind = getInteger(notecardList,"wind");
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
-       packedParam = flightTime+(bouyancy<<8);
+      packedParam = flightTime+(bouyancy<<7);
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
       if (freezeOnBoom >0)
