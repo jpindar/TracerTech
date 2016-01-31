@@ -8,18 +8,17 @@
 
 string texture;
 integer rezParam;
-//string particleColor = COLOR_GOLD;
 string color1;
 string color2;
 string primColor = COLOR_GOLD;
 string lightColor = COLOR_GOLD;
+string sound1 = SOUND_PUREBOOM;
 float intensity = 1.0;
 float radius = 5;
 float falloff = 0.1; //0.02 to 0.75
 float primGlow = 0.4;
 float breakSpeed = 10;
-float primSize = 0.3;
-string sound1 = SOUND_PUREBOOM;
+float primSize1 = 0.3;
 integer index;
 integer glow = TRUE;
 integer bounce = FALSE;
@@ -29,7 +28,6 @@ vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
 vector omega = <0.0,0.0,0.0>;
 
-float SystemSafeSet = 0.00;
 float systemAge = 1.0;
 integer explodeOnCollision = 0;
 integer handle;
@@ -47,8 +45,11 @@ default
     
    on_rez(integer p)
    {
-       llResetTime();
+      llResetTime();
        float bouy = 5;
+      setParamsFast(LINK_THIS,[PRIM_SIZE, <primSize1,primSize1,primSize1>]);
+      llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
        rezParam = p;
        float t = ((float)(p & 0xFF))/10.0;
        integer p2 = (p & 0xFF00) / 256;
@@ -64,31 +65,18 @@ default
        if (p2 > 0)
           bouy = p2;
        llSetBuoyancy(bouy/100);
-       //llCollisionSound("", 1.0);  //  Disable collision sounds
-       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-       //setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-       //setParamsFast(e,[PRIM_GLOW,ALL_SIDES,primGlow]);
-       //setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+      //llCollisionSound("", 1.0);  //  Disable collision sounds
        //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-       //setParamsFast(e,[PRIM_SIZE, <primSize,primSize,primSize>]);
-       integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
-       float gravity = 0.8;
-       float restitution = 0.3;
-       float friction = 0.9;
-       float density = 500;
-       llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
-
        //if (t<1)  //because 0 means no timer effect
        //   t = 1;
        if (p>0)
           llSetTimerEvent(t);
        //debugSay("time is " + (string)t + " param2 is " + (string) bouy);
-       //debugSay("done rezzing");
    }
    
     listen( integer chan, string name, key id, string msg )
     {
-       // llOwnerSay(" listener got: "+ msg);
+      //debugSay(" listener got: "+ msg);
         params = llCSV2List(msg); 
         texture = llList2String(params,0);
         color1 = llList2String(params,1);
