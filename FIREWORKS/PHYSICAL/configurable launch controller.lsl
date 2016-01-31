@@ -15,25 +15,8 @@
 //#define SPINTRAILS
 #include "lib.lsl"
 string texture = TEXTURE_CLASSIC;
-string color1 = COLOR_GOLD;
-string color2 = COLOR_BLUE;
-
-#if defined SPARKBALL
-   list parameters = [24,1,0];//speed, flight time, bouyancy
-#elif defined SPINTRAILS
-   //list parameters = [20,2,3];//speed, flight time, bouyancy
-   list parameters = [14,2,4];//speed, flight time, bouyancy
-#else
-   list parameters = [17,19,12];//speed, flight time, bouyancy
-#endif
-//list parameters = [15,10,60];//speed, flight time, bouyancy
-//list parameters = [12,14,75];//speed, flight time, bouyancy
-//list parameters = [30,30,12];//speed, flight time, bouyancy
-//list parameters = [20,2,3];//speed, flight time, bouyancy
-//speed typically 8 to 25 //15, 20
-//payloadParam1, typ. flight time*10,  typically  10 to 20
-//payloadParam2 typically bouyancy * 100, typically 3 to 12
-
+string color1;
+string color2;
 integer payloadIndex = 0;
 float zOffset = 0.7;
 float glowOnAmount = 0.0; //or 0.05
@@ -52,10 +35,13 @@ key id = "";
 integer explodeOnCollision = 0;
 integer access;
 string launchMsg; 
+list colors;
 integer numOfBalls;
 float speed;
 integer flightTime;
 integer bouyancy; 
+integer particleTime ;
+integer freezeOnBoom; 
 integer packedParam;
 
 default
@@ -75,19 +61,25 @@ default
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
-         launchMsg = texture + "," + color1 + "," + color2; 
       #endif
-      numOfBalls = llGetInventoryNumber(INVENTORY_OBJECT);
-      speed = llList2Float(parameters,0);
-      flightTime = llList2Integer(parameters, 1)
-      bouyancy = llList2Integer(parameters,2)
+      numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
+      speed = getFloat(notecardList,"speed");
+      flightTime = getInteger(notecardList,"flighttime");
+      bouyancy = getInteger(notecardList,"bouyancy"); 
+      particleTime = getInteger(notecardList,"particletime");
+      freezeOnBoom = getInteger(notecardList,"freeze");
+      wind = getInteger(notecardList,"wind");
+      colors = colors + parseColor(notecardList,"color1");
+      colors = colors + parseColor(notecardList,"color2");
        packedParam = flightTime+(bouyancy<<8);
-      //uncomment next line to make payload say debug messages
-      //packedParam = packedParam | DEBUG_MASK;
-      #if defined EXPLODE_ON_COLLISION
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
-     #endif
+      if (freezeOnBoom >0)
+         packedParam = packedParam | FREEZE_MASK;
+      if (wind >0)
+         packedParam = packedParam | WIND_MASK;
+      //uncomment next line to make payload say debug messages
+      //packedParam = packedParam | DEBUG_MASK;
 
       llPreloadSound(sound);
       //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
@@ -150,6 +142,9 @@ fire()
    #endif
    for (i = 0; i<numOfBalls; i++)
    {
+      string colorA = llList2String(colors,(i*2)); 
+      string colorB = llList2String(colors,(i*2)+1);
+      launchMsg = texture + "," + colorA + "," + colorB + "," +(string)particleTime;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;
