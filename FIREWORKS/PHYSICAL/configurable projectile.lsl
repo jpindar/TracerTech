@@ -46,34 +46,43 @@ default
    on_rez(integer p)
    {
       llResetTime();
-       float bouy = 5;
+      setColor(LINK_SET,<0.0,0.0,0.0>,1.0);
       setParamsFast(LINK_THIS,[PRIM_SIZE, <primSize1,primSize1,primSize1>]);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-       rezParam = p;
-       float t = ((float)(p & 0xFF))/10.0;
-       integer p2 = (p & 0xFF00) / 256;
-       integer p3 = (p & 0xFF0000);
-       handle=llListen(chan,"","","");
-       if (p & DEBUG_MASK)
+      rezParam = p; //save this
+      integer p1 = p & 0x7F;
+      integer p2 = (p & 0x3F80) >> 7;
+      integer p3 = (p & 0x3FC000) >>14;
+      float t = (float)p1/10.0;
+      float bouy = (float)p2/100.0;
+      llSetBuoyancy(bouy);
+      integer chan = (-42000) -p3;
+      debugSay("p2 ="+ (string)p2);
+      debugSay("chan = "+(string)chan);
+      debugSay("t ="+ (string)t);
+      handle=llListen(chan,"","","");
+      if (p & DEBUG_MASK)
          debug = TRUE;
-       else
+      else
          debug = FALSE;
-         if (p & COLLISION_MASK)
-           explodeOnCollision = 1; 
-       debugSay("rezParam = " +(string)p);
-       if (p2 > 0)
-          bouy = p2;
-       llSetBuoyancy(bouy/100);
+      if (p & COLLISION_MASK)
+         explodeOnCollision = 1; 
+      if (p & FREEZE_MASK)
+         freezeOnBoom = TRUE;
       //llCollisionSound("", 1.0);  //  Disable collision sounds
-       //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-       //if (t<1)  //because 0 means no timer effect
-       //   t = 1;
-       if (p>0)
+      // we don't know the color yet
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+      //TODO can we make t a float?
+      if (t<0.1)  //because 0 means no timer effect
+         t = 1;
+      if (rezParam>0)
+      {   //use timer instead of sleeping to allow other events
           llSetTimerEvent(t);
-       //debugSay("time is " + (string)t + " param2 is " + (string) bouy);
+          //debugSay("time is " + (string)t + " param2 is " + (string) bouy);
+      }
    }
-   
+
     listen( integer chan, string name, key id, string msg )
     {
       //debugSay(" listener got: "+ msg);
