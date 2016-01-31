@@ -89,7 +89,7 @@ default
          packedParam = packedParam | COLLISION_MASK;
      #endif
 
-      //llPreloadSound(sound);
+      llPreloadSound(sound);
       //llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
       vector v = llGetScale();
       zOffset = ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
@@ -138,8 +138,7 @@ fire()
 {
    string rocket;
    integer i;
-   llPlaySound(sound,volume);
-   repeatSound(sound,volume);
+
    rotation rot = llGetRot();
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
@@ -155,6 +154,8 @@ fire()
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;
       rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+      llPlaySound(sound,volume);
+      repeatSound(sound,volume);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
       llSleep(0.2);
       //llOwnerSay(launchMsg);
