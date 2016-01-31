@@ -5,7 +5,6 @@
 */
 #define EXPLODE_ON_COLLISION
 #include "lib.lsl"
-integer effectsType = 2;
 
 string texture;
 integer rezParam;
@@ -37,10 +36,15 @@ integer handle;
 integer chan = 555;
 list params;
 
-#include "effectslib.lsl"
+#include "effects\effect_standard_rocketball.lsl"
 
 default
 {
+    state_entry()
+    {
+       llLinkParticleSystem(LINK_THIS,[]);
+    }
+    
    on_rez(integer p)
    {
        llResetTime();
@@ -96,10 +100,7 @@ default
        llOwnerSay((string)llGetTime());
     }   
     
-    state_entry()
-    {
-       llLinkParticleSystem(LINK_THIS,[]);
-    }
+
 
    timer()
    {
@@ -123,14 +124,15 @@ default
            debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
        }
        f = 0;
-
        do
        {
           // if (llVecMag(llDetectedVel(f)) >= breakSpeed)
            {
-              if (rezParam>0)
+            if (rezParam!=0)
+            {
                   boom();
            }
+         }
        } while (++f < n);
    }
 
@@ -139,8 +141,10 @@ default
       if (explodeOnCollision==0)
          return;
       debugSay("collision with land");
-      if (rezParam>0)
+      if (rezParam !=0)
+      {
          boom();
+      }
    }
    #endif
 
@@ -151,7 +155,7 @@ boom()
 {
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    debugSay("boom");
-   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,0.0]);
+   setColor(LINK_THIS,(vector)primColor,0.0);
    setParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES,1.0]);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
 
@@ -160,10 +164,7 @@ boom()
    llPlaySound(sound1,volume);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llSleep(systemAge);
-
-   llLinkParticleSystem(LINK_THIS,[]);
-   llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   AllOff();
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
@@ -173,3 +174,9 @@ boom()
    llSleep(5); //dunno why this is needed - but without it, no boom
 }
 
+AllOff()
+{
+   setGlow(LINK_THIS,0.0);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   llLinkParticleSystem(LINK_THIS,[]);
+}
