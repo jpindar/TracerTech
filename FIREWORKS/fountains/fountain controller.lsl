@@ -1,16 +1,18 @@
-///////////////////////////
-//fireworks fountain controller v2.0  2014/8/14
-//copyright Tracer Tech aka Tracer Ping 2014
-//this goes in the main prim
-//it sends link messages to the actual particle script
-//it listens on the description channel then shows, hides etc.
-// should respond to chat from the user or from
+/*
+* fireworks fountain controller v2.5.3
+* copyright Tracer Ping 2015
+*
+* reads data from notecard and forwards it via linkmessage
+* listens for commands on either a chat channel or a link message
+*
+* sends link messages to the actual particle scripts
+*/
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
-string color1 = COLOR_RED;
-string color2 = COLOR_WHITE;
-string color3 = COLOR_BLUE;
+string color1;
+string color2;
+string color3;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
 string preloadPrimName = "pre";
@@ -82,19 +84,34 @@ msgHandler(string sender, string msg)
    else if (msg == "show")
    {
        llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowAmount]);
    }
 }
 
+/*
+sendMsg(string msg1, string msg2)
+{
+   #if defined REMOTE_CONTROLLER
+      llSay(chatChan,msg);
+   #endif
+   llMessageLinked(LINK_SET, FIRE_CMD, msg1, msg2);
+   debugSay(msg);
+}
+*/
+
 fire()
 {
-   string fireMsg = color1+color2+color3;
-   //debugSay("sending fire linkmessage" + fireMsg + texture);
-   llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
-   //llMessageLinked(LINK_SET, FIRE_CMD, color1+color1, texture);
+   color1 = parseColor(notecardList,"color1");
+   color2 = parseColor(notecardList,"color2");
+   color3 = parseColor(notecardList,"color3");
+   string fireMsg1 = texture+","+color1+","+color2+","+color3;
+   //string fireMsg1 = texture+","+color1+","+color1+","+color1;
+   string fireMsg2 = texture+","+color2+","+color2+","+color2;
+   string fireMsg3 = texture+","+color3+","+color3+","+color3;
+   debugSay("controller: sending fire msg"+ fireMsg1);
+   llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
    //llSleep(delay);
-   //llMessageLinked( LINK_SET, FIRE_CMD, color2+color2, texture);
+   //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
    //llSleep(delay);
-   //llMessageLinked( LINK_SET, FIRE_CMD, color3+color3, texture);
+   //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg3, texture);
 }
 
