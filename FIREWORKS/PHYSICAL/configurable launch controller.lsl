@@ -1,5 +1,5 @@
 /*
-* launch controller v2.4   2015/12/25
+* launch controller v2.6.2
 * copyright Tracer Ping 2015
 * this goes in the main prim
 *
@@ -12,9 +12,11 @@
 */
 #define NOTECARD_IN_THIS_PRIM
 //#define LAUNCH_ROT
+#define LAUNCH_ROT_90Y
 //#define SPINTRAILS
 #include "lib.lsl"
-string texture = TEXTURE_CLASSIC;
+//string texture = TEXTURE_CLASSIC;
+string texture = TEXTURE_SPIKESTAR;
 string color1;
 string color2;
 integer payloadIndex = 0;
@@ -136,7 +138,9 @@ fire()
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
    #if defined LAUNCH_ROT
-     rotation rot2 = rot;
+      rotation rot2 = rot;
+   #elif defined LAUNCH_ROT_90Y
+      rotation rot2 = llEuler2Rot(<0, PI_BY_TWO, 0>) * rot; //putting the constant first means local rotation
    #else
       rotation rot2 = <0.0,0.0,0.0,0.0>;
    #endif
