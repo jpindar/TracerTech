@@ -2,7 +2,6 @@
 * rocketball 2.3
 * copyright Tracer Ping 2015
 */
-//#define SPIRALBALL
 #define EXPLODE_ON_COLLISION
 #include "lib.lsl"
 
@@ -35,6 +34,11 @@ float systemAge = 1.0;
 
 default
 {
+   state_entry()
+   {
+      llLinkParticleSystem(LINK_THIS,[]);
+   }
+   
    on_rez(integer p)
    {
        float bouy = 5;
@@ -74,10 +78,6 @@ default
       }
    }
 
-    state_entry()
-    {
-       llLinkParticleSystem(LINK_THIS,[]);
-    }
 
    timer()
    {
