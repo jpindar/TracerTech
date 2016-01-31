@@ -17,22 +17,25 @@ float intensity = 1.0;
 float radius = 5;
 float falloff = 0.1; //0.02 to 0.75
 float primGlow = 0.4;
+float primGlow2 = 0.0;
 float breakSpeed = 10;
 float primSize1 = 0.3;
-integer index;
+float primSize2 = 0.3;
 integer glow = TRUE;
 integer bounce = FALSE;
 float startAlpha = 1;
+integer explodeOnCollision = 0;
+integer freezeOnBoom = FALSE;
+list params;
+integer handle;
+integer armed = FALSE;
+
 float endAlpha = 0;
 vector startSize = <1.9,1.9,1.9>;
 vector endSize = <1.9,1.9,1.9>;
 vector omega = <0.0,0.0,0.0>;
 
 float systemAge = 1.0;
-integer explodeOnCollision = 0;
-integer handle;
-integer chan = 555;
-list params;
 
 #include "effects\effect_standard_rocketball.lsl"
 
@@ -95,15 +98,14 @@ default
         //e = llList2Integer(emitters,i);
        setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
        llOwnerSay((string)llGetTime());
-    }   
-    
-
+      armed = TRUE;
+   }
 
    timer()
    {
-       debugSay("timed out");
-       llSetTimerEvent(0);
-       boom();
+      debugSay("timed out");
+      llSetTimerEvent(0);
+      boom();
    }
 
    #ifdef EXPLODE_ON_COLLISION
@@ -112,7 +114,7 @@ default
        integer f = 0;
        key id;
        vector spd;
-       if (explodeOnCollision==0)
+      if ((explodeOnCollision==0) || (!armed))
          return;
        debugSay(llGetScriptName() + ": collision ");
        debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
@@ -135,7 +137,7 @@ default
 
    land_collision_start(vector pos)
    {
-      if (explodeOnCollision==0)
+      if ((explodeOnCollision==0) || (!armed))
          return;
       debugSay("collision with land");
       if (rezParam !=0)
