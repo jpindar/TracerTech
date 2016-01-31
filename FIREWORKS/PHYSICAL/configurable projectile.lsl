@@ -1,22 +1,26 @@
 /*
-* rocketball 2.4
-* this goes in the projectile, which in turn
-* goes in the launcher
+* rocketball 2.7
+* copyright Tracer Ping 2015
 */
 #define EXPLODE_ON_COLLISION
+//#define PRIM_ROTATION
+#define FREEZE_ON_BOOM
+//#define SPIRALBALL
+//#define RINGBALL
+//#define TRAILBALL
+
 #include "lib.lsl"
 
 string texture;
 integer rezParam;
 string color1;
 string color2;
-string primColor = COLOR_GOLD;
-string lightColor = COLOR_GOLD;
+string primColor;
+string lightColor = COLOR_WHITE;
 string sound1 = SOUND_PUREBOOM;
 float intensity = 1.0;
 float radius = 5;
 float falloff = 0.1; //0.02 to 0.75
-float primGlow = 0.4;
 float primGlow2 = 0.0;
 float breakSpeed = 10;
 float primSize1 = 0.3;
@@ -30,22 +34,64 @@ list params;
 integer handle;
 integer armed = FALSE;
 
-float endAlpha = 0;
-vector startSize = <1.9,1.9,1.9>;
-vector endSize = <1.9,1.9,1.9>;
-vector omega = <0.0,0.0,0.0>;
-
-float systemAge = 1.0;
-
-#include "effects\effect_standard_rocketball.lsl"
+#if defined RINGBALL
+   //#define PRIM_ROTATION
+   float endAlpha = 0;// or1
+   vector startSize = <1.5,1.5,0.0>;//or1.9
+   vector endSize = <0.5,0.5,0.0>;
+   float systemAge = 1.0; //3
+   float rate = 2; //4.7
+   float partRadius = 1.5; //or 1
+   float partAge = 5; //or 1.5
+   float primGlow = 0.0; 
+   #include "effects\effect_ringball1.lsl"
+#elif defined SPIRALBALL
+   integer effectsType = 12;
+   float endAlpha = 0;
+   vector startSize = <1.9,1.9,1.9>;
+   vector endSize = <1.9,1.9,1.9>;
+   vector omega = <0.0,30.0, 0.0>;
+   float systemAge = 5.0;
+   float primGlow = 0.4;
+#elif defined TRAILBALL
+   float partSpeed = 10;
+   vector partOmega = <0.0,0.0,10*PI>;
+   integer wind = 0;
+   float systemAge = 5;
+   float primGlow = 0.4;
+   #include "effects\effect_trailball.lsl"
+#elif defined SPARKLERBALL
+#else
+   float endAlpha = 0;
+   vector startSize = <1.9,1.9,1.9>;
+   vector endSize = <1.9,1.9,1.9>;
+   float systemAge = 1.0;
+   vector omega = <0.0,0.0,0.0>;
+   float primGlow = 0.4;
+   #include "effects\effect_standard_rocketball.lsl"
+#endif
 
 default
 {
-    state_entry()
-    {
-       llLinkParticleSystem(LINK_THIS,[]);
-    }
-    
+   state_entry()
+   {
+      #if !defined SPARKBALL
+         AllOff();
+      #endif
+      #if defined RINGBALL
+         //llTargetOmega(<0,0,0.05>,4*PI,1.0);
+         //llTargetOmega(<0,0,0>,PI,1.0);
+         //partSpeed1 = 0.7;
+         //partSpeed2 = 0.7;
+      #endif
+   }
+
+   //having touch_start makes some effects easier to debug
+   touch_start(integer n)
+   {
+       boom();
+   }
+
    on_rez(integer p)
    {
       llResetTime();
@@ -74,6 +120,13 @@ default
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
       //llCollisionSound("", 1.0);  //  Disable collision sounds
+      #if defined PRIM_ROTATION
+         rotation rot = llGetRot();
+         //rot.z = -rot.z;
+         //rot.x = -rot.x;
+         rot.y = -rot.y; 
+         llSetRot(rot); 
+      #endif
       // we don't know the color yet
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
       //TODO can we make t a float?
@@ -113,28 +166,34 @@ default
    #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
-       integer f = 0;
-       key id;
-       vector spd;
+      integer f = 0;
+      key id;
+      vector spd;
       if ((explodeOnCollision==0) || (!armed))
          return;
-       debugSay(llGetScriptName() + ": collision ");
-       debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
-       for (f=0; f<n; f++)
-       {
-           debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
-       }
-       f = 0;
-       do
-       {
-          // if (llVecMag(llDetectedVel(f)) >= breakSpeed)
-           {
+      debugSay(llGetScriptName() + ": collision ");
+      debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
+      for (f=0; f<n; f++)
+      {
+         debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
+      }
+      f = 0;
+      do
+      {
+         // if (llVecMag(llDetectedVel(f)) >= breakSpeed)
+         {
             if (rezParam!=0)
             {
+               #if defined TRAILBALL
+                  AllOff();
+                  llSetStatus(STATUS_PHYSICS, FALSE);
+                  llDie();
+               #else
                   boom();
-           }
+               #endif
+            }
          }
-       } while (++f < n);
+      } while (++f < n);
    }
 
    land_collision_start(vector pos)
@@ -144,7 +203,13 @@ default
       debugSay("collision with land");
       if (rezParam !=0)
       {
+         #if defined TRAILBALL
+            AllOff();
+            llSetStatus(STATUS_PHYSICS, FALSE);
+            llDie();
+         #else
          boom();
+         #endif
       }
    }
    #endif
@@ -187,3 +252,4 @@ AllOff()
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
 }
+
