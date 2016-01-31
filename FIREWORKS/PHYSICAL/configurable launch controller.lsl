@@ -47,6 +47,7 @@ integer preloadFace = 2;
 key owner;
 integer handle;
 integer chatChan;
+integer rezChan;
 key id = "";
 integer explodeOnCollision = 0;
 integer access;
@@ -55,7 +56,6 @@ integer numOfBalls;
 float speed;
 integer flightTime;
 integer bouyancy; 
-integer rezChan = 555;
 integer packedParam;
 
 default
@@ -151,8 +151,11 @@ fire()
    #endif
    for (i = 0; i<numOfBalls; i++)
    {
-       rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-       llRezAtRoot(rocket,pos,vel, rot2, packedParam);
+      rezChan = (integer) llFrand(255);
+      integer packedParam2 = packedParam + (rezChan*0x4000);
+      rezChan = -42000 -rezChan;
+      rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+      llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
        llSay(rezChan, launchMsg);
    }
 }
