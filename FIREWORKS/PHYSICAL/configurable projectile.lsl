@@ -86,18 +86,20 @@ default
       }
    }
 
-    listen( integer chan, string name, key id, string msg )
-    {
+   listen( integer chan, string name, key id, string msg )
+   {
+      llListenRemove(handle);
       //debugSay(" listener got: "+ msg);
-        params = llCSV2List(msg); 
-        texture = llList2String(params,0);
-        color1 = llList2String(params,1);
-        color2 = llList2String(params,2);
-        primColor = color1;
-        lightColor = color1;
-        //e = llList2Integer(emitters,i);
-       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
-       llOwnerSay((string)llGetTime());
+      params = llCSV2List(msg); 
+      texture = llList2String(params,0);
+      color1 = llList2String(params,1);
+      color2 = llList2String(params,2);
+      systemAge = llList2Float(params,3);
+      primColor = color1;
+      lightColor = color1;
+      //e = llList2Integer(emitters,i);
+      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+      //llOwnerSay((string)llGetTime());
       armed = TRUE;
    }
 
@@ -146,8 +148,6 @@ default
       }
    }
    #endif
-
-
 }
 
 boom()
@@ -155,13 +155,19 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    debugSay("boom");
    setColor(LINK_THIS,(vector)primColor,0.0);
-   setParamsFast(LINK_THIS,[PRIM_GLOW, ALL_SIDES,1.0]);
+   setGlow(LINK_THIS,primGlow2);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-
-   makeParticles(effectsType,(vector)color1,(vector)color2,texture);
+   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_SIZE, <primSize2,primSize2,primSize2>]);
+   if (freezeOnBoom)
+   {
+      llSetStatus(STATUS_PHYSICS,FALSE);
+   }
+   makeParticles(LINK_THIS,color1,color2);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
    llPlaySound(sound1,volume);
+   repeatSound(sound1,volume);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   setGlow(LINK_THIS,0.0);
    llSleep(systemAge);
    AllOff();
    llSetTimerEvent(0);
@@ -175,7 +181,9 @@ boom()
 
 AllOff()
 {
+   llParticleSystem([]);
    setGlow(LINK_THIS,0.0);
+   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
 }
