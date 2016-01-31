@@ -156,7 +156,9 @@ fire()
       rezChan = -42000 -rezChan;
       rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
-       llSay(rezChan, launchMsg);
+      llSleep(0.2);
+      //llOwnerSay(launchMsg);
+      llRegionSay(rezChan, launchMsg);
    }
 }
 
