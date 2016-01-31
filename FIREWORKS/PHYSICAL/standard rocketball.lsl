@@ -136,13 +136,10 @@ boom()
    makeParticles(effectsType,(vector)color1,(vector)color2,texture);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
    llPlaySound(sound1,volume);
+   repeatSound(sound1,volume);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llSleep(systemAge);
-
-   llLinkParticleSystem(LINK_THIS,[]);
-   llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   llSleep(systemAge);
+   AllOff();
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
@@ -150,5 +147,12 @@ boom()
        llDie();
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
+}
+
+AllOff()
+{
+   llLinkParticleSystem(LINK_THIS,[]);
+   llSetPrimitiveParams([PRIM_GLOW,ALL_SIDES,0.0]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
 }
 
