@@ -74,8 +74,8 @@ default
       numOfBalls = llGetInventoryNumber(INVENTORY_OBJECT);
       speed = llList2Float(parameters,0);
       flightTime = llList2Integer(parameters, 1);
-      bouyancy = llList2Integer(parameters,2)*256;
-      packedParam = flightTime+bouyancy;
+      bouyancy = llList2Integer(parameters,2);
+      packedParam = flightTime+bouyancy*256;
       #if defined EXPLODE_ON_COLLISION
          if (explodeOnCollision >0)
             packedParam = packedParam | COLLISION_MASK;
