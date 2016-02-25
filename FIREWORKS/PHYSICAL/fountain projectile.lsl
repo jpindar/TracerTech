@@ -14,7 +14,7 @@ vector color2 = (vector)COLOR_WHITE;
 vector primColor = (vector)COLOR_WHITE;
 vector lightColor = (vector)COLOR_WHITE;
 float intensity = 1.0;
-float radius = 5; //10 to 20
+float radius = 5;
 float falloff = 0.2; //0.02 to 0.75
 float primGlow = 0.0;
 float breakSpeed = 10;
@@ -41,27 +41,26 @@ default
    
    on_rez(integer p)
    {
-      float bouy = 5;
       rezParam = p;
-      float t = p & 0xFF;
-      float time = t;
-      SystemAge =t*2;
-      integer p2 = (p & 0xFF00) / 16; 
-      if (p2 > 0)
-         bouy = p2;
-      llSetBuoyancy(bouy/100);
+      integer p1 = p & 0xFF;
+      integer p2 = (p & 0xFF00)>>8;
+      integer p3 = (p & 0xFF0000)>>16;
+      float t = (float)p1/10.0;
+      float bouy = (float)p2/100.0;
+      SystemAge = (float)p3/10.0;
+      llSetBuoyancy(bouy);
       //llCollisionSound("", 1.0);  //  Disable collision sounds
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       setParamsFast(0,[PRIM_TEMP_ON_REZ,TRUE]);
-      rotation rot = llGetRot();
-      //rot.z = -rot.z;
-      //rot.x = -rot.x;
-      rot.y = -rot.y; 
       #if defined PRIM_ROTATION
-        llSetRot(rot); 
+         rotation rot = llGetRot();
+         //rot.z = -rot.z;
+         //rot.x = -rot.x;
+         rot.y = -rot.y; 
+         llSetRot(rot); 
       #endif
-      setParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,primGlow]);
-      setParamsFast(0,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+      setGlow(LINK_THIS,primGlow);
+      setColor(0,(vector)primColor,1.0);
       setParamsFast(0,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
       setParamsFast(0,[PRIM_SIZE, <primSize,primSize,primSize>]);
       integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
@@ -80,9 +79,9 @@ fire()
 {
    //llPlaySound(sound2, VOLUME );
    //repeatSound(sound2);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,primGlow]);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,TRUE]);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,color1,1.0]);
+   setGlow(LINK_THIS,primGlow);
+   fullbright(LINK_THIS,TRUE);
+   //setColor(LINK_THIS,color1,1.0);
    SystemSafeSet = SystemAge;
    llSetLinkPrimitiveParamsFast(0,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,radius,falloff]);
    makeParticles(color1);
@@ -90,9 +89,8 @@ fire()
    llSleep(SystemAge);
    SystemSafeSet = 0.0;
    llParticleSystem([]);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,ALL_SIDES,0.0]);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_FULLBRIGHT,ALL_SIDES,FALSE]);
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
+   setGlow(LINK_THIS,0.0);
+   setColor(LINK_THIS,(vector)COLOR_BLACK,1.0);
    if (rezParam >0)
    {
       llDie();
