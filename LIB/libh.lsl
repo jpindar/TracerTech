@@ -20,8 +20,11 @@
 #define RETURNING_NOTECARD_DATA 8
 #define SET_CHATCHAN_CMD 16
 #define MAINMENU_CMD 32
-#define FIRE_CMD2 0x01000000
-#define FIRE_CMD3 64
+#define FIRE_CMD2 64
+#define FIRE_CMD3 128
+#define ON_CMD 256
+#define OFF_CMD 512
+
 
 #define TEXTURE_CLASSIC "6189b78f-c7e2-4508-9aa2-0881772c7e27" //"classic", also standard fountain texture
 #define TEXTURE_SPIKESTAR "bda1445f-0e59-4328-901b-a6335932179b"
