@@ -14,7 +14,7 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-//#define LINKED
+#define LINKED
 #include "lib.lsl"
  
 default
@@ -33,6 +33,7 @@ default
    {
       integer timeout = 10;
       string menuText = "listening on channel " + (string)chatChan;
+      //debugSay("access = "+(string)access);
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
