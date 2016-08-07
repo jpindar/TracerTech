@@ -45,6 +45,7 @@
 #define TEXTURE_1 "06f1b652-1a63-4c07-9baf-ebcf4d386e7c"
 #define TEXTURE_SPOTLIGHT "575cd7a8-1732-4b06-9d3a-067232be49db"
 #define TEXTURE_XSTAR      "1e52ad95-4093-42db-ab17-e92cd18ad461"
+#define TEXTURE_RAINBOWBURST "c24aad31-0a35-45ce-82d3-72eceb6216ec"
 //"ffe22c5d-0712-42d6-97a3-4cdfc35614a2" 
 //"e5bc2d4e-a5a1-d075-c29a-60da0d43f448"
 // "f0797071-d608-4606-985d-9bb7f3750256"
