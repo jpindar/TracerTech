@@ -217,15 +217,10 @@ integer getPitch()
 }
 
 integer getLinkWithName(string name) {
-    integer i = llGetLinkNumber() != 0;   // Start at zero (single prim) or 1 (two or more prims)
-    integer x = llGetNumberOfPrims() + i; // [0, 1) or [1, llGetNumberOfPrims()]
-    for (; i < x; ++i)
-        if (llGetLinkName(i) == name)
-        {
-            return i; // Found it! Exit loop early with result
-         }
-    return -1; // No prim with that name, return -1.
+   list foo = iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
+   return llList2Integer(foo, 0);
 }
+
 
 list getLinknumberList()
     {
@@ -251,16 +246,19 @@ integer getLinknumber(string name)
 list getLinknumbers(list names)
 {
     integer i;
-    list foo;
-    getLinknumberList();
+    list result;
+	string name;
     integer len = llGetListLength( names);
     for (i=0; i<len;i++)
     {
-        foo = foo + getLinknumber(llList2String(names,i));
+	    name = llList2String(names,i);
+		result += iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
+		//llOwnerSay(name);
+		//llOwnerSay(llDumpList2String(result, "|"));
     }
-    return foo;
+    return result;
 }
-
+   
 /*
 list mergeLists(list newList, list oldList)
 {
