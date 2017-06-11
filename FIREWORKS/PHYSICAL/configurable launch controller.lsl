@@ -1,5 +1,5 @@
 /*
-* launch controller v2.6.2
+* launch controller v2.7.2
 * copyright Tracer Ping 2015
 * this goes in the main prim
 *
@@ -11,9 +11,8 @@
 *
 */
 #define NOTECARD_IN_THIS_PRIM
-//#define LAUNCH_ROT
-#define LAUNCH_ROT_90Y
 //#define SPINTRAILS
+//#define SPARKBALL
 #include "lib.lsl"
 //string texture = TEXTURE_CLASSIC;
 string texture = TEXTURE_SPIKESTAR;
@@ -27,6 +26,7 @@ float glowOnAmount = 0.0; //or 0.05
 #else
    string sound = SOUND_ROCKETLAUNCH1;
 #endif
+//TODO make these point to a special prim, not the tube
 string preloadPrimName = "preloader";
 integer preloadFace = 2;
 key owner;
@@ -38,13 +38,15 @@ integer explodeOnCollision = 0;
 integer access;
 string launchMsg; 
 list colors;
-integer numOfBalls;
+integer numOfBalls = 0;
 float speed;
 integer flightTime;
 integer bouyancy; 
-integer particleTime ;
+float particleTime;
 integer freezeOnBoom; 
 integer packedParam;
+integer angle = 0;
+float launchDelay = 0;
 
 default
 {
@@ -64,15 +66,19 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
       #endif
-      numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
+      if (numOfBalls == 0)
+          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
       bouyancy = getInteger(notecardList,"bouyancy"); 
-      particleTime = getInteger(notecardList,"particletime");
+      particleTime = getFloat(notecardList,"particletime");
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
+      angle = getInteger(notecardList, "angle");
+      launchDelay = getFloat(notecardList, "delay");
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
+
       packedParam = flightTime+(bouyancy<<7);
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
@@ -137,13 +143,9 @@ fire()
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot;
-   #if defined LAUNCH_ROT
-      rotation rot2 = rot;
-   #elif defined LAUNCH_ROT_90Y
-      rotation rot2 = llEuler2Rot(<0, PI_BY_TWO, 0>) * rot; //putting the constant first means local rotation
-   #else
-      rotation rot2 = <0.0,0.0,0.0,0.0>;
-   #endif
+   float angle2 = angle * DEG_TO_RAD;
+   rotation rot2 = llEuler2Rot(<0, angle2, 0>) * rot; 
+   
    for (i = 0; i<numOfBalls; i++)
    {
       string colorA = llList2String(colors,(i*2)); 
@@ -159,6 +161,7 @@ fire()
       llSleep(0.2);
       //llOwnerSay(launchMsg);
       llRegionSay(rezChan, launchMsg);
+      llSleep(launchDelay);
    }
 }
 
