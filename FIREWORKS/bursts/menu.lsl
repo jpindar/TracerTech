@@ -5,6 +5,16 @@
 *gets notecard data via link message
 *responds to touch
 *listens only to menu
+* 
+* when touched either sends fire command (via chat or linkmessage, determined at compiletime) or opens a popup menu.
+*
+* link message listener: if linkmessage parameter num is RETURNING_NOTECARD_DAT
+* it parses control channel, menumode, and accessmode from parameter msg
+*         
+* chat listener (listening to the popup menu)
+* handles menu button presses by sending a command (fire, show or hide) via chat or
+* linkmessage (determined at compiletime)
+* 
 */
 list buttonsOwner=["fire","hide","show"];
 list buttonsPublic=["fire"];
@@ -16,7 +26,22 @@ integer menuChan;
 integer access;
 //#define LINKED
 #include "lib.lsl"
+
+ sendMsg(string msg)
+{
+   #if defined REMOTE_MENU
+      llSay(chatChan,msg);
+   #endif
+   #if defined LINKED
+      llMessageLinked(LINK_THIS, 0, msg, "");
+   #else
+      llMessageLinked(LINK_SET, 0, msg, "");
+   #endif
+   //llMessageLinked(LINK_SET, 0, msg, "");
+   //llMessageLinked(LINK_SET, 0, msg, "");
+}
  
+
 default
 {
    on_rez(integer n){llResetScript();}
@@ -111,17 +136,5 @@ default
    }
 }
 
-sendMsg(string msg)
-{
-   #if defined REMOTE_MENU
-      llSay(chatChan,msg);
-   #endif
-   #if defined LINKED
-      llMessageLinked(LINK_THIS, 0, msg, "");
-   #else
-      llMessageLinked(LINK_SET, 0, msg, "");
-   #endif
-   //llMessageLinked(LINK_SET, 0, msg, "");
-   //llMessageLinked(LINK_SET, 0, msg, "");
-}
+
 
