@@ -21,9 +21,15 @@ integer handle;
 integer chatChan;
 key id = "";
 integer access;
-integer delay = 0;
+float delay = 0.0;  // 0.3 for multiburst
 
-
+/* for multiburst,
+  add more parseColors as needed, ideally two per prim per burst
+  
+  construct fireMsg's
+ 
+  uncomment delays and llMessageLinked's
+ */  
 fire()
 {
    color1 = parseColor(notecardList,"color1");
@@ -41,14 +47,15 @@ fire()
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg3, texture);
 }
 
+
 msgHandler(string sender, string msg)
 {
-   debugSay("got message <" + msg +">");
+   //debugSay("got message <" + msg +">");
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-   debugSay("got message <" + msg +">");
+   //debugSay("got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -56,8 +63,8 @@ msgHandler(string sender, string msg)
    }
    else if (msg == "hide")
    {
- //      llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
- //      llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
+       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
    }
    else if (msg == "show")
    {
@@ -108,7 +115,6 @@ default
 #include "readNotecardToList.lsl"
 
 
-
 /*
 sendMsg(string msg)
 {
@@ -119,6 +125,5 @@ sendMsg(string msg)
    debugSay(msg);
 }
 */
-
 
 
