@@ -1,5 +1,5 @@
 /*
-*Fireworks burst emitter v2.5.3
+*Fireworks burst emitter v2.5.5
 *Tracer Ping July 2015
 */
 #include "lib.lsl"
@@ -13,6 +13,7 @@ string texture;
 string sound = SOUND_PUREBOOM;
 float glowAmount = 1.0; // or 0.2
 list emitterNames = ["e1"];
+//list emitterNames = ["e1","e2","e3"];
 float intensity = 1.0;
 float radius = 20;
 float falloff = 0.1;
@@ -32,9 +33,9 @@ fire()
    string color;
 
    oldAlpha = llGetAlpha(ALL_SIDES);
-   //llPlaySound(sound, volume/numOfEmitters);
-   //repeatSound(sound,volume/numOfEmitters);
-   llPlaySound(sound, volume);
+   llSetAlpha(0.0,ALL_SIDES);
+   // try repeating this section to make FAST series bursts
+   llPlaySound(sound, volume/numOfEmitters);
    repeatSound(sound,volume);
    for(i=0;i<numOfEmitters;i++)
    {
@@ -42,10 +43,10 @@ fire()
       color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
-      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
+      //setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
       setGlow(e,glowAmount);
       makeParticles(e,color1,color2);
-      llSleep(0.5);
+      llSleep(0.5);  // or less for multis?
       setGlow(LINK_SET,0.0);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    }
@@ -65,10 +66,10 @@ allOff()
       llLinkParticleSystem(e,[]);
    }
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
-   //setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   //llLinkParticleSystem(LINK_THIS,[]);
-   //glow(LINK_THIS,0.0);
-   //setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   llLinkParticleSystem(LINK_SET,[]);
+   setGlow(LINK_SET,0.0);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
 }
 
 default
@@ -104,12 +105,14 @@ default
             lightColor = color1;
             colors = [color1];
             colors += llList2String(params,2);
+            //colors += llList2String(params,3);
+            //colors += llList2String(params,4);
+            //colors += llList2String(params,5);
+            //colors += llList2String(params,6);
           }
+          //texture = id;
           fire();
       }
    }
 }
-
-
-
 
