@@ -2,6 +2,7 @@
 *Fireworks burst emitter v2.5.5
 *Tracer Ping July 2015
 */
+//#define DEBUG
 #include "lib.lsl"
 
 string color1;
@@ -11,15 +12,15 @@ string lightColor;
 string texture;
 //string sound = SOUND_BURST1;
 string sound = SOUND_PUREBOOM;
-float glowAmount = 1.0; // or 0.2
-list emitterNames = ["e1"];
-//list emitterNames = ["e1","e2","e3"];
+float glowAmount = 0.5; // or 0.2
+//list emitterNames = ["e1"];
+list emitterNames = ["e1","e2","e3"];
 float intensity = 1.0;
 float radius = 20;
 float falloff = 0.1;
 float speed = 1;
 float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
-integer numOfEmitters = 1;
+integer numOfEmitters = 2;
 float oldAlpha;
 list colors;
 list emitters;
@@ -33,7 +34,7 @@ fire()
    string color;
 
    oldAlpha = llGetAlpha(ALL_SIDES);
-   llSetAlpha(0.0,ALL_SIDES);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
    // try repeating this section to make FAST series bursts
    llPlaySound(sound, volume/numOfEmitters);
    repeatSound(sound,volume);
@@ -88,6 +89,7 @@ default
    //link messages come from the controller
    link_message( integer sender, integer num, string msg, key id )
    {
+      integer i;
       if (num & RETURNING_NOTECARD_DATA)
       {
           list note = llCSV2List(msg);
@@ -98,17 +100,18 @@ default
       {
          if (llStringLength(msg) > 0)
          {
-            //debugSay(" listener got: "+ msg);
+            debugSay(" listener got: "+ msg);
             params = llCSV2List(msg); 
+            integer len = llGetListLength(params);
             texture = llList2String(params,0);
             color1 = llList2String(params,1);
             lightColor = color1;
             colors = [color1];
-            colors += llList2String(params,2);
-            //colors += llList2String(params,3);
-            //colors += llList2String(params,4);
-            //colors += llList2String(params,5);
-            //colors += llList2String(params,6);
+
+            for (i=2; i<len; i++)
+            {
+                colors += llList2String(params,i);
+            }
           }
           //texture = id;
           fire();
