@@ -8,9 +8,7 @@
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
-string color1;
-string color2;
-string color3;
+string color;
 //string texture = TEXTURE_SPIKESTAR;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
@@ -22,7 +20,7 @@ integer chatChan;
 key id = "";
 integer access;
 float delay = 0.0;  // 0.3 for multiburst
-
+integer maxColors = 6;
 /* for multiburst,
   add more parseColors as needed, ideally two per prim per burst
   
@@ -32,15 +30,16 @@ float delay = 0.0;  // 0.3 for multiburst
  */  
 fire()
 {
-   color1 = parseColor(notecardList,"color1");
-   color2 = parseColor(notecardList,"color2");
-   //color3 = parseColor(notecardList,"color3");
+   integer i;
+   string fireMsg = texture;
+   for (i=1; i<=maxColors; i++)
+   {
+     color = parseColor(notecardList,"color"+(string)i);
+     fireMsg =fireMsg + "," + color;
+   }
 
-   string fireMsg1 = texture+","+color1+","+color2+","+color1;
-   string fireMsg2 = texture+","+color2+","+color2+","+color2;
-   string fireMsg3 = texture+","+color3+","+color3+","+color3;
-   debugSay("controller: sending fire msg");
-   llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
+   debugSay("controller: sending fire msg " + fireMsg);
+   llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
    //llSleep(delay);
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
    //llSleep(delay);
