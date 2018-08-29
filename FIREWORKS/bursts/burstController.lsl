@@ -15,7 +15,7 @@ string color3;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
 key owner; 
-string preloadPrimName = "e1";
+string preloadPrimName = "preloader";
 integer preloadFace = 0;
 integer handle;
 integer chatChan;
