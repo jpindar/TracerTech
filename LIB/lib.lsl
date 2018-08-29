@@ -8,8 +8,10 @@ debugSay(string msg)
    if (debug)
       llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
+   //llShout(0,msg);
 }
 
+#if defined INWORLDZ
 string parseColor(list n, string c)
 {
    string color;
@@ -18,6 +20,19 @@ string parseColor(list n, string c)
        color = (string)iwNameToColor(color);
    return color;	   
 }
+#else
+string parseColor(list n, string c)
+{
+   string color;
+   color = getString(n,c);
+   //if (color == "")
+   //   color =  "<1.0,1.0,1.0>";
+   if (llSubStringIndex(color,"<")== -1)
+       color = "<1.0,1.0,1.0>";
+   return color;	   
+}
+#endif
+
 
 setGlow(integer prim, float  amount)
 {
@@ -216,11 +231,33 @@ integer getPitch()
     return f;
 }
 
+#ifdef INWORLDZ
 integer getLinkWithName(string name) {
    list foo = iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
    return llList2Integer(foo, 0);
 }
-
+#else
+integer getLinkWithName(string name) {
+    integer i = llGetLinkNumber() != 0;   // Start at zero (single prim) or 1 (two or more prims)
+    integer x = llGetNumberOfPrims() + i; // [0, 1) or [1, llGetNumberOfPrims()]
+    for (; i < x; ++i)
+        if (llGetLinkName(i) == name)
+        {
+            return i; // Found it! Exit loop early with result
+         }
+    return -1; // No prim with that name, return -1.
+}
+/*
+integer getLinkWithName(string name) {
+   //list foo = iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
+   //return llList2Integer(foo, 0);
+   if (name == "preloader")
+       return 2;
+	else
+       return 0;
+}
+*/
+#endif
 
 list getLinknumberList()
     {
@@ -245,20 +282,81 @@ integer getLinknumber(string name)
 
 list getLinknumbers(list names)
 {
+#ifdef  INWORLDZ
     integer i;
     list result;
-	string name;
+    string name;
     integer len = llGetListLength( names);
     for (i=0; i<len;i++)
     {
-	    name = llList2String(names,i);
-		result += iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
-		//llOwnerSay(name);
-		//llOwnerSay(llDumpList2String(result, "|"));
+        name = llList2String(names,i);
+        result += iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
+        //llOwnerSay(name);
+        //llOwnerSay(llDumpList2String(result, "|"));
     }
     return result;
+#else
+    integer i;
+    list result;
+    getLinknumberList();
+    integer len = llGetListLength( names);
+    for (i=0; i<len;i++)
+    {
+        result = result + getLinknumber(llList2String(names,i));
+    }
+    return result;
+    /*
+    integer i;
+    list result;
+    string name;
+    integer len = llGetListLength( names);
+    for (i=0; i<len;i++)
+    {
+        name = llList2String(names,i);
+        result += iwSearchLinksByName(name,IW_MATCH_EQUAL,TRUE);
+        //llOwnerSay(name);
+        //llOwnerSay(llDumpList2String(result, "|"));
+    }
+    return result;
+    */
+#endif
 }
-   
+
+//use this in a touch_start event
+integer touchedByOwner()
+{
+return (llDetectedKey(0) == llGetOwner());
+}
+
+clearHoverText()
+{
+   llSetText("",<0,0,0>,0.0);
+}
+
+string descOfTouchedPrim()
+{
+    integer prim = llDetectedLinkNumber(0);
+    list l=llGetLinkPrimitiveParams(prim,[PRIM_DESC]);
+    string s = llList2String(l,0);
+	return s
+}
+
+setAllPrimParams()
+{
+    //link numbering in linksets starts with 1
+    integer link_idx;
+    integer link_qty = llGetNumberOfPrims();
+    if (link_qty > 1)
+    {        
+        for (link_idx=1; link_idx <= link_qty; link_idx++)
+        {
+            //desc =  (string)llGetLinkPrimitiveParams(link_idx,[PRIM_DESC]);
+			//updateThisPrim(link_idx);
+        }
+    }
+}
+
+
 /*
 list mergeLists(list newList, list oldList)
 {
