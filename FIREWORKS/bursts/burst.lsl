@@ -12,26 +12,36 @@ string lightColor;
 string texture;
 //string sound = SOUND_BURST1;
 string sound = SOUND_PUREBOOM;
-float glowAmount = 0.5; // or 0.2
-//list emitterNames = ["e1"];
-list emitterNames = ["e1","e2","e3"];
 float intensity = 1.0;
 float radius = 20;
 float falloff = 0.1;
 float speed = 1;
-float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
-integer numOfEmitters = 2;
 float oldAlpha;
 list colors;
 list emitters;
 list params;
 
-#include "effects\effect_standard_burst.lsl"
+#ifdef TRIPLE
+   float glowAmount = 1.0; // or 0.2
+   list emitterNames = ["e1"];
+   float systemAge = 0.1; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
+   integer numOfEmitters = 1;
+   float interEmitterDelay = 0.1;
+   #include "effects\effect_standard_burst_exp1.lsl"
+#ELSE
+   float glowAmount = 0.5; // or 0.2
+   //list emitterNames = ["e1"];
+   list emitterNames = ["e1","e2","e3"];
+   float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
+   integer numOfEmitters = 2;
+   float interEmitterDelay = 0.5;
+   #include "effects\effect_standard_burst.lsl"
+#endif
+
 fire()
 {
    integer i; 
    integer e;
-   string color;
 
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
@@ -47,7 +57,7 @@ fire()
       //setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
       setGlow(e,glowAmount);
       makeParticles(e,color1,color2);
-      llSleep(0.5);  // or less for multis?
+      llSleep(interEmitterDelay);
       setGlow(LINK_SET,0.0);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    }
