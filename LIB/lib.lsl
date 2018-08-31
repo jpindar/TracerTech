@@ -5,10 +5,14 @@
 
 debugSay(string msg)
 {
+   #ifdef DEBUG
+      llOwnerSay(msg);
+   #else
    if (debug)
       llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
    //llShout(0,msg);
+   #endif
 }
 
 #if defined INWORLDZ
