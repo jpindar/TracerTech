@@ -10,14 +10,17 @@
 *
 *
 */
-///#define RAINBOW
+#define DEBUG
+//#define RAINBOW
 //#define TRICOLOR
 #define NOTECARD_IN_THIS_PRIM
 //#define SPINTRAILS
 //#define SPARKBALL
 #include "lib.lsl"
-//string texture = TEXTURE_CLASSIC;
-string texture = TEXTURE_SPIKESTAR;
+//string texture = TEXTURE_NAUTICAL_STAR;
+//string texture = TEXTURE_RAINBOWBURST;
+string texture = TEXTURE_CLASSIC;
+//string texture = TEXTURE_SPIKESTAR;
 string color1;
 string color2;
 integer payloadIndex = 0;
@@ -44,12 +47,83 @@ integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
 float launchDelay = 0.5;
+integer code = 0;
+
 #if defined SPARKBALL
    string sound = SOUND_CRACKLE2; //3sec crackle
 #else
   /// string sound = SOUND_ROCKETLAUNCH1;
   string sound = SOUND_WHOOSH001;
 #endif
+
+
+msgHandler(string sender, string msg)
+{
+   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+      return;
+   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      return;
+   //debugSay("got message <" + msg +">");
+   msg = llToLower(msg);
+   if (msg == "fire")
+   {
+       fire();
+   }
+   else if (msg == "hide")
+   {
+       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
+   }
+   else if (msg == "show")
+   {
+       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+   }
+}
+
+fire()
+{
+   string rocket;
+   integer i;
+
+   rotation rot = llGetRot();
+   //rez a distance along the the barrel axis
+   vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
+   vector vel = <0,0,speed>*rot; //along the axis of the launcher
+   //angle = 90 * DEG_TO_RAD;
+   rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; 
+   for (i = 0; i<numOfBalls; i++)
+   {
+      llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,firingFace,1.0]);
+      #if defined RAINBOW
+          string colorA = llList2String(colors,(i)); 
+          launchMsg=texture+","+colorA+","+colorA+","+colorA;
+          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
+      #elif defined TRICOLOR
+          string colorA = llList2String(colors,(i*3)); 
+          string colorB = llList2String(colors,(i*3)+1);
+          string colorC = llList2String(colors,(i*3)+2);
+          launchMsg=texture+","+colorA+","+colorB+","+colorC;
+          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+      #else
+          string colorA = llList2String(colors,(i*2)); 
+          string colorB = llList2String(colors,(i*2)+1);
+          launchMsg=texture+","+colorA+","+colorB+","+colorB;
+          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+      #endif
+      launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
+      debugSay(launchMsg);
+      rezChan = (integer) llFrand(255);
+      integer packedParam2 = packedParam + (rezChan*0x4000);
+      rezChan = -42000 -rezChan;
+      llPlaySound(sound,volume);
+      repeatSound(sound,volume);
+      llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
+      setGlow(LINK_THIS,0.0);
+      llSleep(0.2);
+      //llOwnerSay(launchMsg);
+      llRegionSay(rezChan, launchMsg);
+      llSleep(launchDelay);
+   }
+}
 
 default
 {
@@ -60,16 +134,18 @@ default
    {
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
-         chatChan = getChatChan(notecardList);
-         owner = llGetOwner();
-         volume = getVolume(notecardList);
-         explodeOnCollision = getexplodeOnCollision(notecardList);
-         access = getAccess(notecardList);
-         //id  = owner;
-         handle = llListen( chatChan, "",id, "" );
-         llOwnerSay("listening on channel "+(string)chatChan);
       #endif
-      if (numOfBalls == 0)
+      chatChan = getChatChan(notecardList);
+      owner = llGetOwner();
+      volume = getVolume(notecardList);
+      explodeOnCollision = getexplodeOnCollision(notecardList);
+      access = getAccess(notecardList);
+      //id  = owner;
+      handle = llListen( chatChan, "",id, "" );
+      llOwnerSay("listening on channel "+(string)chatChan);
+      //code = getInteger(notecardList,"code");
+      numOfBalls = getInteger(notecardList,"balls");
+      if (numOfBalls < 1)
           numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       #if defined RAINBOW
           numOfBalls = 6;
@@ -124,71 +200,4 @@ default
 
 //this has to be after the default state
 #include "readNotecardToList.lsl"
-
-msgHandler(string sender, string msg)
-{
-   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
-      return;
-   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
-      return;
-   //debugSay("got message <" + msg +">");
-   msg = llToLower(msg);
-   if (msg == "fire")
-   {
-       fire();
-   }
-   else if (msg == "hide")
-   {
-       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-   }
-   else if (msg == "show")
-   {
-       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-   }
-}
-
-fire()
-{
-   string rocket;
-   integer i;
-
-   rotation rot = llGetRot();
-   //rez a distance along the the barrel axis
-   vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
-   vector vel = <0,0,speed>*rot; //along the axis of the launcher
-   rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; 
-   for (i = 0; i<numOfBalls; i++)
-   {
-      llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,firingFace,1.0]);
-      #if defined RAINBOW
-          string colorA = llList2String(colors,(i)); 
-          launchMsg=texture+","+colorA+","+colorA+","+colorA;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
-      #elif defined TRICOLOR
-          string colorA = llList2String(colors,(i*3)); 
-          string colorB = llList2String(colors,(i*3)+1);
-          string colorC = llList2String(colors,(i*3)+2);
-          launchMsg=texture+","+colorA+","+colorB+","+colorC;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-      #else
-          string colorA = llList2String(colors,(i*2)); 
-          string colorB = llList2String(colors,(i*2)+1);
-          launchMsg=texture+","+colorA+","+colorB+","+colorB;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-      #endif
-      launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
-      //llOwnerSay(launchMsg);
-      rezChan = (integer) llFrand(255);
-      integer packedParam2 = packedParam + (rezChan*0x4000);
-      rezChan = -42000 -rezChan;
-      llPlaySound(sound,volume);
-      repeatSound(sound,volume);
-      llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
-      setGlow(LINK_THIS,0.0);
-      llSleep(0.2);
-      //llOwnerSay(launchMsg);
-      llRegionSay(rezChan, launchMsg);
-      llSleep(launchDelay);
-   }
-}
 
