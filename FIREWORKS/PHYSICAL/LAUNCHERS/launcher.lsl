@@ -1,5 +1,5 @@
 /*
-* launch controller v2.7.4
+* launch controller v2.7.6
 * copyright Tracer Ping 2017
 * this goes in the main prim
 *
@@ -11,6 +11,7 @@
 *
 */
 #define DEBUG
+#define TRACERGRID
 //#define RAINBOW
 //#define TRICOLOR
 #define NOTECARD_IN_THIS_PRIM
@@ -93,22 +94,19 @@ fire()
    for (i = 0; i<numOfBalls; i++)
    {
       llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,firingFace,1.0]);
-      #if defined RAINBOW
+      if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
+      {
           string colorA = llList2String(colors,(i)); 
           launchMsg=texture+","+colorA+","+colorA+","+colorA;
           rocket = llGetInventoryName(INVENTORY_OBJECT,0);
-      #elif defined TRICOLOR
+      }else{  // i = 0
           string colorA = llList2String(colors,(i*3)); 
           string colorB = llList2String(colors,(i*3)+1);
           string colorC = llList2String(colors,(i*3)+2);
           launchMsg=texture+","+colorA+","+colorB+","+colorC;
           rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-      #else
-          string colorA = llList2String(colors,(i*2)); 
-          string colorB = llList2String(colors,(i*2)+1);
-          launchMsg=texture+","+colorA+","+colorB+","+colorB;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
-      #endif
+      }
+
       launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
       debugSay(launchMsg);
       rezChan = (integer) llFrand(255);
@@ -144,7 +142,9 @@ default
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
       //code = getInteger(notecardList,"code");
+
       numOfBalls = getInteger(notecardList,"balls");
+      debugSay((string)numOfBalls + " balls");
       if (numOfBalls < 1)
           numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       #if defined RAINBOW
@@ -152,6 +152,7 @@ default
       #elif defined TRICOLOR
           //numOfBalls = 3;
       #endif
+      debugSay((string)numOfBalls + " balls");
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
       bouyancy = getInteger(notecardList,"bouyancy"); 
@@ -161,11 +162,17 @@ default
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
       launchDelay = getFloat(notecardList, "delay");
       colors = colors + parseColor(notecardList,"color1");
+      //debugSay((string)colors);
       colors = colors + parseColor(notecardList,"color2");
+      //debugSay((string)colors);
       colors = colors + parseColor(notecardList,"color3");
+      //debugSay((string)colors);
       colors = colors + parseColor(notecardList,"color4");
+      //debugSay((string)colors);
       colors = colors + parseColor(notecardList,"color5");
+      //debugSay((string)colors);
       colors = colors + parseColor(notecardList,"color6"); 
+      debugSay("[" + (string)colors + "]");
       packedParam = flightTime+(bouyancy<<7);
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
