@@ -2,6 +2,9 @@
 * rocketball 2.8.5
 * copyright Tracer Ping 2017
 */
+#define TRACERGRID
+//#define DEBUG
+
 #define EXPLODE_ON_COLLISION
 //#define PRIM_ROTATION
 #define FREEZE_ON_BOOM
@@ -56,7 +59,7 @@ float flightTime;
    vector endSize = <0.5,0.5,0.0>;
    float rate = 2; //4.7
    float partAge = 5.0; //or 1.5
-   float primGlow = 0.0; 
+   float primGlow = 0.0;
    //float beginAngle = PI_BY_TWO;
    float beginAngle = PI;
    float endAngle = 0;
@@ -96,11 +99,75 @@ float flightTime;
    #include "effects\effect_standard_rocketball.lsl"
 #endif
 
+boom()
+{
+   //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
+   debugSay("boom");
+   setColor(LINK_THIS,(vector)primColor,0.0);
+   setGlow(LINK_THIS,primGlow2);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   if (freezeOnBoom)
+   {
+      debugSay("freezing");
+      llSetStatus(STATUS_PHYSICS,FALSE);
+      llSetStatus(STATUS_PHANTOM,TRUE);
+   }
+   #if defined ROT_90
+      llSetRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
+   #endif
+   if (tricolor)
+   {
+      makeParticles(LINK_THIS,color1,color1);
+      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
+      llPlaySound(sound1,boomVolume);
+      repeatSound(sound1,boomVolume);
+      llSleep(systemAge);
+      makeParticles(LINK_THIS,color2,color2);
+      llSleep(systemAge);
+      makeParticles(LINK_THIS,color3,color3);
+   }else{
+      makeParticles(LINK_THIS,color1,color2);
+      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
+      llPlaySound(sound1,boomVolume);
+      repeatSound(sound1,boomVolume);
+   }
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   setGlow(LINK_THIS,0.0);
+   llSleep(systemAge);
+   AllOff();
+   llSetTimerEvent(0);
+   if (rezParam !=0)
+   {
+       llSetStatus(STATUS_PHYSICS, FALSE);
+       llDie();
+   }
+   llSleep(5); //dunno why this is needed - but without it, no boom
+}
+
+
+AllOff()
+{
+   llParticleSystem([]);
+   setGlow(LINK_THIS,0.0);
+   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   llLinkParticleSystem(LINK_THIS,[]);
+}
+
+string parseColor2(string c)
+{
+   string color;
+   //color = getString(n,c);
+   if (llSubStringIndex(c,"<")== -1)
+       color = (string)iwNameToColor(c);
+   return color;
+}
+
+
 default
 {
    state_entry()
    {
-      //debug = TRUE;
       #if !defined HOTLAUNCH
          AllOff();
       #endif
@@ -139,7 +206,7 @@ default
       else
          debug = FALSE;
       if (p & COLLISION_MASK)
-         explodeOnCollision = 1; 
+         explodeOnCollision = 1;
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
       //llCollisionSound("", 1.0);  //  Disable collision sounds
@@ -147,8 +214,10 @@ default
       #if defined PRIM_ROTATION
          //r.z = -r.z;
          //r.x = -r.x;
-         //r.y = -r.y; 
+         //r.y = -r.y;
       #endif
+      //setting prim size sets velocity to zero
+      //this should have fixed it, but doesn't. Did it work in InWorldz?
       vector v = llGetVel();
       setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       llSetVelocity(v,FALSE);  //because setting the prim size sets velocity to zero
@@ -176,7 +245,7 @@ default
    {
       llListenRemove(handle);
       //debugSay(" listener got: "+ msg);
-      params = llCSV2List(msg); 
+      params = llCSV2List(msg);
       texture = llList2String(params,0);
       color1 = llList2String(params,1);
       color2 = llList2String(params,2);
@@ -206,6 +275,7 @@ default
       }
    }
 
+
    #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
@@ -215,8 +285,9 @@ default
       debugSay(llGetScriptName() + ": collision ");
       if ((explodeOnCollision==0) || (!armed))
          return;
+      spd = llGetVel();
       debugSay(llGetScriptName() + ": acting on collision ");
-      debugSay( "me @ " +(string)llVecMag(spd = llGetVel())+"m/s");
+      debugSay( "me @ " + (string)llVecMag(spd) + "m/s");
       for (f=0; f<n; f++)
       {
          debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
@@ -259,66 +330,3 @@ default
    #endif
 }
 
-boom()
-{
-   //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
-   debugSay("boom");
-   setColor(LINK_THIS,(vector)primColor,0.0);
-   setGlow(LINK_THIS,primGlow2);
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_SIZE, primSize]);
-   if (freezeOnBoom)
-   {
-      debugSay("freezing");
-      llSetStatus(STATUS_PHYSICS,FALSE);
-      llSetStatus(STATUS_PHANTOM,TRUE);
-   }
-   #if defined ROT_90
-      llSetRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
-   #endif
-   if (tricolor)
-   {
-      makeParticles(LINK_THIS,color1,color1);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color2,color2);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color3,color3);
-   }else{
-      makeParticles(LINK_THIS,color1,color2);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-   }
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   setGlow(LINK_THIS,0.0);
-   llSleep(systemAge);
-   AllOff();
-   llSetTimerEvent(0);
-   if (rezParam !=0)
-   {
-       llSetStatus(STATUS_PHYSICS, FALSE);
-       llDie();
-   }
-   llSleep(5); //dunno why this is needed - but without it, no boom
-}
-
-AllOff()
-{
-   llParticleSystem([]);
-   setGlow(LINK_THIS,0.0);
-   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
-   llLinkParticleSystem(LINK_THIS,[]);
-}
-
-string parseColor2(string c)
-{
-   string color;
-   //color = getString(n,c);
-   if (llSubStringIndex(c,"<")== -1)
-       color = (string)iwNameToColor(c);
-   return color;
-}
