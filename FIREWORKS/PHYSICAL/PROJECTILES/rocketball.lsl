@@ -31,6 +31,7 @@ string color2;
 string color3;
 string primColor;
 vector launchColor = <1.0,1.0,1.0>;
+float launchAlpha = 0.0;
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;
@@ -189,7 +190,7 @@ default
    {
       llResetTime();
       if (p > 0)
-          setColor(LINK_SET,launchColor,0.0);
+          setColor(LINK_SET,launchColor,launchAlpha);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       rezParam = p; //save this
