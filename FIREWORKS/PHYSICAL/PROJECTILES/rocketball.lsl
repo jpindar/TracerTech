@@ -38,7 +38,7 @@ float radius = 5;
 float falloff = 0.1; //0.02 to 0.75
 float primGlow1 = 0.0;
 float primGlow2 = 0.0;
-vector primSize = <0.1,0.1,0.5>;
+vector primSize = <0.2,0.2,0.5>;
 //vector primSize = <0.07,0.07,1.99>;
 integer glow = TRUE;
 integer bounce = FALSE;
@@ -58,18 +58,18 @@ float flightTime;
    float endAlpha = 0;// or1
    vector startSize = <1.5,1.5,0.0>;//or1.9
    vector endSize = <0.5,0.5,0.0>;
-   float rate = 2; //4.7
+   float rate = 2; //4.7   // 0.5
    float partAge = 5.0; //or 1.5
    float primGlow = 0.0;
    //float beginAngle = PI_BY_TWO;
    float beginAngle = PI;
    float endAngle = 0;
    #if defined TRICOLOR
-      float systemAge;
+      float systemAge = 0.5; //3//0.2 //1.0
       float partRadius = 1.0; //or 1
       #include "effects\effect_ringball3.lsl"
    #else
-      float systemAge;
+      float systemAge = 1.0; //3
       float partRadius = 1.5; //or 1
       #include "effects\effect_ringball1.lsl"
    #endif
@@ -78,12 +78,16 @@ float flightTime;
    float endAlpha = 0;
    vector startSize = <1.9,1.9,1.9>;
    vector endSize = <1.9,1.9,1.9>;
+   //vector particleOmega = <0.0,30.0, 0.0>;
    vector omega = <0.0,30.0, 0.0>;
    float systemAge = 5.0;
    float primGlow = 0.4;
+   //float partRadius = 1.0;
 #elif defined TRAILBALL
    float partSpeed = 10;
-   vector partOmega = <0.0,0.0,10*PI>;
+   //vector partOmega = <0.0,0.0,10*PI>;
+   vector particleOmega = <0.0,0.0,10*PI>;
+   //float partRadius = 1.0;
    integer wind = 0;
    float systemAge = 5;
    float primGlow = 0.4;
@@ -97,16 +101,21 @@ float flightTime;
    float systemAge = 1.0;
    vector omega = <0.0,0.0,0.0>;
    float primGlow = 0.4;
+   //float partRadius = 1.0;
    #include "effects\effect_standard_rocketball.lsl"
 #endif
+
 
 boom()
 {
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
+   //if (!armed)
+   //  return;
    debugSay("boom");
    setColor(LINK_THIS,(vector)primColor,0.0);
    setGlow(LINK_THIS,primGlow2);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_SIZE, <primSize2,primSize2,primSize2>]);
    if (freezeOnBoom)
    {
       debugSay("freezing");
@@ -155,6 +164,7 @@ AllOff()
    llLinkParticleSystem(LINK_THIS,[]);
 }
 
+/*
 string parseColor2(string c)
 {
    string color;
@@ -163,7 +173,7 @@ string parseColor2(string c)
        color = (string)iwNameToColor(c);
    return color;
 }
-
+*/
 
 default
 {
@@ -177,6 +187,9 @@ default
          //llTargetOmega(<0,0,0>,PI,1.0);
          //partSpeed1 = 0.7;
          //partSpeed2 = 0.7;
+      #endif
+      #if defined TRICOLOR
+         tricolor = TRUE;
       #endif
    }
 
@@ -194,6 +207,7 @@ default
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       rezParam = p; //save this
+      //debugSay("rezzed("+hex(p)+")");
       flightTime = (float)(p & 0x7F)/10.0;
       float bouy = (float)((p & 0x3F80) >> 7)/100.0;
       llSetBuoyancy(bouy);
@@ -245,7 +259,7 @@ default
    listen( integer chan, string name, key id, string msg )
    {
       llListenRemove(handle);
-      //debugSay(" listener got: "+ msg);
+      debugSay(" listener got: "+ msg);
       params = llCSV2List(msg);
       texture = llList2String(params,0);
       color1 = llList2String(params,1);
@@ -263,6 +277,7 @@ default
 
    timer()
    {
+      float minVel = 0.0;
       #if defined POINTFORWARD
       llLookAt( llGetVel()+llGetPos(), 0.5, 0.1);
       #endif
@@ -273,6 +288,17 @@ default
           llSetTimerEvent(0);
           if (armed)
               boom();
+      }
+      else
+      {
+         vector v = llGetVel();
+         if (v.z<minVel)
+         {
+            debugSay("low velocity" + (string)v.z);
+            llSetTimerEvent(0);
+            if (armed)
+               boom();
+         }
       }
    }
 
