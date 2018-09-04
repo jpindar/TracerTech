@@ -1,7 +1,8 @@
 /*
-*Fireworks Fountain emitter v2.5.3
-*Tracer Ping July 2014
+*Fireworks Fountain emitter v2.5
+*Tracer Ping Sept 2018
 */
+#define TRACERGRID
 #include "lib.lsl"
 //#define RAINFALL
 //#define MINIFOUNTAIN
@@ -11,7 +12,8 @@ string color2;
 string color3;
 string lightColor;
 string texture;
-string sound = SOUND_SPARKLE1_5S;
+string sound = SOUND_WHOOSH001;
+//SOUND_SPARKLE1_5S;
 list emitterNames = ["e1"];//["e1","e2","e3"];
 float oldAlpha;
 list colors;
@@ -33,6 +35,48 @@ float systemAge = 5;
    float omega = 0;
    #include "effects\effect_fountain1.lsl"
 #endif
+
+
+fire()
+{
+   integer i;
+   integer e;
+
+   oldAlpha = llGetAlpha(ALL_SIDES);
+   //llPlaySound(sound, volume/numOfEmitters);
+   //repeatSound(sound,volume/numOfEmitters);
+   llPlaySound(sound, volume);
+   repeatSound(sound,volume);
+   for(i=0;i<numOfEmitters;i++)
+   {
+       color1 = llList2String(colors,i*2);
+       color2 = llList2String(colors,(i*2)+1);
+       e = llList2Integer(emitters,i);
+       setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
+       //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
+       setGlow(e,1.0);
+       makeParticles(e,color1,color2);
+   }
+   llSleep(systemAge);
+   allOff();
+}
+
+
+allOff()
+{
+   integer i;
+   integer e;
+   setGlow(LINK_SET,0.0);
+   for(i=0;i<numOfEmitters;i++)
+   {
+      e = llList2Integer(emitters,i);
+      //setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor, intensity,radius,falloff]);
+      llLinkParticleSystem(e,[]);
+      setGlow(e,0.0);
+      setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
+   }
+}
+
 
 default
 {
@@ -60,8 +104,8 @@ default
       {
          if (llStringLength(msg) > 0)
          {
-            //llOwnerSay(" listener got: "+ msg);
-            params = llCSV2List(msg); 
+            debugSay(" emitter got: "+ msg);
+            params = llCSV2List(msg);
             texture = llList2String(params,0);
             color1 = llList2String(params,1);
             lightColor = color1;
@@ -70,45 +114,6 @@ default
          }
          fire();
       }
-   }
-}
-
-fire()
-{
-   integer i; 
-   integer e;
-
-   oldAlpha = llGetAlpha(ALL_SIDES);
-   //llPlaySound(sound, volume/numOfEmitters);
-   //repeatSound(sound,volume/numOfEmitters);
-   llPlaySound(sound, volume);
-   repeatSound(sound,volume);
-   for(i=0;i<numOfEmitters;i++)
-   {
-       color1 = llList2String(colors,i*2);
-       color2 = llList2String(colors,(i*2)+1);
-       e = llList2Integer(emitters,i);
-       setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
-       //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
-       setGlow(e,1.0);
-       makeParticles(e,color1,color2);
-   }
-   llSleep(systemAge);
-   allOff();
-}
-
-allOff()
-{
-   integer i;
-   integer e;
-   setGlow(LINK_SET,0.0);
-   for(i=0;i<numOfEmitters;i++)
-   {
-      e = llList2Integer(emitters,i);
-      //setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor, intensity,radius,falloff]);
-      llLinkParticleSystem(e,[]);
-      setGlow(e,0.0);
-      setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
    }
 }
 
