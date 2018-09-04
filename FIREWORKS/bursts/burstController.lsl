@@ -12,8 +12,8 @@ string color;
 //string texture = TEXTURE_SPIKESTAR;
 string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
-key owner; 
-string preloadPrimName = "preloader";
+key owner;
+string preloadPrimName = "preloader";  //can be same as emitter?
 integer preloadFace = 0;
 integer handle;
 integer chatChan;
@@ -23,11 +23,11 @@ float delay = 0.0;  // 0.3 for multiburst
 integer maxColors = 6;
 /* for multiburst,
   add more parseColors as needed, ideally two per prim per burst
-  
+
   construct fireMsg's
- 
+
   uncomment delays and llMessageLinked's
- */  
+ */
 fire()
 {
    integer i;
@@ -35,6 +35,7 @@ fire()
    for (i=1; i<=maxColors; i++)
    {
      color = parseColor(notecardList,"color"+(string)i);
+     //if color is some value that  indicates failure, use the previous color?
      fireMsg =fireMsg + "," + color;
    }
 
@@ -99,7 +100,7 @@ default
    link_message(integer sender, integer num, string msg, key id)
    {
        debugSay("controller: got link  message " + msg );
-       msgHandler(owner, msg); 
+       msgHandler(owner, msg);
    }
 
    //chat comes from trigger or avatar
