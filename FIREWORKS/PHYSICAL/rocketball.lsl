@@ -1,5 +1,5 @@
 /*
-* rocketball 2.8.5
+* rocketball 2.8.6
 * copyright Tracer Ping 2017
 */
 #define TRACERGRID
@@ -34,12 +34,12 @@ vector launchColor = <1.0,1.0,1.0>;
 float launchAlpha = 0.0;
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
-float radius = 5;
+float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
 float primGlow1 = 0.0;
 float primGlow2 = 0.0;
 vector primSize = <0.2,0.2,0.5>;
-//vector primSize = <0.07,0.07,1.99>;
+//vector primSize = <0.07,0.07,1.99>;  //<0.3,0.3,0.3>
 integer glow = TRUE;
 integer bounce = FALSE;
 float startAlpha = 1;
@@ -51,27 +51,34 @@ integer handle;
 integer armed = FALSE;
 float totalTime = 0;
 float flightTime;
+float systemAge = 1.0;
 
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
-   float endAlpha = 0;// or1
-   vector startSize = <1.5,1.5,0.0>;//or1.9
-   vector endSize = <0.5,0.5,0.0>;
-   float rate = 2; //4.7   // 0.5
+   float endAlpha = 0;// 0 to 1
+   vector startSize = <1.5,1.5,0.0>; //or 1.9
+   vector endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
+   float rate = 2; //2 to 5
+   //float partRadius = 1.5; //or 1
+   //float radius = 1.5; //or 1
    float partAge = 5.0; //or 1.5
    float primGlow = 0.0;
+
+   // full circle or half?
    //float beginAngle = PI_BY_TWO;
    float beginAngle = PI;
+
    float endAngle = 0;
    #if defined TRICOLOR
-      float systemAge = 0.5; //3//0.2 //1.0
       float partRadius = 1.0; //or 1
       #include "effects\effect_ringball3.lsl"
    #else
       float systemAge = 1.0; //3
       float partRadius = 1.5; //or 1
       #include "effects\effect_ringball1.lsl"
+      //#include "effects\effect_ringball2.lsl"
+      //#include "effects\effect_ringball4.lsl"
    #endif
 #elif defined SPIRALBALL
    integer effectsType = 12;
@@ -86,19 +93,19 @@ float flightTime;
 #elif defined TRAILBALL
    float partSpeed = 10;
    //vector partOmega = <0.0,0.0,10*PI>;
-   vector particleOmega = <0.0,0.0,10*PI>;
+   //vector particleOmega = <0.0,0.0,10*PI>;
    //float partRadius = 1.0;
    integer wind = 0;
    float systemAge = 5;
    float primGlow = 0.4;
    #include "effects\effect_trailball.lsl"
 #elif defined SPARKLERBALL
+#elif defined FIREBALL
+   #include "effects\effect_jopseys_fire.lsl"
 #else
-   //integer effectsType = 2;
    float endAlpha = 0;
    vector startSize = <1.9,1.9,1.9>;
    vector endSize = <1.9,1.9,1.9>;
-   float systemAge = 1.0;
    vector omega = <0.0,0.0,0.0>;
    float primGlow = 0.4;
    //float partRadius = 1.0;
@@ -115,7 +122,6 @@ boom()
    setColor(LINK_THIS,(vector)primColor,0.0);
    setGlow(LINK_THIS,primGlow2);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-   //llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_SIZE, <primSize2,primSize2,primSize2>]);
    if (freezeOnBoom)
    {
       debugSay("freezing");
@@ -164,16 +170,6 @@ AllOff()
    llLinkParticleSystem(LINK_THIS,[]);
 }
 
-/*
-string parseColor2(string c)
-{
-   string color;
-   //color = getString(n,c);
-   if (llSubStringIndex(c,"<")== -1)
-       color = (string)iwNameToColor(c);
-   return color;
-}
-*/
 
 default
 {
@@ -243,16 +239,9 @@ default
       #endif
       // we don't know the color yet
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-      //integer mask = FRICTION & DENSITY & RESTITUTION & GRAVITY_MULTIPLIER;
-      //float gravity = 1.0;
-      //float restitution = 0.3;
-      //float friction = 0.9;
-      //float density = 1000; //500
-      //llSetPhysicsMaterial(mask,gravity,restitution,friction,density);
       if (rezParam>0)
       {   //use timer instead of sleeping to allow other events
           llSetTimerEvent(0.1);
-          //debugSay("time is " + (string)t + " param2 is " + (string) bouy);
       }
    }
 
