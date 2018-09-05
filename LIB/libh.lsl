@@ -54,16 +54,17 @@
 #define TEXTURE_LIGHTNING4 "c834d59c-456f-4882-931f-b5320ff35337"
 #define TEXTURE_LIGHTNING5 "00faa9d7-bcb6-46b9-958a-4e79fa2e454c"
 #define TEXTURE_LIGHTNING6 "659d59ef-ff01-4582-8908-7e63bd33e763"
-//"ffe22c5d-0712-42d6-97a3-4cdfc35614a2" 
+//"ffe22c5d-0712-42d6-97a3-4cdfc35614a2"
 //"e5bc2d4e-a5a1-d075-c29a-60da0d43f448"
 // "f0797071-d608-4606-985d-9bb7f3750256"
  //39579f43-e6ff-4711-af68-925b737abc0d
-#else
-#define TEXTURE_CLASSIC "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"
+#elif defined TRACERGRID
+#define TEXTURE_CLASSIC   "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"
+#define TEXTURE_SPIKESTAR "67b464c2-d8e9-4986-8d14-1681224068eb"
 #endif
 
 
-//these colors must be strings in this exact format 
+//these colors must be strings in this exact format
 //because I don't want to bother writing a message parser
 #define COLOR_WHITE "<1.00,1.00,1.00>"
 #define COLOR_BLACK "<0.00,0.00,0.00>"
@@ -99,10 +100,10 @@
 #define SOUND_WHOOSH001 "cbe0f64f-fb02-4aaa-8b8d-8dd729d3cda0"
 #define SOUND_BOOM001 "e53efc67-f50d-4ec5-809b-d13d487e9666"  //metallic boom/gong sound
 
-#else
+#elif defined TRACERGRID
    #define SOUND_WHOOSH001 "a120d4b5-e56c-4f28-ac02-f606862d269e"
    #define SOUND_PUREBOOM  "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
-#endif   
+#endif
 
 
 #define DEBUG_MASK     0x01000000
