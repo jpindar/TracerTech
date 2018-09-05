@@ -1,5 +1,5 @@
 /*
-* launch controller v2.7.6
+* launch controller v2.7.7
 * copyright Tracer Ping 2017
 * this goes in the main prim
 *
@@ -161,7 +161,7 @@ default
       //code = getInteger(notecardList,"code");
 
       numOfBalls = getInteger(notecardList,"balls");
-      debugSay((string)numOfBalls + " balls from notecard");
+      //debugSay((string)numOfBalls + " balls from notecard");
       if (numOfBalls < 1)
           numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       #if defined RAINBOW
@@ -169,7 +169,7 @@ default
       #elif defined TRICOLOR
           numOfBalls = 3;
       #endif
-      debugSay((string)numOfBalls + " balls");
+      //debugSay((string)numOfBalls + " ball(s)");
 
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
@@ -198,7 +198,7 @@ default
 
       llPreloadSound(sound);
       integer preloadLink = getLinkWithName(preloadPrimName);
-      if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER");
+      if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
       vector v = llGetScale();
       zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
