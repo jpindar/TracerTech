@@ -1,0 +1,18 @@
+
+//say commands (hide, show, or fire) on this channel
+channel,2000
+
+//volume from 0.0 to 1.0
+volume, 1.0
+
+//1 = menu, 0 = touch
+menu, 0
+
+//1 = wind, 0 = no wind
+wind, 1
+
+//1 = public; 2 = group; 3 = owner
+access,1
+
+color1, <1,0,0>, color2, <1,1,1>
+color3, <0,0,1>
