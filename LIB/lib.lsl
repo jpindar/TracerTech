@@ -15,6 +15,20 @@ debugSay(string msg)
    #endif
 }
 
+integer assert(integer b, string s)
+{
+   if (b)
+   {
+      return TRUE;
+   }
+   else
+   {
+   debugSay(s);
+   return FALSE;
+   }
+}
+
+
 #if defined INWORLDZ
 string parseColor(list n, string c)
 {
@@ -22,7 +36,7 @@ string parseColor(list n, string c)
    color = getString(n,c);
    if (llSubStringIndex(color,"<")== -1)
        color = (string)iwNameToColor(color);
-   return color;	   
+   return color;
 }
 #else
 string parseColor(list n, string c)
@@ -33,7 +47,7 @@ string parseColor(list n, string c)
    //   color =  "<1.0,1.0,1.0>";
    if (llSubStringIndex(color,"<")== -1)
        color = "<1.0,1.0,1.0>";
-   return color;	   
+   return color;
 }
 #endif
 
@@ -59,8 +73,8 @@ if (id == llGetOwner())
   return TRUE;
 else if (llGetOwnerKey(id) == llGetOwner())
   return TRUE;
-else 
-  return FALSE;  
+else
+  return FALSE;
 }
 
 integer randomChan()
@@ -76,13 +90,13 @@ repeatSound(key sound, float volume)
 integer objectDescToInt()
 {
    return (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
-}  
+}
 
 setObjectDesc(string s)
 { //there is a good reason not to use llSetLinkPrimitiveParamsFast here
     llSetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC,s]);
 }
-	
+
 playInventorySound()
 {
    llPlaySound(llGetInventoryName(INVENTORY_SOUND,0),1);
@@ -99,13 +113,13 @@ string getNotecardName(string d)
   string s = d;
   if (s == "")
        s = llGetInventoryName(INVENTORY_NOTECARD,0);
-  //llOwnerSay("looking for notecard <" + s + ">");   
+  //llOwnerSay("looking for notecard <" + s + ">");
   if (llGetInventoryType(s) == INVENTORY_NONE)
       {
         llOwnerSay("notecard '" + d + "' not found");
         s = "";
-      } 
-  return s;    
+      }
+  return s;
 }
 
 string getString(list notecardList, string name)
@@ -133,7 +147,7 @@ integer getInteger(list notecardList, string name)
    if (ptr > -1)
        i = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
 	else
-        i = -1;	
+        i = -1;
    return i;
 }
 
@@ -351,7 +365,7 @@ setAllPrimParams()
     integer link_idx;
     integer link_qty = llGetNumberOfPrims();
     if (link_qty > 1)
-    {        
+    {
         for (link_idx=1; link_idx <= link_qty; link_idx++)
         {
             //desc =  (string)llGetLinkPrimitiveParams(link_idx,[PRIM_DESC]);
@@ -369,15 +383,15 @@ list mergeLists(list newList, list oldList)
   list value;
   integer ptr;
   integer i;
-  list subList;      
-  length = llGetListLength(newList);  
+  list subList;
+  length = llGetListLength(newList);
   for (i=0; i<length; i=i+2)
   {
       subList = llList2List(newList,i,i+1);
       subList = list_cast(subList);
       // llSay(0, llList2CSV(subList));
-      keyword = llList2List(subList,0,0); 
-      value = llList2List(subList,1,1);  
+      keyword = llList2List(subList,0,0);
+      value = llList2List(subList,1,1);
 
       //llSay(0, llList2CSV(key1));
       ptr = llListFindList(oldList,keyword);  //case sensitive, unfortunately
@@ -386,8 +400,8 @@ list mergeLists(list newList, list oldList)
    }
    return oldList;
 }
-   
-//This function typecasts a list of strings, into the types they appear to be. 
+
+//This function typecasts a list of strings, into the types they appear to be.
 //Extremely useful for feeding user data into llSetPrimitiveParams
 //It takes a list as an input, and returns that list, with all elements correctly typecast, as output
 //Written by Fractured Crystal, 27 Jan 2010, Commissioned by WarKirby Magojiro, this function is Public Domain
@@ -442,9 +456,39 @@ list list_cast(list in)
         @end;
         i += 1;
     }
- 
-    return out;   
- } 
-*/ 
 
+    return out;
+ }
+*/
 
+string XDIGITS = "0123456789abcdef"; // could be "0123456789ABCDEF"
+
+string hexes(integer bits)
+{
+    string nybbles = "";
+    while (bits)
+    {
+        integer lsn = bits & 0xF; // least significant nybble
+        string nybble = llGetSubString(XDIGITS, lsn, lsn);
+        nybbles = nybble + nybbles;
+        bits = bits >> 4; // discard the least significant bits at right
+        bits = bits & 0xfffFFFF; // discard the sign bits at left
+    }
+    return nybbles;
+}
+
+string hex(integer value)
+{
+    if (value < 0)
+    {
+        return "-0x" + hexes(-value);
+    }
+    else if (value == 0)
+    {
+        return "0x0"; // hexes(value) == "" when (value == 0)
+    }
+    else // if (0 < value)
+    {
+        return "0x" + hexes(value);
+    }
+}
