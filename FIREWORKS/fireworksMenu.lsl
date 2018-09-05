@@ -1,7 +1,11 @@
-////////////////////////
-//fireworks menu v1.0
-//copyright Tracer Tech aka Tracer Ping 2014
-/////////////////////////////
+/*
+*fireworks menu v1.3
+*copyright Tracer Tech aka Tracer Ping 2015
+*
+*gets notecard data via link message
+*responds to touch
+*listens only to menu
+*/
 list buttonsOwner=["fire","hide","show"];
 //list buttonsGroup=["hide","show","fire"];
 //list buttonsPublic=["fire"];
@@ -14,7 +18,7 @@ integer access;
 integer timeout = 10;
 
 #include "lib.lsl"
- 
+
 default
 {
    on_rez(integer n){llResetScript();}
@@ -42,7 +46,7 @@ default
          toucher=llDetectedKey(0);
          llDialog(toucher,menuText,buttonsOwner,menuChan);
          handle=llListen(menuChan,"",toucher,"");
-         llSetTimerEvent(timeout); 
+         llSetTimerEvent(timeout);
       }
    }
 
@@ -51,7 +55,7 @@ default
        llSetTimerEvent(0);
        llListenRemove(handle);
    }
-   
+
   link_message( integer sender, integer num, string msg, key id )
   {
      list notecardList;
@@ -88,6 +92,6 @@ sendMsg(string msg)
       llSay(chatChan,msg);
    #endif
    llMessageLinked(LINK_SET, 0, msg, "");
-   debugSay(msg); 
+   debugSay(msg);
 }
 

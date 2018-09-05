@@ -14,11 +14,11 @@ state readNotecardToList
         if (notecardName == "")
         {
            doneReadingNotecard = TRUE;
-           llOwnerSay("Can't find the config notecard");			   
+           llOwnerSay("Can't find the config notecard");
            state default;
         }
         notecardLineIndex = 0;
-        Query1 = llGetNotecardLine(notecardName, notecardLineIndex++); 
+        Query1 = llGetNotecardLine(notecardName, notecardLineIndex++);
         llOwnerSay("loading notecard...");
     }
 
@@ -37,7 +37,7 @@ state readNotecardToList
             doneReadingNotecard = TRUE;
             string s = llList2CSV(notecardList);
             //debugSay(s);
-            llMessageLinked(LINK_THIS, RETURNING_NOTECARD_DATA, s,""); 
+            llMessageLinked(LINK_THIS, RETURNING_NOTECARD_DATA, s,"");
             llOwnerSay("...done");
             state default;
         }
