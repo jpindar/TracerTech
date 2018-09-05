@@ -1,17 +1,18 @@
 /*
-* rocketball 2.8.6
-* copyright Tracer Ping 2017
+* rocketball 2.9
+* copyright Tracer Ping 2018
 */
 #define TRACERGRID
-//#define DEBUG
+#define DEBUG
 
-#define EXPLODE_ON_COLLISION
-//#define PRIM_ROTATION
-#define FREEZE_ON_BOOM
-//#define SPIRALBALL
 #define RINGBALL
 //#define SPHERE_BALL
 //#define TRAILBALL
+
+//#define EXPLODE_ON_COLLISION
+//#define PRIM_ROTATION
+#define FREEZE_ON_BOOM
+//#define SPIRALBALL
 //#define HOTLAUNCH
 // RINGBALLS SHOULD NOT POINTFORWARD
 //#define POINTFORWARD
@@ -49,7 +50,6 @@ integer freezeOnBoom = FALSE;
 list params;
 integer handle;
 integer armed = FALSE;
-float totalTime = 0;
 float flightTime;
 float systemAge = 1.0;
 
@@ -59,17 +59,17 @@ float systemAge = 1.0;
    float endAlpha = 0;// 0 to 1
    vector startSize = <1.5,1.5,0.0>; //or 1.9
    vector endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
-   float rate = 2; //2 to 5
+   float rate = 0.1; //0.1 to 5
    //float partRadius = 1.5; //or 1
    //float radius = 1.5; //or 1
-   float partAge = 5.0; //or 1.5
+   float partAge = 1.0; // 1.0 to 5
    float primGlow = 0.0;
 
-   // full circle or half?
+   //full or half ring?
    //float beginAngle = PI_BY_TWO;
    float beginAngle = PI;
-
    float endAngle = 0;
+
    #if defined TRICOLOR
       float partRadius = 1.0; //or 1
       #include "effects\effect_ringball3.lsl"
@@ -198,57 +198,58 @@ default
    on_rez(integer p)
    {
       llResetTime();
+      debug = (p & DEBUG_MASK);
+      debugSay("initial velocity "+(string)llGetVel());
       if (p > 0)
           setColor(LINK_SET,launchColor,launchAlpha);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       rezParam = p; //save this
       //debugSay("rezzed("+hex(p)+")");
-      flightTime = (float)(p & 0x7F)/10.0;
+      flightTime = (float)(p & 0x7F);
       float bouy = (float)((p & 0x3F80) >> 7)/100.0;
       llSetBuoyancy(bouy);
       integer chan = (-42000) -((p & 0x3FC000) >>14);
       //debugSay("p2 ="+ (string)p2);
       //debugSay("chan = "+(string)chan);
-      //debugSay("flightTime ="+ (string)flightTime);
+      debugSay("flightTime ="+ (string)flightTime);
       handle=llListen(chan,"","","");
-      if (p & DEBUG_MASK)
-         debug = TRUE;
-      else
-         debug = FALSE;
+
       if (p & COLLISION_MASK)
          explodeOnCollision = 1;
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
       //llCollisionSound("", 1.0);  //  Disable collision sounds
-      rotation r = llGetRot();
-      #if defined PRIM_ROTATION
+
+      //setting prim size sets velocity to zero
+      //this should have fixed it, but doesn't. Did it work in InWorldz?
+      //vector v = llGetVel();
+      //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
+      //llSetVelocity(v,FALSE);  //because setting the prim size sets velocity to zero
+      #if defined POINTFORWARD
+         vector v = llGetVel();
+         llLookAt(v+llGetPos(), 0.5, 0.1);
+      #elif defined PRIM_ROTATION
+         rotation r = llGetRot();
          //r.z = -r.z;
          //r.x = -r.x;
          //r.y = -r.y;
-      #endif
-      //setting prim size sets velocity to zero
-      //this should have fixed it, but doesn't. Did it work in InWorldz?
-      vector v = llGetVel();
-      setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
-      llSetVelocity(v,FALSE);  //because setting the prim size sets velocity to zero
-      #if defined POINTFORWARD
-         llLookAt(v+llGetPos(), 0.5, 0.1);
-      #else
          llSetRot(r);
       #endif
       // we don't know the color yet
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
       if (rezParam>0)
       {   //use timer instead of sleeping to allow other events
-          llSetTimerEvent(0.1);
+          llSetTimerEvent(0.01);
       }
+      debugSay("end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
    }
 
    listen( integer chan, string name, key id, string msg )
    {
       llListenRemove(handle);
-      debugSay(" listener got: "+ msg);
+      //debugSay(" listener got: "+ msg);
+      debugSay("got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       params = llCSV2List(msg);
       texture = llList2String(params,0);
       color1 = llList2String(params,1);
@@ -270,8 +271,11 @@ default
       #if defined POINTFORWARD
       llLookAt( llGetVel()+llGetPos(), 0.5, 0.1);
       #endif
-      totalTime = totalTime+0.1;
-      if (totalTime>flightTime)
+      float tim = llGetTime();
+      vector v = llGetVel();
+      debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
+
+      if (tim>flightTime)
       {
           debugSay("timed out");
           llSetTimerEvent(0);
@@ -280,13 +284,12 @@ default
       }
       else
       {
-         vector v = llGetVel();
          if (v.z<minVel)
          {
             debugSay("low velocity" + (string)v.z);
             llSetTimerEvent(0);
-            if (armed)
-               boom();
+            //if (armed)
+            //   boom();
          }
       }
    }
