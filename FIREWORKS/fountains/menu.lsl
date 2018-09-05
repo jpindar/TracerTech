@@ -17,6 +17,21 @@ integer access;
 //#define LINKED
 #include "lib.lsl"
  
+sendMsg(string msg)
+{
+   #if defined REMOTE_MENU
+      llSay(chatChan,msg);
+   #endif
+   #if defined LINKED
+      llMessageLinked(LINK_THIS, 0, msg, "");
+   #else
+      llMessageLinked(LINK_SET, 0, msg, "");
+   #endif
+   //llMessageLinked(LINK_SET, 0, msg, "");
+   //llMessageLinked(LINK_SET, 0, msg, "");
+}
+
+
 default
 {
    on_rez(integer n){llResetScript();}
@@ -111,17 +126,4 @@ default
    }
 }
 
-sendMsg(string msg)
-{
-   #if defined REMOTE_MENU
-      llSay(chatChan,msg);
-   #endif
-   #if defined LINKED
-      llMessageLinked(LINK_THIS, 0, msg, "");
-   #else
-      llMessageLinked(LINK_SET, 0, msg, "");
-   #endif
-   //llMessageLinked(LINK_SET, 0, msg, "");
-   //llMessageLinked(LINK_SET, 0, msg, "");
-}
 
