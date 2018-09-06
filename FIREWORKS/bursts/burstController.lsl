@@ -5,12 +5,15 @@
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
 */
+#define TRACERGRID
+//#define SOAS
+
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
-string color;
 //string texture = TEXTURE_SPIKESTAR;
 string texture = TEXTURE_CLASSIC;
+string color;
 float glowAmount = 0.0;
 key owner;
 string preloadPrimName = "preloader";  //can be same as emitter?
@@ -21,6 +24,8 @@ key id = "";
 integer access;
 float delay = 0.0;  // 0.3 for multiburst
 integer maxColors = 6;
+
+
 /* for multiburst,
   add more parseColors as needed, ideally two per prim per burst
 

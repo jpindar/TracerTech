@@ -2,7 +2,12 @@
 *Fireworks burst emitter v2.5.5
 *Tracer Ping July 2015
 */
+
+#define TRACERGRID
+//#define SOAS
+
 //#define DEBUG
+
 #include "lib.lsl"
 
 string color1;
@@ -28,7 +33,7 @@ list params;
    integer numOfEmitters = 1;
    float interEmitterDelay = 0.1;
    #include "effects\effect_standard_burst_exp1.lsl"
-#ELSE
+#else
    float glowAmount = 0.5; // or 0.2
    //list emitterNames = ["e1"];
    list emitterNames = ["e1","e2","e3"];
@@ -40,7 +45,7 @@ list params;
 
 fire()
 {
-   integer i; 
+   integer i;
    integer e;
 
    oldAlpha = llGetAlpha(ALL_SIDES);
@@ -111,7 +116,7 @@ default
          if (llStringLength(msg) > 0)
          {
             debugSay(" listener got: "+ msg);
-            params = llCSV2List(msg); 
+            params = llCSV2List(msg);
             integer len = llGetListLength(params);
             texture = llList2String(params,0);
             color1 = llList2String(params,1);
