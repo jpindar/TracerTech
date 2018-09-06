@@ -2,18 +2,22 @@
 *Fireworks Fountain emitter v2.5
 *Tracer Ping Sept 2018
 */
+
 #define TRACERGRID
+//#define SOAS
+
 #include "lib.lsl"
 //#define RAINFALL
 //#define MINIFOUNTAIN
+string sound = SOUND_WHOOSH001;
+//SOUND_SPARKLE1_5S;
 
 string color1;
 string color2;
 string color3;
 string lightColor;
 string texture;
-string sound = SOUND_WHOOSH001;
-//SOUND_SPARKLE1_5S;
+
 list emitterNames = ["e1"];//["e1","e2","e3"];
 float oldAlpha;
 list colors;

@@ -7,15 +7,18 @@
 *
 * sends link messages to the actual particle scripts
 */
+
 #define TRACERGRID
+//#define SOAS
+
 //#define DEBUG
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
+string texture = TEXTURE_CLASSIC;
 
 string color1;
 string color2;
 string color3;
-string texture = TEXTURE_CLASSIC;
 float glowAmount = 0.0;
 string preloadPrimName = "pre";
 integer preloadFace = 0; // was 3?
