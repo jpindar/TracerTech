@@ -12,6 +12,8 @@
 */
 #define DEBUG
 #define TRACERGRID
+//#define SOAS
+
 //#define RAINBOW
 //#define TRICOLOR
 #define NOTECARD_IN_THIS_PRIM
@@ -87,17 +89,11 @@ fire()
    string rocket;
    integer i;
 
-   #if defined DEBUG
-      packedParam = packedParam | DEBUG_MASK;
-   #endif
    rotation rot = llGetRot();
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot; //along the axis of the launcher
 
-   // NORMAL CASE
-   //angle = 90 * DEG_TO_RAD;  //90 degrees =  PI_BY_TWO radians
-   rotation rot2 = llEuler2Rot(<0,angle,0>) * rot;
 
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
@@ -106,6 +102,8 @@ fire()
       rotation rot2 = llEuler2Rot(<0, PI_BY_TWO, 0>) * rot; //putting the constant first means local rotation
    #elif defined LAUNCH_ROT_ZERO
       rotation rot2 = <0.0,0.0,0.0,0.0>;
+   #else // angle is in radians, either as initialized or read from notecard
+      rotation rot2 = llEuler2Rot(<0,angle,0>) * rot;
    #endif
 
    for (i = 0; i<numOfBalls; i++)
@@ -193,8 +191,9 @@ default
          packedParam = packedParam | FREEZE_MASK;
       if (wind >0)
          packedParam = packedParam | WIND_MASK;
-      //uncomment next line to make payload say debug messages
-      //packedParam = packedParam | DEBUG_MASK;
+      #if defined DEBUG
+         packedParam = packedParam | DEBUG_MASK;
+      #endif
 
       llPreloadSound(sound);
       integer preloadLink = getLinkWithName(preloadPrimName);

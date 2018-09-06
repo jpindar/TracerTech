@@ -3,17 +3,19 @@
 * copyright Tracer Ping 2018
 */
 #define TRACERGRID
+//#define SOAS
+
 #define DEBUG
 
 #define RINGBALL
 //#define SPHERE_BALL
 //#define TRAILBALL
+//#define SPIRALBALL
+//#define HOTLAUNCH
 
 //#define EXPLODE_ON_COLLISION
 //#define PRIM_ROTATION
 #define FREEZE_ON_BOOM
-//#define SPIRALBALL
-//#define HOTLAUNCH
 // RINGBALLS SHOULD NOT POINTFORWARD
 //#define POINTFORWARD
 //but if they are, they probably should be ROT_90, so that the ring is perpedicular
@@ -39,8 +41,7 @@ float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
 float primGlow1 = 0.0;
 float primGlow2 = 0.0;
-vector primSize = <0.2,0.2,0.5>;
-//vector primSize = <0.07,0.07,1.99>;  //<0.3,0.3,0.3>
+vector primSize = <0.3,0.3,0.3>; //or <0.07,0.07,1.99> or <0.3,0.3,0.3>
 integer glow = TRUE;
 integer bounce = FALSE;
 float startAlpha = 1;
@@ -52,7 +53,6 @@ integer handle;
 integer armed = FALSE;
 float flightTime;
 float systemAge = 1.0;
-
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
@@ -74,7 +74,6 @@ float systemAge = 1.0;
       float partRadius = 1.0; //or 1
       #include "effects\effect_ringball3.lsl"
    #else
-      float systemAge = 1.0; //3
       float partRadius = 1.5; //or 1
       #include "effects\effect_ringball1.lsl"
       //#include "effects\effect_ringball2.lsl"
@@ -87,7 +86,6 @@ float systemAge = 1.0;
    vector endSize = <1.9,1.9,1.9>;
    //vector particleOmega = <0.0,30.0, 0.0>;
    vector omega = <0.0,30.0, 0.0>;
-   float systemAge = 5.0;
    float primGlow = 0.4;
    //float partRadius = 1.0;
 #elif defined TRAILBALL
@@ -96,7 +94,6 @@ float systemAge = 1.0;
    //vector particleOmega = <0.0,0.0,10*PI>;
    //float partRadius = 1.0;
    integer wind = 0;
-   float systemAge = 5;
    float primGlow = 0.4;
    #include "effects\effect_trailball.lsl"
 #elif defined SPARKLERBALL
@@ -212,7 +209,7 @@ default
       integer chan = (-42000) -((p & 0x3FC000) >>14);
       //debugSay("p2 ="+ (string)p2);
       //debugSay("chan = "+(string)chan);
-      debugSay("flightTime ="+ (string)flightTime);
+      //debugSay("flightTime ="+ (string)flightTime);
       handle=llListen(chan,"","","");
 
       if (p & COLLISION_MASK)
@@ -233,7 +230,7 @@ default
          rotation r = llGetRot();
          //r.z = -r.z;
          //r.x = -r.x;
-         //r.y = -r.y;
+         r.y = -r.y;
          llSetRot(r);
       #endif
       // we don't know the color yet
@@ -304,9 +301,8 @@ default
       debugSay(llGetScriptName() + ": collision ");
       if ((explodeOnCollision==0) || (!armed))
          return;
-      spd = llGetVel();
       debugSay(llGetScriptName() + ": acting on collision ");
-      debugSay( "me @ " + (string)llVecMag(spd) + "m/s");
+      debugSay( "me @ " +(string)llVecMag(llGetVel())+"m/s");
       for (f=0; f<n; f++)
       {
          debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");

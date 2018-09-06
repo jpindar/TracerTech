@@ -11,15 +11,23 @@ menu, 0
 //1 = explode on collision, 0 = don't
 collision, 1
 
+//1 =  freeze on explosion, 0 = keep moving
+freeze,1
+
 //1 = public; 2 = group; 3 = owner
 access,1
 
-//speed typically 8 to 30 // 
-//flighttime typically 10 to 30 // was 19
-//bouyancy 0 to 100  (typ 55)
+// number of balls, typically 1
+balls, 1
 
-speed,20, flighttime, 10,  bouyancy,65
+//speed typically 8 to 30
+//flighttime typically 2 or 3
+//bouyancy typically 50 or 55
+
+speed, 8, flighttime, 2,  bouyancy,50
+
+//particletime varies, start with 1
+particletime, 1
 
  color1, <1.0,0.0,0.0>, color2, <0.0,0.0,1.0>
- 
- 
+
