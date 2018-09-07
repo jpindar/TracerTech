@@ -8,6 +8,8 @@
 #define TRACERGRID
 //#define SOAS
 
+#define DEBUG
+
 #define NOTECARD_IN_THIS_PRIM
 #include "lib.lsl"
 
@@ -40,7 +42,6 @@ fire()
    for (i=1; i<=maxColors; i++)
    {
      color = parseColor(notecardList,"color"+(string)i);
-     //if color is some value that  indicates failure, use the previous color?
      fireMsg =fireMsg + "," + color;
    }
 
@@ -98,7 +99,10 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
       #endif
-      llSetLinkTexture(getLinkWithName(preloadPrimName),texture,preloadFace);
+      integer preloadLink = getLinkWithName(preloadPrimName);
+      //debugSay("preloader is "+(string)preloadLink);
+      if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
+         llSetLinkTexture(preloadLink,texture,preloadFace);
    }
 
    //link messages come from the menu script
