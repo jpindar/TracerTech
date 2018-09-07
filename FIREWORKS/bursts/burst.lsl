@@ -1,6 +1,6 @@
 /*
-*Fireworks burst emitter v2.5.5
-*Tracer Ping July 2015
+*Fireworks burst emitter v2.6
+*Tracer Ping Sept 2018
 */
 
 #define TRACERGRID
@@ -25,11 +25,14 @@ float oldAlpha;
 list colors;
 list emitters;
 list params;
+float systemAge;
+float particleAge;
+float flashTime = 0.2;
+
 
 #ifdef TRIPLE
    float glowAmount = 1.0; // or 0.2
    list emitterNames = ["e1"];
-   float systemAge = 0.1; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
    integer numOfEmitters = 1;
    float interEmitterDelay = 0.1;
    #include "effects\effect_standard_burst_exp1.lsl"
@@ -37,8 +40,7 @@ list params;
    float glowAmount = 0.5; // or 0.2
    //list emitterNames = ["e1"];
    list emitterNames = ["e1","e2","e3"];
-   float systemAge = 1.75; //1.75 for normal, 1.0 or even 0.5 for multiple bursts
-   integer numOfEmitters = 2;
+   integer numOfEmitters = 1;
    float interEmitterDelay = 0.5;
    #include "effects\effect_standard_burst.lsl"
 #endif
@@ -59,14 +61,15 @@ fire()
       color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
-      //setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
+      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,0.0]);
       setGlow(e,glowAmount);
       makeParticles(e,color1,color2);
-      llSleep(interEmitterDelay);
+      llSleep(flashTime);
       setGlow(LINK_SET,0.0);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+      llSleep(interEmitterDelay);
    }
-   llSleep(systemAge);
+   llSleep(systemAge+particleAge);
    allOff();
 }
 
@@ -81,7 +84,7 @@ allOff()
       setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
       llLinkParticleSystem(e,[]);
    }
-   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llLinkParticleSystem(LINK_SET,[]);
    setGlow(LINK_SET,0.0);
@@ -107,9 +110,11 @@ default
       integer i;
       if (num & RETURNING_NOTECARD_DATA)
       {
-          list note = llCSV2List(msg);
-          volume = getVolume(note);
-          wind = getInteger(note, "wind");
+         list note = llCSV2List(msg);
+         volume = getVolume(note);
+         wind = getInteger(note, "wind");
+         systemAge = getFloat(note, "systemAge");
+         particleAge = getFloat(note, "particleAge");
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
