@@ -59,8 +59,12 @@
 // "f0797071-d608-4606-985d-9bb7f3750256"
  //39579f43-e6ff-4711-af68-925b737abc0d
 #elif defined TRACERGRID
-#define TEXTURE_CLASSIC   "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"
-#define TEXTURE_SPIKESTAR "67b464c2-d8e9-4986-8d14-1681224068eb"
+#define TEXTURE_CLASSIC   "bdd0d47f-e6b2-4971-9eae-e167def7c2ef"
+#define TEXTURE_SPIKESTAR "24acad78-2cba-4306-a45c-5702b64ac647"
+#define TEXTURE_BLANK     "2e3e01f7-2d09-43f3-9eb5-8155efb327f4"
+#elif defined SOAS
+#define TEXTURE_CLASSIC   "e51dfec9-b481-4ea0-aa67-545632d0b3fd"
+#define TEXTURE_SPIKESTAR "9fe0e79b-f810-481a-9b6f-6a6931ed50ca"
 #endif
 
 
@@ -103,6 +107,9 @@
 #elif defined TRACERGRID
    #define SOUND_WHOOSH001 "a120d4b5-e56c-4f28-ac02-f606862d269e"
    #define SOUND_PUREBOOM  "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
+#elif defined SOAS
+   #define SOUND_WHOOSH001 "3a3882d0-d8a6-4e03-b440-be31c37c805d"
+   #define SOUND_PUREBOOM  "bbfcb1bf-93b2-4071-832e-89492dd04d68"
 #endif
 
 
