@@ -1,0 +1,10 @@
+#ignore folder named junk
+junk/
+
+#ignore download folder
+dl/
+
+# ignore files by filename
+notes.txt
+
+New Script.*
