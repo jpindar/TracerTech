@@ -1,7 +1,8 @@
-#ignore folder named junk
+#ignore folders
 junk/
 
-#ignore download folder
+inbox/
+
 dl/
 
 # ignore files by filename
