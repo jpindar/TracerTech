@@ -53,10 +53,12 @@ fire()
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
    // try repeating this section to make FAST series bursts
-   llPlaySound(sound, volume/numOfEmitters);
-   repeatSound(sound,volume);
+
    for(i=0;i<numOfEmitters;i++)
    {
+      //llPlaySound(sound, volume/numOfEmitters);  //only if the are simultaneous?
+      llPlaySound(sound, volume);
+      repeatSound(sound,volume);
       color1 = llList2String(colors,i*2);
       color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
