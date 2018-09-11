@@ -43,6 +43,9 @@ float primGlow1 = 0.0;
 float primGlow2 = 0.0;
 vector primSize = <0.3,0.3,0.3>; //or <0.07,0.07,1.99> or <0.3,0.3,0.3>
 integer glow = TRUE;
+float startGlow = 0.0;
+float endGlow = 0.0;
+
 integer bounce = FALSE;
 float startAlpha = 1;
 integer explodeOnCollision = 0;
