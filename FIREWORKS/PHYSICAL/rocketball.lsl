@@ -198,9 +198,11 @@ default
       debug = (p & DEBUG_MASK);
       debugSay("initial velocity "+(string)llGetVel());
       if (p > 0)
-          setColor(LINK_SET,launchColor,launchAlpha);
+      {
+          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+      }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+      setColor(LINK_SET,launchColor,launchAlpha);
       rezParam = p; //save this
       //debugSay("rezzed("+hex(p)+")");
       flightTime = (float)(p & 0x7F);
@@ -223,6 +225,7 @@ default
       //vector v = llGetVel();
       //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       //llSetVelocity(v,FALSE);  //because setting the prim size sets velocity to zero
+
       #if defined POINTFORWARD
          vector v = llGetVel();
          llLookAt(v+llGetPos(), 0.5, 0.1);
@@ -267,6 +270,8 @@ default
       float minVel = 0.0;
       #if defined POINTFORWARD
       llLookAt( llGetVel()+llGetPos(), 0.5, 0.1);
+      //or
+      //llLookAt( llGetVel()+llGetPos(), 1.0, 0.5);
       #endif
       float tim = llGetTime();
       vector v = llGetVel();
