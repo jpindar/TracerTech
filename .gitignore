@@ -1,8 +1,8 @@
 #ignore folders
 junk/
-
+temp/
 inbox/
-
+old/
 dl/
 
 # ignore files by filename
