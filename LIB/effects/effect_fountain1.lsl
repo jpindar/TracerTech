@@ -19,6 +19,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_COLOR,        (vector)color2,
    PSYS_PART_START_ALPHA,      1.0,
    PSYS_PART_END_ALPHA,        0.3,
+   PSYS_PART_START_GLOW,       startGlow,
+   PSYS_PART_END_GLOW,         endGlow,
    PSYS_PART_START_SCALE,      <1.0,1.0,0.0>,
    PSYS_PART_END_SCALE,        <3.0,3.0,0.0>,
    PSYS_SRC_TEXTURE,           texture,

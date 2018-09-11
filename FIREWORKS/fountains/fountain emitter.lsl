@@ -1,5 +1,5 @@
 /*
-*Fireworks Fountain emitter v2.5
+*Fireworks Fountain emitter v2.6
 *Tracer Ping Sept 2018
 */
 
@@ -26,6 +26,8 @@ list params;
 integer numOfEmitters = 1;
 float glowAmount = 1.0;
 float systemAge = 5;
+float startGlow = 0.30;
+float endGlow = 0.0;
 
 #if defined RAINFALL
    float speed = 5;

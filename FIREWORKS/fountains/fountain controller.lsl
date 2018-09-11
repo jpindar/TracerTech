@@ -1,6 +1,6 @@
 /*
-* fireworks fountain controller v2.5.3
-* copyright Tracer Ping 2015
+* fireworks fountain controller v2.6
+* copyright Tracer Ping 2018
 *
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
