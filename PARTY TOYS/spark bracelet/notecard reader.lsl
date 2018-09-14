@@ -6,10 +6,10 @@
 
 
 default
-{  
+{
     on_rez(integer n){llResetScript();}
     changed(integer change){if(change & CHANGED_INVENTORY) llResetScript();}
- 
+
     state_entry()
     {
        if(doneReadingNotecard == FALSE) state readNotecardToList;

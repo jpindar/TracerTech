@@ -29,6 +29,31 @@ integer assert(integer b, string s)
 }
 
 
+string nameToColor(string c)
+{
+#if defined INWORLDZ
+   return (string)iwNameToColor(c);
+#else
+   if (llSubStringIndex(c,"<")!= -1)
+      return c;
+
+   if(c=="white") return "<1.00,1.00,1.00>";
+   if(c=="black") return "<0.00,0.00,0.00>";
+   if(c=="red")   return "<1.00,0.00,0.00>";
+   if(c=="green")  return "<0.00,1.00,0.00>";
+   if(c=="blue")   return "<0.00,0.00,1.00>";
+   if(c=="gold")   return "<1.00,0.80,0.20>";
+   if(c=="yellow") return "<1.00,1.00,0.00>";
+   if(c=="orange") return "<1.00,0.50,0.00>";
+   if(c=="purple") return "<1.00,0.00,1.00>";
+   if(c=="darkgreen")  return "<0.00,0.80,0.20>";
+   if(c=="hotpink")    return "<1.0,0.3,0.5>";
+   if(c=="bluepurple") return "<0.7,0.00,1.00>";
+   if(c=="lightblue")  return "<0.30,0.40,1.00>";
+   return "<0.0,0.0,0.0>";
+#endif
+}
+
 #if defined INWORLDZ
 string parseColor(list n, string c)
 {
@@ -45,23 +70,7 @@ string parseColor(list n, string c)
    color = getString(n,c);
    //if (color == "")
    //   color =  "<1.0,1.0,1.0>";
-   if (llSubStringIndex(color,"<")!= -1)
-      return color;
-
-   if (color=="white") return "<1.00,1.00,1.00>";
-   if (color=="black") return "<0.00,0.00,0.00>";
-   if (color=="red")   return "<1.00,0.00,0.00>";
-   if(color=="green")  return "<0.00,1.00,0.00>";
-   if(color=="blue")   return "<0.00,0.00,1.00>";
-   if(color=="gold")   return "<1.00,0.80,0.20>";
-   if(color=="yellow") return "<1.00,1.00,0.00>";
-   if(color=="orange") return "<1.00,0.50,0.00>";
-   if(color=="purple") return "<1.00,0.00,1.00>";
-   if(color=="darkgreen")  return "<0.00,0.80,0.20>";
-   if(color=="hotpink")    return "<1.0,0.3,0.5>";
-   if(color=="bluepurple") return "<0.7,0.00,1.00>";
-   if(color=="lightblue")  return "<0.30,0.40,1.00>";
-   return "<0.0,0.0,0.0>";
+   return nameToColor(c);
 }
 #endif
 
