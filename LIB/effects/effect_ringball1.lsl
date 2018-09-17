@@ -25,7 +25,7 @@ makeParticles(integer link, string color1, string color2)
       PSYS_SRC_TARGET_KEY,       llGetKey(),
       PSYS_PART_START_COLOR,     (vector)color1,
       PSYS_PART_END_COLOR,       (vector)color2,
-      PSYS_PART_START_ALPHA,     beginAlpha,
+      PSYS_PART_START_ALPHA,     startAlpha,
       PSYS_PART_END_ALPHA,       endAlpha,
       PSYS_PART_START_SCALE,     startSize,
       PSYS_PART_END_SCALE,       endSize,
