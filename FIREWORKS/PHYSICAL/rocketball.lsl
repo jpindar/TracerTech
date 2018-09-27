@@ -41,7 +41,7 @@ float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
 float primGlow1 = 0.0;
 float primGlow2 = 0.0;
-vector primSize = <0.3,0.3,0.3>; //or <0.07,0.07,1.99> or <0.3,0.3,0.3>
+vector primSize = <0.3,0.3,0.3>;
 integer glow = TRUE;
 float startGlow = 0.0;
 float endGlow = 0.0;
@@ -59,7 +59,7 @@ float systemAge = 1.0;
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
-   float endAlpha = 0;// 0 to 1
+   float endAlpha = 0;
    vector startSize = <1.5,1.5,0.0>; //or 1.9
    vector endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
    float rate = 0.1; //0.1 to 5
@@ -131,6 +131,7 @@ boom()
    #if defined ROT_90
       llSetRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
    #endif
+
    if (tricolor)
    {
       makeParticles(LINK_THIS,color1,color1);
@@ -202,10 +203,10 @@ default
       debugSay("initial velocity "+(string)llGetVel());
       if (p > 0)
       {
+          setColor(LINK_SET,launchColor,launchAlpha);
           setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-      setColor(LINK_SET,launchColor,launchAlpha);
       rezParam = p; //save this
       //debugSay("rezzed("+hex(p)+")");
       flightTime = (float)(p & 0x7F);
@@ -278,7 +279,7 @@ default
       #endif
       float tim = llGetTime();
       vector v = llGetVel();
-      debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
+      //debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
 
       if (tim>flightTime)
       {
