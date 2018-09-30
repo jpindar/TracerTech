@@ -28,15 +28,18 @@ integer assert(integer b, string s)
    }
 }
 
-
+/* Convert a string containing a color name
+ * to a string representing the color
+ * in vector form.
+ *
+ * An error returns <0,0,0> because that's what
+ * iwNameToColor() did.
+ */
 string nameToColor(string c)
 {
 #if defined INWORLDZ
    return (string)iwNameToColor(c);
 #else
-   if (llSubStringIndex(c,"<")!= -1)
-      return c;
-
    if(c=="white") return "<1.00,1.00,1.00>";
    if(c=="black") return "<0.00,0.00,0.00>";
    if(c=="red")   return "<1.00,0.00,0.00>";
@@ -54,25 +57,20 @@ string nameToColor(string c)
 #endif
 }
 
-#if defined INWORLDZ
-string parseColor(list n, string c)
+/*
+   get a color name from a list based on a keyword
+   if it isn't a string represntation of a color vector,
+   use nameToColor() to make it one
+ */
+string parseColor(list n, string keyword)
 {
-   string color;
-   color = getString(n,c);
+   string color = getString(n,keyword);
    if (llSubStringIndex(color,"<")== -1)
-       color = (string)iwNameToColor(color);
+       color = nameToColor(color);
    return color;
 }
-#else
-string parseColor(list n, string c)
-{
-   string color;
-   color = getString(n,c);
-   //if (color == "")
-   //   color =  "<1.0,1.0,1.0>";
-   return nameToColor(c);
-}
-#endif
+
+
 
 
 setGlow(integer prim, float  amount)
@@ -515,3 +513,5 @@ string hex(integer value)
         return "0x" + hexes(value);
     }
 }
+
+
