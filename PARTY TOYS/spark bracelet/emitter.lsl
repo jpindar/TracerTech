@@ -1,6 +1,8 @@
 /*
 * dance bracelet v1.0
 *Tracer Ping July 2016
+* the notecard reading has to be done in another script because
+* a script can't send a linkmessage to itself
 */
 #define DEBUG
 #define TRACERGRID
