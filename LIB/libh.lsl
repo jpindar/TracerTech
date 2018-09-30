@@ -59,20 +59,24 @@
 // "f0797071-d608-4606-985d-9bb7f3750256"
  //39579f43-e6ff-4711-af68-925b737abc0d
 #elif defined TRACERGRID
-#define TEXTURE_CLASSIC   "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"
-#define TEXTURE_SPIKESTAR "67b464c2-d8e9-4986-8d14-1681224068eb"
-//#define TEXTURE_CLASSIC   "bdd0d47f-e6b2-4971-9eae-e167def7c2ef"
-//#define TEXTURE_SPIKESTAR "24acad78-2cba-4306-a45c-5702b64ac647"
+#define TEXTURE_CLASSIC           "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"
+#define TEXTURE_SPIKESTAR         "67b464c2-d8e9-4986-8d14-1681224068eb"
+//#define TEXTURE_CLASSIC         "bdd0d47f-e6b2-4971-9eae-e167def7c2ef"
+//#define TEXTURE_SPIKESTAR       "24acad78-2cba-4306-a45c-5702b64ac647"
+#define TEXTURE_NAUTICAL_STAR     "1e83875a-7096-4c68-8003-6612e296ea29"
+#define TEXTURE_PATRIOTIC_STAR    "d80f20f5-269e-4662-a2e2-b4f7098a81dd"
+#define TEXTURE_PAWSOME           "36a631d4-e202-4d0a-8b05-6a48fde0d258"
+#define TEXTURE_PAWSOME_CHROME    "23a79d51-75e8-4266-b447-547093c36fd6"
+#define TEXTURE_BLANK             "2e3e01f7-2d09-43f3-9eb5-8155efb327f4"
+#define TEXTURE_FLAMEBALL         "1d747f98-41e2-4bd6-bbd4-9a9f36ef78bb"
+#define TEXTURE_FEATHERS          "467472da-9584-42c4-927e-c06b739b29f4"
+#define TEXTURE_WHIRLBLADES       "7af7b5a8-75b9-4736-b244-bec7be20a106"
 
-#define TEXTURE_PATRIOTIC_STAR "d80f20f5-269e-4662-a2e2-b4f7098a81dd"
-#define TEXTURE_PAWSOME        "36a631d4-e202-4d0a-8b05-6a48fde0d258"
-#define TEXTURE_PAWSOME_CHROME "23a79d51-75e8-4266-b447-547093c36fd6"
-#define TEXTURE_BLANK     "2e3e01f7-2d09-43f3-9eb5-8155efb327f4"
-
-#define TEXTURE_COURIER_NEW_A     "5473e212-e7bf-47f7-82d7-ca1c78c5e50c"
-#define TEXTURE_COURIER_NEW_B     "9e9e3c28-10bc-4647-ab5b-6ebe464b4d92"
-#define TEXTURE_COURIER_NEW_C     "0b723437-7157-448c-8d48-d7667a6f45cb"
-#define TEXTURE_COURIER_NEW_SPACE "b7ea800f-80b5-4882-8a2e-4833752bd9a5"
+#define TEXTURE_TORNADO1            "046ed932-2f8b-4f79-9bd5-d25c388e6afd"
+#define TEXTURE_COURIER_NEW_A       "5473e212-e7bf-47f7-82d7-ca1c78c5e50c"
+#define TEXTURE_COURIER_NEW_B       "9e9e3c28-10bc-4647-ab5b-6ebe464b4d92"
+#define TEXTURE_COURIER_NEW_C       "0b723437-7157-448c-8d48-d7667a6f45cb"
+#define TEXTURE_COURIER_NEW_SPACE   "b7ea800f-80b5-4882-8a2e-4833752bd9a5"
 #define TEXTURE_COURIER_NEW_BOLD_A  "11d48c16-c02e-4766-9ab2-fc8b39ff1f39"
 #define TEXTURE_COURIER_NEW_BOLD_B  "c290a675-7383-449a-9c77-87a5aed545de"
 #define TEXTURE_COURIER_NEW_BOLD_C  "d3eb6aca-d7d1-46ad-99da-fb2320031a7f"
@@ -100,7 +104,7 @@
 #define COLOR_HOTPINK "<1.0,0.3,0.5>"
 #define COLOR_BLUEPURPLE "<0.7,0.00,1.00>"
 #define COLOR_LIGHTBLUE "<0.30,0.40,1.00>"
-
+#define COLOR_LIGHTGREYBLUE "<0.468, 0.676, 0.767>"
 //string color = "<0.42,0.017,0.59>";
 #ifdef INWORLDZ
 
@@ -129,11 +133,13 @@
    #define SOUND_PUREBOOM  "bbfcb1bf-93b2-4071-832e-89492dd04d68"
 #endif
 
-
-#define DEBUG_MASK     0x01000000
-#define COLLISION_MASK 0x02000000
-#define FREEZE_MASK    0x04000000
-#define WIND_MASK      0x08000000
+// masks for encoding options into a short message
+#define DEBUG_MASK        0x01000000
+#define COLLISION_MASK    0x02000000
+#define FREEZE_MASK       0x04000000
+#define WIND_MASK         0x08000000
+#define LOW_VELOCITY_MASK 0x10000000
+#define MAX_INT           0x80000000
 // global variables
 integer debug = FALSE;
 float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
@@ -146,7 +152,7 @@ integer doneReadingNotecard = FALSE;
 list linknumberList;
 float partSpeed1 = 1.0;
 float partSpeed2 = 1.0;
-integer menuMode = 0;
+//integer menuMode = 0;
 integer wind;
 #endif
 
