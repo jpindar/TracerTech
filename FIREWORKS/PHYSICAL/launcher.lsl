@@ -1,5 +1,5 @@
 /*
-* launch controller v2.7.7
+* launch controller v3.0
 * copyright Tracer Ping 2017
 * this goes in the main prim
 *
@@ -10,7 +10,7 @@
 *
 *
 */
-#define DEBUG
+//#define DEBUG
 #define TRACERGRID
 //#define SOAS
 
@@ -18,14 +18,18 @@
 //#define TRICOLOR
 #define NOTECARD_IN_THIS_PRIM
 //#define LAUNCH_ROT
-//#define LAUNCH_ROT_90Y
+//#define LAUNCH_ROT_90Y  // makes ring perp to flight axis
 //#define SPINTRAILS
 //#define SPARKBALL
-#include "lib.lsl"
+
+#include "LIB\lib.lsl"
 //string texture = TEXTURE_NAUTICAL_STAR;
 //string texture = TEXTURE_RAINBOWBURST;
 //string texture = TEXTURE_CLASSIC;
-string texture = TEXTURE_SPIKESTAR;
+//string texture = TEXTURE_SPIKESTAR;
+string texture = TEXTURE1;
+
+
 #if defined SPARKBALL
    string sound = SOUND_CRACKLE2; //3sec crackle
 #else
@@ -36,7 +40,11 @@ string texture = TEXTURE_SPIKESTAR;
 string color1;
 string color2;
 integer payloadIndex = 0;
+#if defined CANNON_BARREL
+   float zOffset = 1.5;
+#else
 float zOffset = 0.7; //0.7 to 2.0
+#endif
 float glowOnAmount = 0.0; //or 0.05
 string preloadPrimName = "preloader";
 integer preloadFace = 0;
@@ -50,7 +58,7 @@ integer explodeOnCollision = 0;
 integer access;
 string launchMsg;
 list colors;
-integer numOfBalls = 0;
+integer numOfBalls;
 float speed;
 integer flightTime;
 integer bouyancy;
@@ -220,5 +228,5 @@ default
 }
 
 //this has to be after the default state
-#include "readNotecardToList.lsl"
+#include "LIB\readNotecardToList.lsl"
 
