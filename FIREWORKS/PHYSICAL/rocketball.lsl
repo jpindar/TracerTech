@@ -1,19 +1,20 @@
 /*
-* rocketball 2.9
+* rocketball 3.0
 * copyright Tracer Ping 2018
+*
 */
-#define TRACERGRID
+//#define TRACERGRID
 //#define SOAS
+//#define DEBUG
+//#define RINGBALL
 
-#define DEBUG
 
-#define RINGBALL
 //#define SPHERE_BALL
 //#define TRAILBALL
 //#define SPIRALBALL
 //#define HOTLAUNCH
 
-//#define EXPLODE_ON_COLLISION
+
 //#define PRIM_ROTATION
 #define FREEZE_ON_BOOM
 // RINGBALLS SHOULD NOT POINTFORWARD
@@ -23,7 +24,8 @@
 //#define ROT_90
 //#define TRICOLOR
 
-#include "lib.lsl"
+#include "LIB\lib.lsl"
+
 integer tricolor = FALSE;
 string sound1 = SOUND_PUREBOOM;
 float boomVolume = 1.0;
@@ -75,10 +77,10 @@ float systemAge = 1.0;
 
    #if defined TRICOLOR
       float partRadius = 1.0; //or 1
-      #include "effects\effect_ringball3.lsl"
+      #include "LIB\effects\effect_ringball3.lsl"
    #else
       float partRadius = 1.5; //or 1
-      #include "effects\effect_ringball1.lsl"
+      #include "LIB\effects\effect_ringball1.lsl"
       //#include "effects\effect_ringball2.lsl"
       //#include "effects\effect_ringball4.lsl"
    #endif
@@ -98,10 +100,10 @@ float systemAge = 1.0;
    //float partRadius = 1.0;
    integer wind = 0;
    float primGlow = 0.4;
-   #include "effects\effect_trailball.lsl"
+   #include "LIB\effects\effect_trailball.lsl"
 #elif defined SPARKLERBALL
 #elif defined FIREBALL
-   #include "effects\effect_jopseys_fire.lsl"
+   #include "LIB\effects\effect_jopseys_fire.lsl"
 #else
    float endAlpha = 0;
    vector startSize = <1.9,1.9,1.9>;
@@ -109,7 +111,7 @@ float systemAge = 1.0;
    vector omega = <0.0,0.0,0.0>;
    float primGlow = 0.4;
    //float partRadius = 1.0;
-   #include "effects\effect_standard_rocketball.lsl"
+   #include "LIB\effects\effect_standard_rocketball.lsl"
 #endif
 
 
@@ -219,7 +221,7 @@ default
       handle=llListen(chan,"","","");
 
       if (p & COLLISION_MASK)
-         explodeOnCollision = 1;
+         explodeOnCollision = TRUE;
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
       //llCollisionSound("", 1.0);  //  Disable collision sounds
@@ -237,7 +239,7 @@ default
          rotation r = llGetRot();
          //r.z = -r.z;
          //r.x = -r.x;
-         r.y = -r.y;
+         //r.y = -r.y;
          llSetRot(r);
       #endif
       // we don't know the color yet
@@ -252,7 +254,6 @@ default
    listen( integer chan, string name, key id, string msg )
    {
       llListenRemove(handle);
-      //debugSay(" listener got: "+ msg);
       debugSay("got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       params = llCSV2List(msg);
       texture = llList2String(params,0);
@@ -271,15 +272,15 @@ default
 
    timer()
    {
-      float minVel = 0.0;
-      #if defined POINTFORWARD
-      llLookAt( llGetVel()+llGetPos(), 0.5, 0.1);
-      //or
-      //llLookAt( llGetVel()+llGetPos(), 1.0, 0.5);
-      #endif
       float tim = llGetTime();
       vector v = llGetVel();
       //debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
+      float minVel = 0.0;
+      #if defined POINTFORWARD
+      llLookAt(v+llGetPos(), 0.5, 0.1);
+      //or
+      //llLookAt(v+llGetPos(), 1.0, 0.5);
+      #endif
 
       if (tim>flightTime)
       {
@@ -300,7 +301,7 @@ default
       }
    }
 
-
+   #define EXPLODE_ON_COLLISION
    #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
