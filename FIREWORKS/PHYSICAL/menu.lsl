@@ -1,6 +1,6 @@
 /*
-*fireworks menu v1.3
-*copyright Tracer Tech aka Tracer Ping 2015
+*fireworks menu v1.4
+*copyright Tracer Tech aka Tracer Ping 2018
 *
 *gets notecard data via link message
 *responds to touch
@@ -16,6 +16,7 @@
 * linkmessage (determined at compiletime)
 *
 */
+//#define LINKED
 list buttonsOwner=["fire","hide","show"];
 list buttonsPublic=["fire"];
 key owner;
@@ -24,8 +25,9 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-//#define LINKED
-#include "lib.lsl"
+integer menuMode = 1;
+
+#include "LIB\lib.lsl"
 
 sendMsg(string msg)
 {
@@ -58,7 +60,6 @@ default
    {
       integer timeout = 10;
       string menuText = "listening on channel " + (string)chatChan;
-      //debugSay("access = "+(string)access);
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
@@ -110,7 +111,7 @@ default
      {
          list notecard = llCSV2List(msg);
          //debugSay("got list:" + llDumpList2String(notecard,"-"));
-         chatChan = getChatChan(notecardList);
+         chatChan = getChatChan(notecard);
          menuMode = getInteger(notecard,"menu");
          //debugSay("got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
