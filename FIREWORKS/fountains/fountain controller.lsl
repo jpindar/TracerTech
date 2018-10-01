@@ -13,8 +13,8 @@
 
 //#define DEBUG
 #define NOTECARD_IN_THIS_PRIM
-#include "lib.lsl"
-string texture = TEXTURE_CLASSIC;
+#include "LIB\lib.lsl"
+string texture = TEXTURE;
 
 string color1;
 string color2;
@@ -112,7 +112,7 @@ default
 }
 
 //this has to be after the default state
-#include "readNotecardToList.lsl"
+#include "LIB\readNotecardToList.lsl"
 
 
 /*

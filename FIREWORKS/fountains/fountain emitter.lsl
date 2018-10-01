@@ -6,7 +6,7 @@
 #define TRACERGRID
 //#define SOAS
 
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 //#define RAINFALL
 //#define MINIFOUNTAIN
 string sound = SOUND_WHOOSH001;
@@ -17,29 +17,28 @@ string color2;
 string color3;
 string lightColor;
 string texture;
-
 list emitterNames = ["e1"];//["e1","e2","e3"];
 float oldAlpha;
 list colors;
 list emitters;
 list params;
 integer numOfEmitters = 1;
-float glowAmount = 1.0;
+float glowAmount = PRIMGLOW;
 float systemAge = 5;
-float startGlow = 0.30;
-float endGlow = 0.0;
+float startGlow = STARTGLOW;
+float endGlow = ENDGLOW;
 
 #if defined RAINFALL
    float speed = 5;
-   #include "effects\effect_fountain_rainfall1.lsl"
+   #include "LIB\effects\effect_fountain_rainfall1.lsl"
 #elif defined MINIFOUNTAIN
    float speed = 10;
    float omega = 0;
-   #include "effects\effect_mini_fountain1.lsl"
+   #include "LIB\effects\effect_mini_fountain1.lsl"
 #else
    float speed = 10;
    float omega = 0;
-   #include "effects\effect_fountain1.lsl"
+   #include "LIB\effects\effect_fountain1.lsl"
 #endif
 
 
