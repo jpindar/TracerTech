@@ -1,5 +1,5 @@
 /*
-*Fireworks burst emitter v2.6
+*Fireworks burst emitter v2.7
 *Tracer Ping Sept 2018
 */
 
@@ -28,7 +28,8 @@ list params;
 float systemAge;
 float particleAge;
 float flashTime = 0.2;
-
+float startGlow;
+float endGlow;
 
 #ifdef TRIPLE
    float glowAmount = 1.0; // or 0.2
@@ -122,6 +123,9 @@ default
       {
          if (llStringLength(msg) > 0)
          {
+            //expected format is
+            //UUID,color,color......
+            //although more than the frst two colors may not be used
             debugSay(" listener got: "+ msg);
             params = llCSV2List(msg);
             integer len = llGetListLength(params);
@@ -135,7 +139,6 @@ default
                 colors += llList2String(params,i);
             }
           }
-          //texture = id;
           fire();
       }
    }
