@@ -1,5 +1,5 @@
 /*
- *  Chatsynth 1.1
+ *  Chatsynth 2.0
  * Copyright Tracer Ping  2018
  *
  *  touchUV.x goes across the texture from the left to the right
@@ -7,7 +7,7 @@
  *  ZERO_VECTOR aka <0.0, 0.0, 0.0> is at the bottom left corner of the texture
 */
 #define DEBUG
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 
 integer targetPrim = 1;
 integer targetFace = 2;
@@ -15,7 +15,7 @@ integer numberOfRows = 1;
 float numberOfColumns = 36.5;
 float xOffset =0.117;
 integer chan;
-integer chanBase = 2000;
+integer chanBase = CHANNEL_BASE;
 
 
 integer getTouch()
