@@ -6,6 +6,8 @@
 *responds to touch
 *listens only to menu
 */
+//#define LINKED
+
 list buttonsOwner=["fire","hide","show"];
 list buttonsPublic=["fire"];
 key owner;
@@ -14,9 +16,10 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-//#define LINKED
-#include "lib.lsl"
- 
+integer menuMode;
+
+#include "LIB\lib.lsl"
+
 sendMsg(string msg)
 {
    #if defined REMOTE_MENU
@@ -73,7 +76,7 @@ default
              llDialog(toucher,menuText,buttonsOwner,menuChan);
           }
       }
-      else //access == ACCESS_PUBLIC 
+      else //access == ACCESS_PUBLIC
       {
           if (menuMode == 0)
           {
@@ -85,7 +88,7 @@ default
           }
       }
       handle=llListen(menuChan,"",toucher,"");
-      llSetTimerEvent(timeout); 
+      llSetTimerEvent(timeout);
    }
 
    timer()
@@ -93,7 +96,7 @@ default
        llSetTimerEvent(0);
        llListenRemove(handle);
    }
-   
+
   link_message( integer sender, integer num, string msg, key id )
   {
      if (num & RETURNING_NOTECARD_DATA)
