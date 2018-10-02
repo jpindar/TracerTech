@@ -6,7 +6,7 @@
  *  touchUV.y goes across the texture from the bottom to the top
  *  ZERO_VECTOR aka <0.0, 0.0, 0.0> is at the bottom left corner of the texture
 */
-#define DEBUG
+//#define DEBUG
 #include "LIB\lib.lsl"
 
 integer targetPrim = 1;
