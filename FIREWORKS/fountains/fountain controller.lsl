@@ -19,7 +19,6 @@ string texture = TEXTURE;
 string color1;
 string color2;
 string color3;
-float glowAmount = 0.0;
 string preloadPrimName = "pre";
 integer preloadFace = 0; // was 3?
 key owner;
@@ -27,7 +26,7 @@ integer handle;
 integer chatChan;
 key id = "";
 integer access;
-integer delay = 2;
+//integer delay = 2;
 float systemAge = 1;
 
 fire()
