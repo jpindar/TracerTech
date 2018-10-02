@@ -68,7 +68,8 @@ integer packedParam;
 float angle = 0;
 float launchDelay = 0.5;
 integer code = 0;
-
+float startGlow = STARTGLOW;  //notecard will override these
+float endGlow = ENDGLOW;
 
 msgHandler(string sender, string msg)
 {
@@ -131,6 +132,7 @@ fire()
       }
 
       launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
+      launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;
@@ -185,12 +187,16 @@ default
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
       launchDelay = getFloat(notecardList, "delay");
+      startGlow = getFloat(notecardList, "startGlow")'
+      endGlow = getFloat(notecardList, "endGlow")'
+
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
       colors = colors + parseColor(notecardList,"color3");
       colors = colors + parseColor(notecardList,"color4");
       colors = colors + parseColor(notecardList,"color5");
       colors = colors + parseColor(notecardList,"color6");
+
       debugSay("[" + (string)colors + "]");
       packedParam = flightTime+(bouyancy<<7);
       if (explodeOnCollision >0)
