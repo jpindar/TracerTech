@@ -28,17 +28,14 @@ integer chatChan;
 key id = "";
 integer access;
 integer delay = 2;
-
+float systemAge = 1;
 
 fire()
 {
-   color1 = parseColor(notecardList,"color1");
-   color2 = parseColor(notecardList,"color2");
-   color3 = parseColor(notecardList,"color3");
-   string fireMsg1 = texture+","+color1+","+color2+","+color3;
+   string fireMsg1 = texture+"," +(string)systemAge+","+color1+","+color2+","+color3;
    //string fireMsg1 = texture+","+color1+","+color1+","+color1;
-   string fireMsg2 = texture+","+color2+","+color2+","+color2;
-   string fireMsg3 = texture+","+color3+","+color3+","+color3;
+   //string fireMsg2 = texture+","+color2+","+color2+","+color2;
+   //string fireMsg3 = texture+","+color3+","+color3+","+color3;
    debugSay("controller: sending fire msg "+ fireMsg1);
    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
    //llSleep(delay);
@@ -83,6 +80,11 @@ default
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
          chatChan = getChatChan(notecardList);
+         color1 = parseColor(notecardList,"color1");
+         color2 = parseColor(notecardList,"color2");
+         color3 = parseColor(notecardList,"color3");
+         systemAge = getFloat(notecardList,"time");
+
          owner = llGetOwner();
          //no volume, the emitter makes the sound
          //no collision
