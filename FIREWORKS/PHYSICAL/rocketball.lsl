@@ -5,6 +5,7 @@
 */
 //#define TRACERGRID
 //#define SOAS
+
 //#define DEBUG
 //#define RINGBALL
 
@@ -16,7 +17,7 @@
 
 
 //#define PRIM_ROTATION
-#define FREEZE_ON_BOOM
+
 // RINGBALLS SHOULD NOT POINTFORWARD
 //#define POINTFORWARD
 //but if they are, they probably should be ROT_90, so that the ring is perpedicular
@@ -45,12 +46,14 @@ float primGlow1 = 0.0;
 float primGlow2 = 0.0;
 vector primSize = <0.3,0.3,0.3>;
 integer glow = TRUE;
-float startGlow = 0.0;
-float endGlow = 0.0;
+float startGlow = STARTGLOW;
+float endGlow = ENDGLOW;
 
 integer bounce = FALSE;
 float startAlpha = 1;
 integer explodeOnCollision = 0;
+integer explodeOnLowVelocity = 0;
+float minimumVelocity = 0.1;
 float minimumCollisionSpeed = 10;
 integer freezeOnBoom = FALSE;
 list params;
@@ -219,7 +222,8 @@ default
       //debugSay("chan = "+(string)chan);
       //debugSay("flightTime ="+ (string)flightTime);
       handle=llListen(chan,"","","");
-
+      if  (p & LOW_VELOCITY_MASK)
+         explodeOnLowVelocity = TRUE;
       if (p & COLLISION_MASK)
          explodeOnCollision = TRUE;
       if (p & FREEZE_MASK)
@@ -262,6 +266,8 @@ default
       color3 = llList2String(params,3);
       systemAge = llList2Float(params,4);
       boomVolume = llList2Float(params,5);
+      startGlow =  llList2Float(params,6);
+      endGlow =  llList2Float(params,7);
       primColor = color1;
       lightColor = color1;
       //e = llList2Integer(emitters,i);
@@ -274,8 +280,7 @@ default
    {
       float tim = llGetTime();
       vector v = llGetVel();
-      //debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
-      float minVel = 0.0;
+      debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
       #if defined POINTFORWARD
       llLookAt(v+llGetPos(), 0.5, 0.1);
       //or
@@ -291,12 +296,12 @@ default
       }
       else
       {
-         if (v.z<minVel)
+         if (v.z< minimumVelocity)
          {
-            debugSay("low velocity" + (string)v.z);
+            debugSay("at low velocity" + (string)v.z);
             llSetTimerEvent(0);
-            //if (armed)
-            //   boom();
+            if (armed && explodeOnLowVelocity)
+               boom();
          }
       }
    }

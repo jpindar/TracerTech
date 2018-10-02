@@ -21,6 +21,7 @@
 //#define LAUNCH_ROT_90Y  // makes ring perp to flight axis
 //#define SPINTRAILS
 //#define SPARKBALL
+//#define CANNON_BARREL
 
 #include "LIB\lib.lsl"
 //string texture = TEXTURE_NAUTICAL_STAR;
@@ -55,6 +56,7 @@ integer chatChan;
 integer rezChan;
 key id = "";
 integer explodeOnCollision = 0;
+integer explodeOnLowVelocity = 0;
 integer access;
 string launchMsg;
 list colors;
@@ -162,6 +164,7 @@ default
       owner = llGetOwner();
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
+      explodeOnLowVelocity = getInteger(notecardList, "lowvelocity");
       access = getAccess(notecardList);
       //id  = owner;
       handle = llListen( chatChan, "",id, "" );
@@ -187,8 +190,8 @@ default
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
       launchDelay = getFloat(notecardList, "delay");
-      startGlow = getFloat(notecardList, "startGlow")'
-      endGlow = getFloat(notecardList, "endGlow")'
+      startGlow = getFloat(notecardList, "startGlow");
+      endGlow = getFloat(notecardList, "endGlow");
 
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
@@ -198,7 +201,14 @@ default
       colors = colors + parseColor(notecardList,"color6");
 
       debugSay("[" + (string)colors + "]");
-      packedParam = flightTime+(bouyancy<<7);
+      // max int 0x80000000  (32 bits)
+      //integer(<127) + integer (<=100, typically 50)
+      // so     b    mmmmmmmm mmmmmmmm mmmbbbbb bfffffff
+      //        h        0x10       00       00       00
+
+      packedParam = (bouyancy<<7) + flightTime;
+      if (explodeOnLowVelocity >0)
+         packedParam = packedParam | LOW_VELOCITY_MASK; //0x10000000
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
       if (freezeOnBoom >0)
@@ -206,7 +216,7 @@ default
       if (wind >0)
          packedParam = packedParam | WIND_MASK;
       #if defined DEBUG
-         packedParam = packedParam | DEBUG_MASK;
+         packedParam = packedParam | DEBUG_MASK; // 0x01000000
       #endif
 
       llPreloadSound(sound);
