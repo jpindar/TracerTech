@@ -16,6 +16,8 @@
 * linkmessage (determined at compiletime)
 *
 */
+//#define LINKED
+
 list buttonsOwner=["fire","hide","show"];
 list buttonsPublic=["fire"];
 key owner;
@@ -24,10 +26,11 @@ integer handle;
 integer chatChan;
 integer menuChan;
 integer access;
-//#define LINKED
-#include "lib.lsl"
+integer menuMode;
 
- sendMsg(string msg)
+#include "LIB\lib.lsl"
+
+sendMsg(string msg)
 {
    #if defined REMOTE_MENU
       llSay(chatChan,msg);
@@ -135,6 +138,5 @@ default
       }
    }
 }
-
 
 
