@@ -5,7 +5,15 @@ makeParticles(integer link, string color1, string color2)
    systemSafeSet = systemAge;
    if (particleAge == 0)
       particleAge = 5;
-   integer flags =
+    float startAlpha = 1.0;
+    float endAlpha = 0.2;    
+    #if defined STARTALPHA  
+       startAlpha = STARTALPHA;
+    #endif
+    #if defined ENDALPHA
+        endAlpha = ENDALPHA;
+    #endif    
+    integer flags =
    PSYS_PART_EMISSIVE_MASK |
    PSYS_PART_INTERP_COLOR_MASK |
    PSYS_PART_INTERP_SCALE_MASK |
@@ -19,8 +27,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_SRC_ANGLE_END,         0.0,
    PSYS_PART_START_COLOR,      (vector)color1,
    PSYS_PART_END_COLOR,        (vector)color2,
-   PSYS_PART_START_ALPHA,      1.0,
-   PSYS_PART_END_ALPHA,        0.1,
+   PSYS_PART_START_ALPHA,      startAlpha,
+   PSYS_PART_END_ALPHA,        endAlpha,
    PSYS_PART_START_GLOW,       startGlow,
    PSYS_PART_END_GLOW,         endGlow,
    PSYS_PART_START_SCALE,      <0.5, 0.5, 0.0>,

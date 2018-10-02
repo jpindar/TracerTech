@@ -28,8 +28,8 @@ list params;
 float systemAge;
 float particleAge;
 float flashTime = 0.2;
-float startGlow;
-float endGlow;
+float startGlow = STARTGLOW;  //notecard will override these
+float endGlow = ENDGLOW;
 
 #ifdef TRIPLE
    float glowAmount = 1.0; // or 0.2
@@ -118,6 +118,9 @@ default
          wind = getInteger(note, "wind");
          systemAge = getFloat(note, "systemAge");
          particleAge = getFloat(note, "particleAge");
+         startGlow = getFloat(note,"startGlow");
+         endGlow = getFloat(note,"endGlow");
+
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
