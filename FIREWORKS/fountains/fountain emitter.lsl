@@ -112,10 +112,11 @@ default
             debugSay(" emitter got: "+ msg);
             params = llCSV2List(msg);
             texture = llList2String(params,0);
-            color1 = llList2String(params,1);
+            systemAge = llList2String(params,1);
+            color1 = llList2String(params,2);
             lightColor = color1;
             colors = [color1];
-            colors += llList2String(params,2);
+            colors += llList2String(params,3);
          }
          fire();
       }
