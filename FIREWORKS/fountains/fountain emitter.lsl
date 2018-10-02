@@ -25,7 +25,7 @@ list params;
 integer numOfEmitters = 1;
 float glowAmount = PRIMGLOW;
 float systemAge = 5;
-float startGlow = STARTGLOW;
+float startGlow = STARTGLOW;  //notecard will override these
 float endGlow = ENDGLOW;
 float speed = SPEED;
 
@@ -105,6 +105,8 @@ default
          list note = llCSV2List(msg);
          volume = getVolume(note);
          wind = getInteger(note, "wind");
+         startGlow = getFloat(note,"startGlow");
+         endGlow = getFloat(note,"endGlow");
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
