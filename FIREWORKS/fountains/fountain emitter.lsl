@@ -27,16 +27,17 @@ float glowAmount = PRIMGLOW;
 float systemAge = 5;
 float startGlow = STARTGLOW;
 float endGlow = ENDGLOW;
+float speed = SPEED;
 
 #if defined RAINFALL
-   float speed = 5;
+   ///float speed = 5;
    #include "LIB\effects\effect_fountain_rainfall1.lsl"
 #elif defined MINIFOUNTAIN
-   float speed = 10;
+   //float speed = 10;
    float omega = 0;
    #include "LIB\effects\effect_mini_fountain1.lsl"
 #else
-   float speed = 10;
+   //float speed = 10;
    float omega = 0;
    #include "LIB\effects\effect_fountain1.lsl"
 #endif
