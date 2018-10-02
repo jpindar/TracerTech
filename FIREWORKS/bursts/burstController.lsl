@@ -1,5 +1,5 @@
 /*
-* fireworks burst controller v2.5.3
+* fireworks burst controller v3.0
 * copyright Tracer Ping 2015
 *
 * reads data from notecard and forwards it via linkmessage
@@ -8,13 +8,12 @@
 #define TRACERGRID
 //#define SOAS
 
-#define DEBUG
+//#define DEBUG
 
 #define NOTECARD_IN_THIS_PRIM
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 
-//string texture = TEXTURE_SPIKESTAR;
-string texture = TEXTURE_CLASSIC;
+string texture = TEXTURE;
 string color;
 float glowAmount = 0.0;
 key owner;
@@ -121,7 +120,7 @@ default
 }
 
 //this has to be after the default state
-#include "readNotecardToList.lsl"
+#include "LIB\readNotecardToList.lsl"
 
 
 /*
