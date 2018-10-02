@@ -8,7 +8,7 @@
 
 //#define DEBUG
 
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 
 string color1;
 string color2;
@@ -36,14 +36,14 @@ float endGlow;
    list emitterNames = ["e1"];
    integer numOfEmitters = 1;
    float interEmitterDelay = 0.1;
-   #include "effects\effect_standard_burst_exp1.lsl"
+   #include "LIB\effects\effect_standard_burst_exp1.lsl"
 #else
    float glowAmount = 0.5; // or 0.2
    //list emitterNames = ["e1"];
    list emitterNames = ["e1","e2","e3"];
    integer numOfEmitters = 1;
    float interEmitterDelay = 0.5;
-   #include "effects\effect_standard_burst.lsl"
+   #include "LIB\effects\effect_standard_burst.lsl"
 #endif
 
 fire()
