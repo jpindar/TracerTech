@@ -1,8 +1,8 @@
 /*
-* dance bracelet v1.0
+* for dance bracelet v1.1
 *Tracer Ping July 2016
 */
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 
 
 default
@@ -17,4 +17,4 @@ default
 }
 
 //this has to be after the default state
-#include "readNotecardToList.lsl"
+#include "LIB\readNotecardToList.lsl"

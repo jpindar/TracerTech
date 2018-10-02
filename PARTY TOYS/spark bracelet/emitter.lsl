@@ -1,12 +1,12 @@
 /*
-* dance bracelet v1.0
+* dance bracelet v1.10
 *Tracer Ping July 2016
 * the notecard reading has to be done in another script because
 * a script can't send a linkmessage to itself
 */
-#define DEBUG
+//#define DEBUG
 #define TRACERGRID
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 
 string color1 = COLOR_GOLD;
 string color2 = COLOR_RED;
@@ -20,7 +20,7 @@ integer numOfEmitters = 1;
 list colors = [COLOR_GOLD,COLOR_ORANGE,COLOR_RED];
 list emitters;
 
-#include "effects\effect_small_starburst.lsl"
+#include "LIB\effects\effect_small_starburst.lsl"
 
 
 sendMsg(integer cmd, string msg)
@@ -107,6 +107,4 @@ default
     }
 }
 
-//this has to be after the default state
-//#include "readNotecardToList.lsl"
 
