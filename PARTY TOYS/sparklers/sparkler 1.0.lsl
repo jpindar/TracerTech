@@ -1,7 +1,7 @@
 //sparkler
 // by Tracer Ping July 2011
 #define TRACERGRID
-#include "lib.lsl"
+#include "LIB\lib.lsl"
 vector color = COLOR_WHITE;
 string texture = TEXTURE_CLASSIC;
 
