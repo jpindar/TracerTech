@@ -97,6 +97,7 @@ default
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
+         llSetObjectDesc((string)chatChan);
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
       //debugSay("preloader is "+(string)preloadLink);
