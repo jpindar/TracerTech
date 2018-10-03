@@ -26,7 +26,17 @@ state readNotecardToList
     {
         if ((Query1 == query_id) && (data != EOF))
         {
-            if ((llSubStringIndex(data,"//") == -1) && (data != ""))
+            data = llStringTrim(data,STRING_TRIM);
+            integer index = llSubStringIndex(data,"//"); 
+            if ((index != -1) && (data != ""))
+            {
+              if (index == 0)
+                   data = "";
+              else     
+                   data = llGetSubString(data, 0, index-1);
+            }
+            data = llStringTrim(data,STRING_TRIM);
+            if (data != "")
             {
                notecardList = notecardList + llCSV2List(data);
             }
@@ -36,7 +46,6 @@ state readNotecardToList
         {
             doneReadingNotecard = TRUE;
             string s = llList2CSV(notecardList);
-            //debugSay(s);
             llMessageLinked(LINK_THIS, RETURNING_NOTECARD_DATA, s,"");
             llOwnerSay("...done");
             state default;
