@@ -1,12 +1,12 @@
 /*
-*Fireworks burst emitter v2.7
+*Fireworks burst emitter v3.0
 *Tracer Ping Sept 2018
 */
 
 #define TRACERGRID
 //#define SOAS
-
 //#define DEBUG
+string version = "3.0";
 
 #include "LIB\lib.lsl"
 
@@ -18,9 +18,13 @@ string texture;
 //string sound = SOUND_BURST1;
 string sound = SOUND_PUREBOOM;
 float intensity = 1.0;
-float radius = 20;
+float lightRadius = 20;
 float falloff = 0.1;
+#ifdef SPEED
+float speed = SPEED;
+#else
 float speed = 1;
+#endif
 float oldAlpha;
 list colors;
 list emitters;
@@ -28,8 +32,24 @@ list params;
 float systemAge;
 float particleAge;
 float flashTime = 0.2;
+
+#if defined STARTGLOW
 float startGlow = STARTGLOW;  //notecard will override these
+#else
+float startGlow;
+#endif
+
+#if defined STARTGLOW
 float endGlow = ENDGLOW;
+#else
+float endGlow;
+#endif
+
+#ifdef RADIUS
+float radius = RADIUS;
+#else
+float radius = 0;
+#endif
 
 #ifdef TRIPLE
    float glowAmount = 1.0; // or 0.2
@@ -63,13 +83,13 @@ fire()
       color1 = llList2String(colors,i*2);
       color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
-      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
+      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,lightRadius,falloff]);
       setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,0.0]);
       setGlow(e,glowAmount);
       makeParticles(e,color1,color2);
       llSleep(flashTime);
       setGlow(LINK_SET,0.0);
-      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
       llSleep(interEmitterDelay);
    }
    llSleep(systemAge+particleAge);
@@ -84,11 +104,11 @@ allOff()
    for(i=0;i<numOfEmitters;i++)
    {
       e = llList2Integer(emitters,i);
-      setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+      setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
       llLinkParticleSystem(e,[]);
    }
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    llLinkParticleSystem(LINK_SET,[]);
    setGlow(LINK_SET,0.0);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
