@@ -63,7 +63,6 @@ list colors;
 integer numOfBalls;
 float speed;
 integer flightTime;
-integer bouyancy;
 float particleTime;
 integer freezeOnBoom;
 integer packedParam;
@@ -72,6 +71,8 @@ float launchDelay = 0.5;
 integer code = 0;
 float startGlow = STARTGLOW;  //notecard will override these
 float endGlow = ENDGLOW;
+#define bouyancy 50
+
 
 msgHandler(string sender, string msg)
 {
@@ -97,6 +98,8 @@ msgHandler(string sender, string msg)
 
 fire()
 {
+   // launch message CSV format:
+   //texture, color, color, color, particleTime , volume, startGlow, endGlow
    string rocket;
    integer i;
 
@@ -104,7 +107,6 @@ fire()
    //rez a distance along the the barrel axis
    vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
    vector vel = <0,0,speed>*rot; //along the axis of the launcher
-
 
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
@@ -132,12 +134,12 @@ fire()
           launchMsg=texture+","+colorA+","+colorB+","+colorC;
           rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       }
-
       launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
       launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
+
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
-      rezChan = -42000 -rezChan;
+      rezChan = -42000 -rezChan;  // the -42000 is arbitrary
       llPlaySound(sound,volume);
       repeatSound(sound,volume);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
@@ -169,6 +171,7 @@ default
       //id  = owner;
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
+      //llSetObjectDesc((string)chatChan);
       //code = getInteger(notecardList,"code");
 
       numOfBalls = getInteger(notecardList,"balls");
@@ -184,7 +187,6 @@ default
 
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
-      bouyancy = getInteger(notecardList,"bouyancy");
       particleTime = getFloat(notecardList,"particletime");
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
