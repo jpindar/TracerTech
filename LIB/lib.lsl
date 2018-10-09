@@ -28,6 +28,16 @@ integer assert(integer b, string s)
    }
 }
 
+integer equals(float a,float b, float e)
+{
+ float d;
+ d = llFabs(a-b);
+ if (d<e)
+   return TRUE;
+ else
+   return FALSE;
+}
+
 /* Convert a string containing a color name
  * to a string representing the color
  * in vector form.
@@ -377,7 +387,7 @@ string descOfTouchedPrim()
     integer prim = llDetectedLinkNumber(0);
     list l=llGetLinkPrimitiveParams(prim,[PRIM_DESC]);
     string s = llList2String(l,0);
-	return s
+    return s;
 }
 
 setAllPrimParams()
