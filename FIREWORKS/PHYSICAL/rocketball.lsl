@@ -119,7 +119,11 @@ float systemAge = 1.0;
    vector endSize = <1.9,1.9,1.9>;
    vector omega = <0.0,0.0,0.0>;
    float primGlow = 0.4;
-   //float partRadius = 1.0;
+   #ifdef BURST_RADIUS
+   float burstRadius = BURST_RADIUS;
+   #else
+   float burstRadius = 0.0;
+   #endif
    #include "LIB\effects\effect_standard_rocketball.lsl"
 #endif
 
