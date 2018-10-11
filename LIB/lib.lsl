@@ -81,7 +81,11 @@ string parseColor(list n, string keyword)
 }
 
 
-
+setRot(rotation rot)
+{
+    // llSetRot() has  a delay, this doesn't
+    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos])
+}
 
 setGlow(integer prim, float  amount)
 {

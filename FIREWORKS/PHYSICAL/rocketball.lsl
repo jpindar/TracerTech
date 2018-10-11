@@ -144,7 +144,7 @@ boom()
       llSetStatus(STATUS_PHANTOM,TRUE);
    }
    #if defined ROT_90
-      llSetRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
+      setRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
    #endif
 
    if (tricolor)
@@ -254,7 +254,7 @@ default
          //r.z = -r.z;
          //r.x = -r.x;
          //r.y = -r.y;
-         llSetRot(r);
+         setRot(r);
       #endif
       // we don't know the color yet
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
