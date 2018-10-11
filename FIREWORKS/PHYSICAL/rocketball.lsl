@@ -37,7 +37,13 @@ string color2;
 string color3;
 string primColor;
 vector launchColor = <1.0,1.0,1.0>;
-float launchAlpha = 0.0;
+
+#if defined LAUNCH_ALPHA
+float launchAlpha = LAUNCH_ALPHA;
+#else
+float launchAlpha = 1.0;
+#endif
+
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;  // 5 to 20
