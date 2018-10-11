@@ -166,7 +166,7 @@ boom()
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    setGlow(LINK_THIS,0.0);
    llSleep(systemAge);
-   AllOff();
+   AllOff(TRUE);
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
@@ -177,10 +177,11 @@ boom()
 }
 
 
-AllOff()
+AllOff(integer blacken)
 {
    llParticleSystem([]);
    setGlow(LINK_THIS,0.0);
+   if (blacken)
    setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
@@ -192,7 +193,7 @@ default
    state_entry()
    {
       #if !defined HOTLAUNCH
-         AllOff();
+         AllOff(FALSE);
       #endif
       #if defined RINGBALL
          //llTargetOmega(<0,0,0.05>,4*PI,1.0);
@@ -219,7 +220,12 @@ default
       if (p > 0)
       {
           setColor(LINK_SET,launchColor,launchAlpha);
+          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
           setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+      }
+      else
+      {
+         AllOff(FALSE);
       }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       rezParam = p; //save this
@@ -257,7 +263,7 @@ default
          setRot(r);
       #endif
       // we don't know the color yet
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+
       if (rezParam>0)
       {   //use timer instead of sleeping to allow other events
           llSetTimerEvent(0.01);
@@ -340,7 +346,7 @@ default
             if (rezParam!=0)
             {
                #if defined TRAILBALL
-                  AllOff();
+                  AllOff(TRUE);
                   llSetStatus(STATUS_PHYSICS, FALSE);
                   llDie();
                #else
@@ -359,7 +365,7 @@ default
       if (rezParam !=0)
       {
          #if defined TRAILBALL
-            AllOff();
+            AllOff(TRUE);
             llSetStatus(STATUS_PHYSICS, FALSE);
             llDie();
          #else
