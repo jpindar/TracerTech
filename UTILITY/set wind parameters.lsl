@@ -8,6 +8,7 @@ float newAvgDirection = 10.0;
 float newVarStrength = 7.0;
 float newVarDirection = -30.0;
 float newRateChange = 8.0;
+integer on = TRUE;
  
 default
 {
@@ -16,9 +17,14 @@ default
         string activePluginName = osWindActiveModelPluginName();
         if(activePluginName == "SimpleRandomWind")
         {
-            llSay(0, "[SimpleRandomWind]");
-            osSetWindParam("SimpleRandomWind", "strength", newStrength);
-            llSay(0, "wind strength(strength) is changed to " + (string)newStrength);
+            on =  !on;
+            llOwnerSay("[SimpleRandomWind]");
+            if (on)
+                osSetWindParam("SimpleRandomWind", "strength", newStrength);
+            else
+                osSetWindParam("SimpleRandomWind", "strength", 0.0);
+                
+            llOwnerSay("wind strength(strength) is changed to " + (string)newStrength);
         }
         else if(activePluginName == "ConfigurableWind")
         {
