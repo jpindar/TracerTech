@@ -4,8 +4,6 @@
 */
 #define TRACERGRID
 //#define DEBUG
-#define STARTGLOW 0.1
-#define ENDGLOW 0.1
 #define RINGBALL
 
 #include "FIREWORKS\PHYSICAL\rocketball.lsl"

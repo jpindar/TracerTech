@@ -48,12 +48,9 @@ string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
-float primGlow1 = 0.0;
-float primGlow2 = 0.0;
 vector primSize = <0.3,0.3,0.3>;
-integer glow = TRUE;
-float startGlow = STARTGLOW;
-float endGlow = ENDGLOW;
+float startGlow;
+float endGlow;
 
 integer bounce = FALSE;
 float startAlpha = 1;
@@ -135,7 +132,7 @@ boom()
    //  return;
    debugSay("boom");
    setColor(LINK_THIS,(vector)primColor,0.0);
-   setGlow(LINK_THIS,primGlow2);
+   setGlow(LINK_THIS,primGlow);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    if (freezeOnBoom)
    {
