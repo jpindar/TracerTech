@@ -12,15 +12,15 @@ makeParticles(integer link, string color1, string color2)
       flags = flags | PSYS_PART_WIND_MASK;
    list particles = [
    PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_EXPLODE,
-   PSYS_SRC_BURST_RADIUS,      0.0,
+   PSYS_SRC_BURST_RADIUS,      burstRadius,
    PSYS_PART_START_COLOR,      (vector)color1,
    PSYS_PART_END_COLOR,        (vector)color2,
    PSYS_PART_START_ALPHA,      1.0,
    PSYS_PART_END_ALPHA,        0.1,
    PSYS_PART_START_SCALE,      <0.5, 0.5, 0.0>,
    PSYS_PART_END_SCALE,        <0.5, 0.5, 0.0>,
-   PSYS_PART_START_GLOW, startGlow,
-   PSYS_PART_END_GLOW,   endGlow,
+   PSYS_PART_START_GLOW,       startGlow,
+   PSYS_PART_END_GLOW,         endGlow,
    PSYS_SRC_TEXTURE,           texture,
    PSYS_SRC_MAX_AGE,           systemSafeSet,
    PSYS_PART_MAX_AGE,          5.0,
