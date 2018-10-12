@@ -1,8 +1,10 @@
 /*
-* rocketball 3.0
-* copyright Tracer Ping 2018
+* rocketball 3.x
+* copyright Tracer Ping / Tracer Prometheus 2018
+* tracerping@gmail.com
 *
 */
+#define Version "3.1"
 //#define TRACERGRID
 //#define SOAS
 
@@ -24,6 +26,7 @@
 //to the flightpath
 //#define ROT_90
 //#define TRICOLOR
+
 
 #include "LIB\lib.lsl"
 
@@ -189,6 +192,9 @@ default
 {
    state_entry()
    {
+      #if defined DESCRIPTION
+         llSetObjectDesc(Version + " " + DESCRIPTION);
+      #endif
       #if !defined HOTLAUNCH
          AllOff(FALSE);
       #endif
@@ -206,7 +212,7 @@ default
    //having touch_start makes some effects easier to debug
    touch_start(integer n)
    {
-       boom();
+      boom();
    }
 
    on_rez(integer p)
@@ -216,9 +222,9 @@ default
       debugSay("initial velocity "+(string)llGetVel());
       if (p > 0)
       {
-          setColor(LINK_SET,launchColor,launchAlpha);
-          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
-          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+         setColor(LINK_SET,launchColor,launchAlpha);
+         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+         setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       }
       else
       {
