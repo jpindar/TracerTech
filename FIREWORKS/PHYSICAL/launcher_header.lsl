@@ -1,8 +1,9 @@
 /*
-* launch controller v2.8
-* copyright Tracer Ping 2017
-* this goes in the main prim
+* launch controller
+* copyright Tracer Prometheus / Tracer Ping 2018
+* tracerping@gmail.com
 *
+* this goes in the main prim
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
 *
@@ -12,8 +13,12 @@
 */
 //#define DEBUG
 #define TRACERGRID
+#define DESCRIPTION "plain spikestar"
+#define STARTGLOW 1.0
+#define ENDGLOW 0.0
 #define TEXTURE1 TEXTURE_CLASSIC
-#include "FIREWORKS\PHYSICAL\launcher.lsl"
+#define TEXTURE1 TEXTURE_SPIKESTAR
+//#include "FIREWORKS\PHYSICAL\launcher.lsl"
 
 
 

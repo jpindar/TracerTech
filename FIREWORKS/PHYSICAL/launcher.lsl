@@ -1,5 +1,5 @@
 /*
-* launch controller v3.0
+* launch controller
 * copyright Tracer Ping 2017
 * this goes in the main prim
 *
@@ -10,6 +10,7 @@
 *
 *
 */
+#define Version "3.1"
 //#define DEBUG
 #define TRACERGRID
 //#define SOAS
@@ -69,8 +70,19 @@ integer packedParam;
 float angle = 0;
 float launchDelay = 0.5;
 integer code = 0;
-float startGlow = STARTGLOW;  //notecard will override these
+
+#if defined STARTGLOW
+float startGlow = STARTGLOW;
+#else
+float startGlow = 0.0;
+#endif
+
+#if defined ENDGLOW
 float endGlow = ENDGLOW;
+#else
+float endGlow = 0.0;
+#endif
+
 #define bouyancy 50
 
 
@@ -84,15 +96,15 @@ msgHandler(string sender, string msg)
    msg = llToLower(msg);
    if (msg == "fire")
    {
-       fire();
+      fire();
    }
    else if (msg == "hide")
    {
-       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
+      llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
    }
    else if (msg == "show")
    {
-       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+      llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
    }
 }
 
@@ -171,7 +183,9 @@ default
       //id  = owner;
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
-      //llSetObjectDesc((string)chatChan);
+      #if defined DESCRIPTION
+         llSetObjectDesc((string)chatChan+" "+Version+" "+DESCRIPTION);
+      #endif
       //code = getInteger(notecardList,"code");
 
       numOfBalls = getInteger(notecardList,"balls");
@@ -192,8 +206,8 @@ default
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
       launchDelay = getFloat(notecardList, "delay");
-      startGlow = getFloat(notecardList, "startGlow");
-      endGlow = getFloat(notecardList, "endGlow");
+      //startGlow = getFloat(notecardList, "startGlow");
+      //endGlow = getFloat(notecardList, "endGlow");
 
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
