@@ -8,7 +8,7 @@ makeParticles(integer link, string color1, string color2)
    //vector startSize = <1.5,1.5,0.0>;
    //vector endSize = <0.5,0.5,0.0>;
    //float systemAge = 3.0;
-   //float partRadius = 1.5;
+   //float burstRadius = 1.5;
 
    integer flags =
    PSYS_PART_EMISSIVE_MASK |
@@ -19,7 +19,7 @@ makeParticles(integer link, string color1, string color2)
       flags = flags | PSYS_PART_WIND_MASK;
    list particles = [
       PSYS_SRC_PATTERN,          PSYS_SRC_PATTERN_ANGLE,
-      PSYS_SRC_BURST_RADIUS,     partRadius,
+      PSYS_SRC_BURST_RADIUS,     burstRadius,
       PSYS_SRC_ANGLE_BEGIN,      beginAngle,
       PSYS_SRC_ANGLE_END,        endAngle,
       PSYS_SRC_TARGET_KEY,       llGetKey(),
@@ -29,6 +29,8 @@ makeParticles(integer link, string color1, string color2)
       PSYS_PART_END_ALPHA,       endAlpha,
       PSYS_PART_START_SCALE,     startSize,
       PSYS_PART_END_SCALE,       endSize,
+      PSYS_PART_START_GLOW,      startGlow,
+      PSYS_PART_END_GLOW,        endGlow,
       PSYS_SRC_TEXTURE,          texture,
       PSYS_SRC_MAX_AGE,          systemSafeSet,
       PSYS_PART_MAX_AGE,         partAge,
@@ -38,8 +40,6 @@ makeParticles(integer link, string color1, string color2)
       PSYS_SRC_OMEGA,             particleOmega,
       PSYS_SRC_BURST_SPEED_MIN,   partSpeed1,
       PSYS_SRC_BURST_SPEED_MAX,   partSpeed2,
-      PSYS_PART_START_GLOW, startGlow,
-      PSYS_PART_END_GLOW, endGlow,
       PSYS_PART_FLAGS,flags
    ];
    llLinkParticleSystem(link,particles);
