@@ -46,9 +46,9 @@ float endGlow;
 #endif
 
 #ifdef RADIUS
-float radius = RADIUS;
+float burstRadius = RADIUS;
 #else
-float radius = 0;
+float burstRadius = 0;
 #endif
 
 #ifdef TRIPLE
