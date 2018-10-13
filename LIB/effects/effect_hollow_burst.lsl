@@ -43,8 +43,12 @@ makeParticles(integer link, string color1, string color2)
    integer flags =
    PSYS_PART_EMISSIVE_MASK |
    PSYS_PART_INTERP_COLOR_MASK |
-   PSYS_PART_INTERP_SCALE_MASK |
-   PSYS_PART_FOLLOW_VELOCITY_MASK;
+   PSYS_PART_INTERP_SCALE_MASK ;
+
+   #ifndef NOFOLLOWVELOCITY
+   flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
+   #endif
+
    if (wind > 0)
       flags = flags | PSYS_PART_WIND_MASK;
 
@@ -57,15 +61,17 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_COLOR,        (vector)color2,
    PSYS_PART_START_ALPHA,      startAlpha,
    PSYS_PART_END_ALPHA,        endAlpha,
+   PSYS_PART_START_GLOW,       startGlow,
+   PSYS_PART_END_GLOW,         endGlow,
    PSYS_PART_START_SCALE,      startScale,
    PSYS_PART_END_SCALE,        endScale,
    PSYS_SRC_TEXTURE,           texture,
    PSYS_SRC_MAX_AGE,           systemSafeSet,
-   PSYS_PART_MAX_AGE,          0.7,
+   PSYS_PART_MAX_AGE,          particleAge,
    PSYS_SRC_BURST_RATE,        0.1,
-   PSYS_SRC_BURST_PART_COUNT,  150,
+   PSYS_SRC_BURST_PART_COUNT,  140,
    PSYS_SRC_ACCEL,             <0.0,0.0,-0.3>,
-   PSYS_SRC_OMEGA,             <0.0,0.0,0.0>,
+   PSYS_SRC_OMEGA,             particleOmega,
    PSYS_SRC_BURST_SPEED_MIN,   (1.5*speed),
    PSYS_SRC_BURST_SPEED_MAX,   (1.5*speed),
    PSYS_PART_FLAGS,flags
