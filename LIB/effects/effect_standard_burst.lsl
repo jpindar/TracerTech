@@ -1,4 +1,9 @@
-//standard burst
+/*
+ standard burst
+ The ANGLE_CONE pattern can be used to imitate the EXPLODE pattern by explicitly setting PSYS_SRC_ANGLE_BEGIN to 0.00000 and PSYS_SRC_ANGLE_END to 3.14159 (or PI) (or vice versa).
+*/
+
+
 makeParticles(integer link, string color1, string color2)
 {
  //#define  STARTXSCALE 2.0
@@ -6,30 +11,34 @@ makeParticles(integer link, string color1, string color2)
  //#define  ENDXSCALE 4.0
  //#define  ENDYSCALE 4.0
 
-   vector startScale = <0.5,0.5,0.0>;
-   vector endScale = <0.5,0.5,0.0>;
    #if defined STARTXSCALE
-   startScale = <STARTXSCALE,STARTYSCALE,0>;
+   vector startScale = <STARTXSCALE,STARTYSCALE,0>;
+   #else
+   vector startScale = <0.5,0.5,0.0>;
    #endif
    #if defined ENDXSCALE
-   endScale = <ENDXSCALE,ENDYSCALE,0>;
+   vector endScale = <ENDXSCALE,ENDYSCALE,0>;
+   #else
+   vector endScale = <0.5,0.5,0.0>;
    #endif
 
-    float startAlpha = 1.0;
-    float endAlpha = 0.2;
     #if defined STARTALPHA
-    startAlpha = STARTALPHA;
+    float startAlpha = STARTALPHA;
+    #else
+    float startAlpha = 1.0;
     #endif
     #if defined ENDALPHA
     endAlpha = ENDALPHA;
+    #else
+    float endAlpha = 0.2;
     #endif
 
    vector particleOmega = <0.0,0.0,0.0>;
-   float radius = 0;
+   float burstRadius = 0;
 
    systemSafeSet = systemAge;
 
-   if (particleAge == 0)
+   if (particleAge == 0)  //?
       particleAge = 5;
 
    integer flags =
@@ -45,10 +54,10 @@ makeParticles(integer link, string color1, string color2)
       flags = flags | PSYS_PART_WIND_MASK;
 
    list particles = [
-   PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_EXPLODE,
-   PSYS_SRC_BURST_RADIUS,      radius,  // was 1.0 or 1.5
+   PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
+   PSYS_SRC_BURST_RADIUS,      burstRadius,
    PSYS_SRC_ANGLE_BEGIN,       0.0,
-   PSYS_SRC_ANGLE_END,         0.0,
+   PSYS_SRC_ANGLE_END,         PI_BY_TWO,
    PSYS_PART_START_COLOR,      (vector)color1,
    PSYS_PART_END_COLOR,        (vector)color2,
    PSYS_PART_START_ALPHA,      startAlpha,
@@ -59,7 +68,7 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_SCALE,        endScale,
    PSYS_SRC_TEXTURE,           texture,
    PSYS_SRC_MAX_AGE,           systemSafeSet,
-   PSYS_PART_MAX_AGE,          particleAge, // was 5.0
+   PSYS_PART_MAX_AGE,          particleAge,
    PSYS_SRC_BURST_RATE,        0.1,
    PSYS_SRC_BURST_PART_COUNT,  180,
    PSYS_SRC_ACCEL,             <0.0,0.0,-0.3>,
