@@ -60,9 +60,12 @@ string nameToColor(string c)
    if(c=="orange") return "<1.00,0.50,0.00>";
    if(c=="purple") return "<1.00,0.00,1.00>";
    if(c=="darkgreen")  return "<0.00,0.80,0.20>";
-   if(c=="hotpink")    return "<1.0,0.3,0.5>";
-   if(c=="bluepurple") return "<0.7,0.00,1.00>";
-   if(c=="lightblue")  return "<0.30,0.40,1.00>";
+   if(c=="hotpink")    return COLOR_HOTPINK;
+   if(c=="bluepurple") return COLOR_BLUEPURPLE;
+   if(c=="lightblue")  return COLOR_LIGHTBLUE;
+   if(c=="brightblue")  return COLOR_BRIGHT_BLUE;
+   if(c=="teal")  return COLOR_TEAL;
+   if(c=="cyan")  return COLOR_CYAN;
    return "<0.0,0.0,0.0>";
 #endif
 }
@@ -83,18 +86,18 @@ string parseColor(list n, string keyword)
 
 setRot(rotation rot)
 {
-    // llSetRot() has  a delay, this doesn't
-    llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos])
+   // llSetRot() has  a delay, this doesn't
+   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos])
 }
 
 setGlow(integer prim, float  amount)
 {
-    llSetLinkPrimitiveParamsFast(prim,[PRIM_GLOW,ALL_SIDES,amount]);
+   llSetLinkPrimitiveParamsFast(prim,[PRIM_GLOW,ALL_SIDES,amount]);
 }
 
 setFullbright(integer prim, integer on)
 {
-    llSetLinkPrimitiveParamsFast(prim,[PRIM_FULLBRIGHT,ALL_SIDES,on]);
+   llSetLinkPrimitiveParamsFast(prim,[PRIM_FULLBRIGHT,ALL_SIDES,on]);
 }
 
 setColor(integer prim, vector c, float alpha)
@@ -119,7 +122,7 @@ integer randomChan()
 
 repeatSound(key sound, float volume)
 {
-    llRegionSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
+   llRegionSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
 }
 
 integer objectDescToInt()
@@ -129,7 +132,7 @@ integer objectDescToInt()
 
 setObjectDesc(string s)
 { //there is a good reason not to use llSetLinkPrimitiveParamsFast here
-    llSetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC,s]);
+   llSetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC,s]);
 }
 
 playInventorySound()
@@ -139,23 +142,24 @@ playInventorySound()
 
 string getInventoryTexture()
 {
-    return llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
+   return llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,0));
 }
 
 
 string getNotecardName(string d)
 {
-  string s = d;
-  if (s == "")
-       s = llGetInventoryName(INVENTORY_NOTECARD,0);
-  //llOwnerSay("looking for notecard <" + s + ">");
-  if (llGetInventoryType(s) == INVENTORY_NONE)
-      {
-        llOwnerSay("notecard '" + d + "' not found");
-        s = "";
-      }
-  return s;
+   string s = d;
+   if (s == "")
+      s = llGetInventoryName(INVENTORY_NOTECARD,0);
+   //llOwnerSay("looking for notecard <" + s + ">");
+   if (llGetInventoryType(s) == INVENTORY_NONE)
+   {
+      llOwnerSay("notecard '" + d + "' not found");
+      s = "";
+   }
+   return s;
 }
+
 
 string getString(list notecardList, string name)
 {
