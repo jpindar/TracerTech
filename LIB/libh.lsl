@@ -74,8 +74,8 @@
 #define TEXTURE_GLOSSY_HEART  "d056a3a7-e456-4ff3-b360-04475fb16200"
 #define TEXTURE_GLOSSY_HEARTS "d056a3a7-e456-4ff3-b360-04475fb16200"
 #define TEXTURE_ROSE1         "05135c09-e9a5-45da-b00d-19a0c8ef1b71"
-
-
+#define TEXTURE_MAPLE_LEAF  "17eca2aa-6616-4dc2-8856-63dd82c14ca5"
+#define TEXTURE_MAPLE_LEAF_SMALL  "18e42515-503c-4d9b-89cc-edf3f38d3604"
 
 #define TEXTURE_TORNADO1            "046ed932-2f8b-4f79-9bd5-d25c388e6afd"
 #define TEXTURE_COURIER_NEW_A       "5473e212-e7bf-47f7-82d7-ca1c78c5e50c"
@@ -95,21 +95,29 @@
 
 
 //these colors must be strings in this exact format
-//because I don't want to bother writing a message parser
-#define COLOR_WHITE "<1.00,1.00,1.00>"
-#define COLOR_BLACK "<0.00,0.00,0.00>"
-#define COLOR_RED "<1.00,0.00,0.00>"
-#define COLOR_GREEN "<0.00,1.00,0.00>"
-#define COLOR_BLUE "<0.00,0.00,1.00>"
-#define COLOR_GOLD "<1.00,0.80,0.20>"
-#define COLOR_YELLOW "<1.00,1.00,0.00>"
-#define COLOR_ORANGE "<1.00,0.50,0.00>"
-#define COLOR_PURPLE "<1.00,0.00,1.00>"
-#define COLOR_3 "<0.00,0.80,0.20>"
-#define COLOR_HOTPINK "<1.0,0.3,0.5>"
-#define COLOR_BLUEPURPLE "<0.7,0.00,1.00>"
-#define COLOR_LIGHTBLUE "<0.30,0.40,1.00>"
-#define COLOR_LIGHTGREYBLUE "<0.468, 0.676, 0.767>"
+//2 decimal places are close enough
+#define COLOR_WHITE         "<1.00,1.00,1.00>"
+#define COLOR_BLACK         "<0.00,0.00,0.00>"
+#define COLOR_RED           "<1.00,0.00,0.00>"
+#define COLOR_GREEN         "<0.00,1.00,0.00>"
+#define COLOR_BLUE          "<0.00,0.00,1.00>"
+#define COLOR_GOLD          "<1.00,0.80,0.20>"
+#define COLOR_YELLOW        "<1.00,1.00,0.00>"
+#define COLOR_ORANGE        "<1.00,0.50,0.00>"
+#define COLOR_PURPLE        "<1.00,0.00,1.00>"
+#define COLOR_PURPLE2       "<0.69, 0.05, 0.79>"
+#define COLOR_3             "<0.00,0.80,0.20>"
+#define COLOR_HOTPINK       "<1.0,0.3,0.5>"
+#define COLOR_BLUEPURPLE    "<0.7,0.00,1.00>"
+#define COLOR_LIGHTBLUE     "<0.30,0.40,1.00>"
+#define COLOR_BRIGHT_BLUE   "<0.3,0.3,1.00>"
+//#define COLOR_BLUE_TOO    "<0.00,0.46,0.85>"
+#define COLOR_LIGHTGREYBLUE "<0.47,0.68,0.77>"
+#define COLOR_TEAL          "<0.22,0.80,0.80>"
+#define COLOR_AQUA          "<0.5,0.86,1.00>"  //but cyan == aqua?
+#define COLOR_CYAN          "<0.0,1.00,1.00>"
+#define COLOR_LIME          "<0.00,1.0,0.44>"
+
 //string color = "<0.42,0.017,0.59>";
 #ifdef INWORLDZ
 
