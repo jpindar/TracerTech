@@ -84,7 +84,7 @@ float endGlow = 0.0;
 #endif
 
 #define bouyancy 50
-
+#include "LIB\readNotecardToList.h"
 
 msgHandler(string sender, string msg)
 {

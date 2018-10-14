@@ -12,6 +12,7 @@
 
 #define NOTECARD_IN_THIS_PRIM
 #include "LIB\lib.lsl"
+#include "LIB\readNotecardToList.h"
 
 string texture = TEXTURE;
 string color;
