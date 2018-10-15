@@ -157,11 +157,6 @@
 integer debug = FALSE;
 float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
 float systemSafeSet = 0.00;//prevents erroneous particle emissions
-key Query1;
-string notecardName;
-list notecardList;
-integer notecardLineIndex;
-integer doneReadingNotecard = FALSE;
 list linknumberList;
 float partSpeed1 = 1.0;
 float partSpeed2 = 1.0;

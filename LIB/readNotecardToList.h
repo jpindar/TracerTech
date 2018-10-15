@@ -11,7 +11,7 @@ a state (but outside of any events/functions)
 
 
 /* these are parameters */
-integer doneReadingNotecard; // boolean 
+integer doneReadingNotecard = FALSE; // boolean
 list notecardList;  // this is the 'return value' from getNotecardName.lsl
 
 /* these would be local to the state if that were possible */
