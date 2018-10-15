@@ -152,7 +152,10 @@
 #define FREEZE_MASK       0x04000000
 #define WIND_MASK         0x08000000
 #define LOW_VELOCITY_MASK 0x10000000
+#define FOLLOW_VELOCITY_MASK 0x20000000
+
 #define MAX_INT           0x80000000
+
 // global variables
 integer debug = FALSE;
 float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
