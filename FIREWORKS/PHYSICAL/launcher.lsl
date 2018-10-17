@@ -13,7 +13,6 @@
 #define Version "3.1"
 //#define DEBUG
 #define TRACERGRID
-//#define SOAS
 
 //#define RAINBOW
 //#define TRICOLOR
@@ -25,6 +24,8 @@
 //#define CANNON_BARREL
 
 #include "LIB\lib.lsl"
+#include "LIB\readNotecardToList.h"
+
 //string texture = TEXTURE_NAUTICAL_STAR;
 //string texture = TEXTURE_RAINBOWBURST;
 //string texture = TEXTURE_CLASSIC;
@@ -84,7 +85,7 @@ float endGlow = 0.0;
 #endif
 
 #define bouyancy 50
-#include "LIB\readNotecardToList.h"
+
 
 msgHandler(string sender, string msg)
 {
@@ -92,7 +93,7 @@ msgHandler(string sender, string msg)
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-   //debugSay("got message <" + msg +">");
+      
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -136,15 +137,15 @@ fire()
       llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,firingFace,1.0]);
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
-          string colorA = llList2String(colors,(i));
-          launchMsg=texture+","+colorA+","+colorA+","+colorA;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
+         string colorA = llList2String(colors,(i));
+         launchMsg=texture+","+colorA+","+colorA+","+colorA;
+         rocket = llGetInventoryName(INVENTORY_OBJECT,0);
       }else{  // i = 0
-          string colorA = llList2String(colors,(i*3));
-          string colorB = llList2String(colors,(i*3)+1);
-          string colorC = llList2String(colors,(i*3)+2);
-          launchMsg=texture+","+colorA+","+colorB+","+colorC;
-          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
+         string colorA = llList2String(colors,(i*3));
+         string colorB = llList2String(colors,(i*3)+1);
+         string colorC = llList2String(colors,(i*3)+2);
+         launchMsg=texture+","+colorA+","+colorB+","+colorC;
+         rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       }
       launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
       launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
@@ -223,8 +224,12 @@ default
       //        h        0x10       00       00       00
 
       packedParam = (bouyancy<<7) + flightTime;
+      #ifndef NO_FOLLOW_VELOCITY
+         packedParam = packedParam | FOLLOW_VELOCITY_MASK; //0x2000 0000
+         debugSay("follow velocity");
+      #endif
       if (explodeOnLowVelocity >0)
-         packedParam = packedParam | LOW_VELOCITY_MASK; //0x10000000
+         packedParam = packedParam | LOW_VELOCITY_MASK; //0x1000 0000
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
       if (freezeOnBoom >0)
@@ -232,7 +237,7 @@ default
       if (wind >0)
          packedParam = packedParam | WIND_MASK;
       #if defined DEBUG
-         packedParam = packedParam | DEBUG_MASK; // 0x01000000
+         packedParam = packedParam | DEBUG_MASK; // 0x0100 0000
       #endif
 
       llPreloadSound(sound);
