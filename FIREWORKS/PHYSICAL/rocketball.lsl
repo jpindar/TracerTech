@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.1"
+#define Version "3.1.2"
 //#define TRACERGRID
 //#define SOAS
 
@@ -29,44 +29,47 @@
 
 
 #include "LIB\lib.lsl"
+#include "LIB\effects\effect.h"
 
-integer tricolor = FALSE;
 string sound1 = SOUND_PUREBOOM;
 float boomVolume = 1.0;
-string texture;
-integer rezParam;
-string color1;
-string color2;
-string color3;
-string primColor;
-vector launchColor = <1.0,1.0,1.0>;
 
+vector launchColor = <1.0,1.0,1.0>;
 #if defined LAUNCH_ALPHA
 float launchAlpha = LAUNCH_ALPHA;
 #else
 float launchAlpha = 1.0;
 #endif
 
+string primColor;
+float primGlow = 0.0;
+vector primSize = <0.3,0.3,0.3>;
+
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
-vector primSize = <0.3,0.3,0.3>;
-float startGlow;
-float endGlow;
 
-integer bounce = FALSE;
-float startAlpha = 1;
 integer explodeOnCollision = 0;
 integer explodeOnLowVelocity = 0;
 float minimumVelocity = 0.1;
 float minimumCollisionSpeed = 10;
 integer freezeOnBoom = FALSE;
+integer tricolor = FALSE;
+
+integer rezParam;
+string color1;
+string color2;
+string color3;
 list params;
 integer handle;
 integer armed = FALSE;
 float flightTime;
-float systemAge = 1.0;
+#ifdef SPEED
+float speed = SPEED;
+#else
+float speed = 1;
+#endif
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
@@ -77,7 +80,7 @@ float systemAge = 1.0;
    //float partRadius = 1.5; //or 1
    //float radius = 1.5; //or 1
    float partAge = 1.0; // 1.0 to 5
-   float primGlow = 0.0;
+   //float primGlow = 0.0;
 
    //full or half ring?
    //float beginAngle = PI_BY_TWO;
@@ -100,7 +103,7 @@ float systemAge = 1.0;
    vector endSize = <1.9,1.9,1.9>;
    //vector particleOmega = <0.0,30.0, 0.0>;
    vector omega = <0.0,30.0, 0.0>;
-   float primGlow = 0.4;
+   //float primGlow = 0.4;
    //float partRadius = 1.0;
 #elif defined TRAILBALL
    float partSpeed = 10;
@@ -108,24 +111,16 @@ float systemAge = 1.0;
    //vector particleOmega = <0.0,0.0,10*PI>;
    //float partRadius = 1.0;
    integer wind = 0;
-   float primGlow = 0.4;
+   //float primGlow = 0.4;
    #include "LIB\effects\effect_trailball.lsl"
 #elif defined SPARKLERBALL
 #elif defined FIREBALL
    #include "LIB\effects\effect_jopseys_fire.lsl"
 #else
-   float endAlpha = 0;
-   vector startSize = <1.9,1.9,1.9>;
-   vector endSize = <1.9,1.9,1.9>;
-   vector omega = <0.0,0.0,0.0>;
-   float primGlow = 0.4;
-   #ifdef BURST_RADIUS
-   float burstRadius = BURST_RADIUS;
-   #else
-   float burstRadius = 0.0;
+   // #define PARTICLE_SCALE 4  // moved to header
+   //#include "LIB\effects\effect_standard_rocketball.lsl"
+  #include "LIB\effects\effect_standard_burst.lsl"
    #endif
-   #include "LIB\effects\effect_standard_rocketball.lsl"
-#endif
 
 
 boom()
@@ -170,8 +165,8 @@ boom()
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
-       llSetStatus(STATUS_PHYSICS, FALSE);
-       llDie();
+      llSetStatus(STATUS_PHYSICS, FALSE);
+      llDie();
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
 }
@@ -212,6 +207,12 @@ default
    //having touch_start makes some effects easier to debug
    touch_start(integer n)
    {
+      systemAge = 1;
+      partAge = 4;
+      color1 = "<1.0,1.0,1.0>";
+      color2 = "<1.0,1.0,1.0>";
+      startGlow = 0.0;
+      endGlow = 0.0;
       boom();
    }
 
@@ -308,10 +309,10 @@ default
 
       if (tim>flightTime)
       {
-          debugSay("timed out");
-          llSetTimerEvent(0);
-          if (armed)
-              boom();
+         debugSay("timed out");
+         llSetTimerEvent(0);
+         if (armed)
+            boom();
       }
       else
       {

@@ -9,12 +9,12 @@
 string version = "3.0";
 
 #include "LIB\lib.lsl"
+#include "LIB\effects\effect.h"
 
 string color1;
 string color2;
 string color3;
 string lightColor;
-string texture;
 //string sound = SOUND_BURST1;
 string sound = SOUND_PUREBOOM;
 float intensity = 1.0;
@@ -29,27 +29,7 @@ float oldAlpha;
 list colors;
 list emitters;
 list params;
-float systemAge;
-float particleAge;
 float flashTime = 0.2;
-
-#if defined STARTGLOW
-float startGlow = STARTGLOW;  //notecard will override these
-#else
-float startGlow;
-#endif
-
-#if defined STARTGLOW
-float endGlow = ENDGLOW;
-#else
-float endGlow;
-#endif
-
-#ifdef RADIUS
-float burstRadius = RADIUS;
-#else
-float burstRadius = 0;
-#endif
 
 #ifdef TRIPLE
    float glowAmount = 1.0; // or 0.2
@@ -92,7 +72,7 @@ fire()
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
       llSleep(interEmitterDelay);
    }
-   llSleep(systemAge+particleAge);
+   llSleep(systemAge+partAge);
    allOff();
 }
 
@@ -137,9 +117,9 @@ default
          volume = getVolume(note);
          wind = getInteger(note, "wind");
          systemAge = getFloat(note, "systemAge");
-         particleAge = getFloat(note, "particleAge");
-         startGlow = getFloat(note,"startGlow");
-         endGlow = getFloat(note,"endGlow");
+         partAge = getFloat(note, "particleAge");
+         //startGlow = getFloat(note,"startGlow");
+         //endGlow = getFloat(note,"endGlow");
 
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
@@ -159,7 +139,7 @@ default
 
             for (i=2; i<len; i++)
             {
-                colors += llList2String(params,i);
+               colors += llList2String(params,i);
             }
           }
           fire();

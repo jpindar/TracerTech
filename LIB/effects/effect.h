@@ -43,8 +43,8 @@ effect.h
    #ifdef BURST_RADIUS
    float burstRadius = BURST_RADIUS;
    #else
-   ///float burstRadius = 0.0;
-   float burstRadius = 1.5;
+   float burstRadius = 0.0;
+   //float burstRadius = 1.5;
    #endif
 
    #ifdef PARTCOUNT
@@ -53,9 +53,14 @@ effect.h
    integer partCount = 300;
    #endif
    
+   #ifdef FOLLOW_VELOCITY
+      integer followVelocity = TRUE;
+   #else
+      integer followVelocity = FALSE;
+   #endif
    
-   integer followVelocity = FALSE;
    float burstRate = 0.2;
+   
    //float maxPartSpeed = 2.0;
    //float minPartSpeed = 2.0;
    float maxPartSpeed = 1.5;
@@ -67,7 +72,7 @@ effect.h
 ///   float partAge = 5;
    float partAge = 1;
 
-   float systemAge;
+   float systemAge = 1;
    
    string texture;
 
