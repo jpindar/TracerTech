@@ -128,7 +128,7 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //if (!armed)
    //  return;
-   debugSay("boom");
+   debugSay("boom at " + (string)llGetPos() + (string)llGetVel());
    setColor(LINK_THIS,(vector)primColor,0.0);
    setGlow(LINK_THIS,primGlow);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
@@ -248,7 +248,11 @@ default
          explodeOnCollision = TRUE;
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
-      //llCollisionSound("", 1.0);  //  Disable collision sounds
+      if (p & FOLLOW_VELOCITY_MASK)
+      {
+         followVelocity = TRUE;
+      }
+      llCollisionSound("", 1.0);  //  Disable collision sounds
 
       //setting prim size sets velocity to zero
       //this should have fixed it, but doesn't. Did it work in InWorldz?
@@ -266,7 +270,6 @@ default
          //r.y = -r.y;
          setRot(r);
       #endif
-      // we don't know the color yet
 
       if (rezParam>0)
       {   //use timer instead of sleeping to allow other events
@@ -277,21 +280,23 @@ default
 
    listen( integer chan, string name, key id, string msg )
    {
+      // we want to set the prim color ASAP
+      params = llCSV2List(msg);
+      color1 = llList2String(params,1);
+      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
+
       llListenRemove(handle);
       debugSay("got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
-      params = llCSV2List(msg);
       texture = llList2String(params,0);
-      color1 = llList2String(params,1);
       color2 = llList2String(params,2);
       color3 = llList2String(params,3);
       systemAge = llList2Float(params,4);
       boomVolume = llList2Float(params,5);
       startGlow =  llList2Float(params,6);
       endGlow =  llList2Float(params,7);
-      primColor = color1;
       lightColor = color1;
       //e = llList2Integer(emitters,i);
-      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)primColor,1.0]);
+
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
       armed = TRUE;
    }
