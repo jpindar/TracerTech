@@ -155,7 +155,8 @@
 #define FOLLOW_VELOCITY_MASK 0x20000000
 
 #define MAX_INT           0x80000000
-
+// this will do for now
+#define ERROR_FLAG        -9999
 // global variables
 integer debug = FALSE;
 float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
