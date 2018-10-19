@@ -147,11 +147,13 @@
 #endif
 
 // masks for encoding options into a short message
-#define DEBUG_MASK        0x01000000
-#define COLLISION_MASK    0x02000000
-#define FREEZE_MASK       0x04000000
-#define WIND_MASK         0x08000000
-#define LOW_VELOCITY_MASK 0x10000000
+
+#define LAUNCH_ALPHA_MASK    0x00800000
+#define DEBUG_MASK           0x01000000
+#define COLLISION_MASK       0x02000000
+#define FREEZE_MASK          0x04000000
+#define WIND_MASK            0x08000000
+#define LOW_VELOCITY_MASK    0x10000000
 #define FOLLOW_VELOCITY_MASK 0x20000000
 
 #define MAX_INT           0x80000000
