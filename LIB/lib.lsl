@@ -175,7 +175,9 @@ float getFloat(list notecardList, string name)
    float f;
    integer ptr = llListFindList(notecardList,[name]);
    if (ptr > -1)
-       f = llList2Float(notecardList,ptr+1);  //case sensitive, unfortunately
+      f = llList2Float(notecardList,ptr+1);  //case sensitive, unfortunately
+   else
+      f = ERROR_FLAG;
    return f;
 }
 
