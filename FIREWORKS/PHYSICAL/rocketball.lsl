@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.1.2"
+#define Version "3.1.5"
 //#define TRACERGRID
 //#define SOAS
 
@@ -35,11 +35,7 @@ string sound1 = SOUND_PUREBOOM;
 float boomVolume = 1.0;
 
 vector launchColor = <1.0,1.0,1.0>;
-#if defined LAUNCH_ALPHA
-float launchAlpha = LAUNCH_ALPHA;
-#else
-float launchAlpha = 1.0;
-#endif
+float launchAlpha;
 
 string primColor;
 float primGlow = 0.0;
@@ -160,7 +156,8 @@ boom()
    }
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    setGlow(LINK_THIS,0.0);
-   llSleep(systemAge);
+   if (systemAge>0)
+      llSleep(systemAge);
    AllOff(TRUE);
    llSetTimerEvent(0);
    if (rezParam !=0)
@@ -223,7 +220,11 @@ default
       debugSay("initial velocity "+(string)llGetVel());
       if (p > 0)
       {
-         setColor(LINK_SET,launchColor,launchAlpha);
+         if (p & LAUNCH_ALPHA_MASK)
+            launchAlpha = 1.0;
+         else
+            launchAlpha = 0.0;
+         setColor(LINK_SET,launchColor,launchAlpha);            
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       }
@@ -273,7 +274,7 @@ default
 
       if (rezParam>0)
       {   //use timer instead of sleeping to allow other events
-          llSetTimerEvent(0.01);
+         llSetTimerEvent(0.01);
       }
       debugSay("end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
    }
@@ -296,7 +297,6 @@ default
       endGlow =  llList2Float(params,7);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
-
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
       armed = TRUE;
    }
