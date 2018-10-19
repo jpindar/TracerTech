@@ -16,7 +16,6 @@
 
 //#define RAINBOW
 //#define TRICOLOR
-#define NOTECARD_IN_THIS_PRIM
 //#define LAUNCH_ROT
 //#define LAUNCH_ROT_90Y  // makes ring perp to flight axis
 //#define SPINTRAILS
@@ -26,12 +25,8 @@
 #include "LIB\lib.lsl"
 #include "LIB\readNotecardToList.h"
 
-//string texture = TEXTURE_NAUTICAL_STAR;
-//string texture = TEXTURE_RAINBOWBURST;
-//string texture = TEXTURE_CLASSIC;
-//string texture = TEXTURE_SPIKESTAR;
-string texture = TEXTURE1;
 
+string texture = TEXTURE1;
 
 #if defined SPARKBALL
    string sound = SOUND_CRACKLE2; //3sec crackle
@@ -65,12 +60,12 @@ list colors;
 integer numOfBalls;
 float speed;
 integer flightTime;
-float particleTime;
 integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
 float launchDelay = 0.5;
 integer code = 0;
+float systemAge = 1;   //overridden by notecard
 
 #if defined STARTGLOW
 float startGlow = STARTGLOW;
@@ -85,6 +80,7 @@ float endGlow = 0.0;
 #endif
 
 #define bouyancy 50
+#define NOTECARD_IN_THIS_PRIM
 
 
 msgHandler(string sender, string msg)
@@ -93,7 +89,7 @@ msgHandler(string sender, string msg)
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-      
+
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -147,7 +143,7 @@ fire()
          launchMsg=texture+","+colorA+","+colorB+","+colorC;
          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       }
-      launchMsg = launchMsg+","+(string)particleTime+","+(string)volume;
+      launchMsg = launchMsg+","+(string)systemAge+","+(string)volume;
       launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
 
       rezChan = (integer) llFrand(255);
@@ -160,7 +156,8 @@ fire()
       llSleep(0.2);
       debugSay("launchMsg " + launchMsg);
       llRegionSay(rezChan, launchMsg);
-      llSleep(launchDelay);
+      if (launchDelay > 0.0)
+         llSleep(launchDelay);
    }
 }
 
@@ -202,14 +199,11 @@ default
 
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
-      particleTime = getFloat(notecardList,"particletime");
+      systemAge = getFloat(notecardList, "systemAge");
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
       launchDelay = getFloat(notecardList, "delay");
-      //startGlow = getFloat(notecardList, "startGlow");
-      //endGlow = getFloat(notecardList, "endGlow");
-
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
       colors = colors + parseColor(notecardList,"color3");
@@ -238,6 +232,9 @@ default
          packedParam = packedParam | WIND_MASK;
       #if defined DEBUG
          packedParam = packedParam | DEBUG_MASK; // 0x0100 0000
+      #endif
+      #if defined LAUNCH_ALPHA
+         packedParam = packedParam | LAUNCH_ALPHA_MASK;  //0x0080 0000
       #endif
 
       llPreloadSound(sound);
