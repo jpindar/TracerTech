@@ -5,8 +5,6 @@
 *
 */
 #define Version "3.1.5"
-//#define TRACERGRID
-//#define SOAS
 
 //#define DEBUG
 //#define RINGBALL
@@ -16,7 +14,6 @@
 //#define TRAILBALL
 //#define SPIRALBALL
 //#define HOTLAUNCH
-
 
 //#define PRIM_ROTATION
 
@@ -32,10 +29,10 @@
 #include "LIB\effects\effect.h"
 
 string sound1 = SOUND_PUREBOOM;
-float boomVolume = 1.0;
+float boomVolume = 1.0;                // overridden by notecard via chat
 
-vector launchColor = <1.0,1.0,1.0>;
-float launchAlpha;
+vector launchColor = <1.0,1.0,1.0>;    //OK for now
+float launchAlpha;                     // determined by rez param
 
 string primColor;
 float primGlow = 0.0;
@@ -46,12 +43,13 @@ float intensity = 1.0;
 float radius = 5;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
 
-integer explodeOnCollision = 0;
-integer explodeOnLowVelocity = 0;
-float minimumVelocity = 0.1;
-float minimumCollisionSpeed = 10;
-integer freezeOnBoom = FALSE;
-integer tricolor = FALSE;
+integer explodeOnCollision = 0;        //overridden by notecard via rez param
+integer explodeOnLowVelocity = 0;      //overridden by notecard via rez param
+integer freezeOnBoom = FALSE;          //overridden by notecard via rez param
+float flightTime = 99;                 //overridden by notecard via rez param
+float minimumVelocity = 0.1;        //constant
+float minimumCollisionSpeed = 10;   //constant
+integer tricolor = FALSE;     //overridden by #define?
 
 integer rezParam;
 string color1;
@@ -60,7 +58,6 @@ string color3;
 list params;
 integer handle;
 integer armed = FALSE;
-float flightTime;
 #ifdef SPEED
 float speed = SPEED;
 #else
@@ -224,7 +221,7 @@ default
             launchAlpha = 1.0;
          else
             launchAlpha = 0.0;
-         setColor(LINK_SET,launchColor,launchAlpha);            
+         setColor(LINK_SET,launchColor,launchAlpha);
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       }
