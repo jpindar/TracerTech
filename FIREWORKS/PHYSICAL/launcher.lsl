@@ -83,6 +83,8 @@ float endGlow = 0.0;
 #define NOTECARD_IN_THIS_PRIM
 
 
+/*  handle messages from the menu script
+ */
 msgHandler(string sender, string msg)
 {
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
@@ -104,6 +106,7 @@ msgHandler(string sender, string msg)
       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
    }
 }
+
 
 fire()
 {
@@ -145,7 +148,7 @@ fire()
       }
       launchMsg = launchMsg+","+(string)systemAge+","+(string)volume;
       launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
-
+      launchMsg = launchMsg + "," + BOOMSOUND;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
@@ -238,6 +241,7 @@ default
       #endif
 
       llPreloadSound(sound);
+      llPreloadSound(BOOMSOUND);
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
