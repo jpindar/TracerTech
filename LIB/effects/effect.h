@@ -2,6 +2,7 @@
 
 particle system header
 effect.h
+v1.0
 
 */
 
@@ -40,8 +41,8 @@ effect.h
    float partSizeScale = 1.0;
    #endif
 
-   #ifdef BURST_RADIUS
-   float burstRadius = BURST_RADIUS;
+   #ifdef BURSTRADIUS
+   float burstRadius = BURSTRADIUS;
    #else
    float burstRadius = 0.0;
    //float burstRadius = 1.5;
@@ -53,7 +54,7 @@ effect.h
    integer partCount = 300;
    #endif
    
-   #ifdef FOLLOW_VELOCITY
+   #ifdef FOLLOWVELOCITY
       integer followVelocity = TRUE;
    #else
       integer followVelocity = FALSE;
@@ -71,10 +72,10 @@ effect.h
 
 ///   float partAge = 5;
    float partAge = 1;
-
    float systemAge = 1;
    
    string texture;
+   float rate ;
 
    //integer flags;
 
