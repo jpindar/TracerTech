@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.1.5"
+#define Version "3.1.6"
 
 //#define DEBUG
 //#define RINGBALL
@@ -25,7 +25,7 @@
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
 
-string sound1 = SOUND_PUREBOOM;
+string sound1;
 float boomVolume = 1.0;                // overridden by notecard via chat
 
 vector launchColor = <1.0,1.0,1.0>;    //OK for now
@@ -151,6 +151,7 @@ boom()
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
+      llSleep(2); // allow time for sound to finish
       llSetStatus(STATUS_PHYSICS, FALSE);
       llDie();
    }
@@ -284,6 +285,7 @@ default
       boomVolume = llList2Float(params,5);
       startGlow =  llList2Float(params,6);
       endGlow =  llList2Float(params,7);
+      sound1 =  llList2String(params,8);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
