@@ -46,7 +46,8 @@ float zOffset = 0.7; //0.7 to 2.0
 float glowOnAmount = 0.0; //or 0.05
 string preloadPrimName = "preloader";
 integer preloadFace = 0;
-integer firingFace = 2; //interior of tube
+string muzzlePrimName = "muzzle";
+integer muzzleLink;
 key owner;
 integer handle;
 integer chatChan;
@@ -110,8 +111,9 @@ msgHandler(string sender, string msg)
 
 fire()
 {
-   // launch message CSV format:
-   //texture, color, color, color, particleTime , volume, startGlow, endGlow
+   vector muzzleColor = (vector)COLOR_GOLD;
+   float muzzleGlow = 1.0;
+   integer muzzleFace = ALL_SIDES;
    string rocket;
    integer i;
 
@@ -133,7 +135,8 @@ fire()
 
    for (i = 0; i<numOfBalls; i++)
    {
-      llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_GLOW,firingFace,1.0]);
+      setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,muzzleColor,1.0]);
+      setParamsFast(muzzleLink,[PRIM_GLOW,ALL_SIDES,1.0]);
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
          string colorA = llList2String(colors,(i));
@@ -155,7 +158,8 @@ fire()
       llPlaySound(sound,volume);
       repeatSound(sound,volume);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
-      setGlow(LINK_THIS,0.0);
+      setGlow(muzzleLink,0.0);
+      setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
       llSleep(0.2);
       debugSay("launchMsg " + launchMsg);
       llRegionSay(rezChan, launchMsg);
@@ -245,6 +249,12 @@ default
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
+
+      muzzleLink = getLinkWithName(muzzlePrimName);
+      debugSay("muzzle is link number " + (string)muzzleLink);
+      assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
+      //llSetLinkTexture(muzzleLink, texture,muzzleFace);
+
       vector v = llGetScale();
       zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
       if (zOffset > 10.0) //can't rez more than 10 m away
