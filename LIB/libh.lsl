@@ -141,6 +141,7 @@
 #elif defined TRACERGRID
    #define SOUND_WHOOSH001 "a120d4b5-e56c-4f28-ac02-f606862d269e"
    #define SOUND_PUREBOOM  "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
+   #define SOUND_BANGECHO  "69f401d1-1e61-476b-99b1-dce18531996b"
 #elif defined SOAS
    #define SOUND_WHOOSH001 "3a3882d0-d8a6-4e03-b440-be31c37c805d"
    #define SOUND_PUREBOOM  "bbfcb1bf-93b2-4071-832e-89492dd04d68"
