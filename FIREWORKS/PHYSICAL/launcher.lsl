@@ -135,8 +135,8 @@ fire()
 
    for (i = 0; i<numOfBalls; i++)
    {
-      setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,muzzleColor,1.0]);
-      setParamsFast(muzzleLink,[PRIM_GLOW,ALL_SIDES,1.0]);
+      setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
+      setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
          string colorA = llList2String(colors,(i));
