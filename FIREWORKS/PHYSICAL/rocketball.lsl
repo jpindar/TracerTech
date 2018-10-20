@@ -8,13 +8,10 @@
 
 //#define DEBUG
 //#define RINGBALL
-
-
 //#define SPHERE_BALL
 //#define TRAILBALL
 //#define SPIRALBALL
 //#define HOTLAUNCH
-
 //#define PRIM_ROTATION
 
 // RINGBALLS SHOULD NOT POINTFORWARD
@@ -50,7 +47,6 @@ float flightTime = 99;                 //overridden by notecard via rez param
 float minimumVelocity = 0.1;        //constant
 float minimumCollisionSpeed = 10;   //constant
 integer tricolor = FALSE;     //overridden by #define?
-
 integer rezParam;
 string color1;
 string color2;
@@ -58,11 +54,7 @@ string color3;
 list params;
 integer handle;
 integer armed = FALSE;
-#ifdef SPEED
-float speed = SPEED;
-#else
-float speed = 1;
-#endif
+
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
