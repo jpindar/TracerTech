@@ -7,19 +7,7 @@
 #define Version "3.1.6"
 
 //#define DEBUG
-//#define RINGBALL
-//#define SPHERE_BALL
-//#define TRAILBALL
-//#define SPIRALBALL
-//#define HOTLAUNCH
-//#define PRIM_ROTATION
 
-// RINGBALLS SHOULD NOT POINTFORWARD
-//#define POINTFORWARD
-//but if they are, they probably should be ROT_90, so that the ring is perpedicular
-//to the flightpath
-//#define ROT_90
-//#define TRICOLOR
 
 
 #include "LIB\lib.lsl"
