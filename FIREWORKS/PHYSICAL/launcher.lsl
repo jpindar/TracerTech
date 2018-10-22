@@ -27,12 +27,14 @@
 
 
 string texture = TEXTURE1;
+string sound = LAUNCHSOUND;
 
 #if defined SPARKBALL
-   string sound = SOUND_CRACKLE2; //3sec crackle
+  // string sound = SOUND_CRACKLE2; //3sec crackle
 #else
   /// string sound = SOUND_ROCKETLAUNCH1;
-  string sound = SOUND_WHOOSH001;
+  //string sound = SOUND_WHOOSH001;
+  // string sound = SOUND_CHEE;
 #endif
 
 string color1;
@@ -61,6 +63,7 @@ list colors;
 integer numOfBalls;
 float speed;
 integer flightTime;
+float burstRadius;
 integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
@@ -152,6 +155,15 @@ fire()
       launchMsg = launchMsg+","+(string)systemAge+","+(string)volume;
       launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
       launchMsg = launchMsg + "," + BOOMSOUND;
+      burstRadius= BURSTRADIUS;
+      launchMsg = launchMsg + "," + (string)burstRadius;
+
+      float partAge;
+      #ifdef PARTAGE
+         partAge = PARTAGE;
+      #endif
+      launchMsg = launchMsg + "," + (string)partAge;
+
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
@@ -240,7 +252,7 @@ default
       #if defined DEBUG
          packedParam = packedParam | DEBUG_MASK; // 0x0100 0000
       #endif
-      #if defined LAUNCH_ALPHA
+      #if defined LAUNCHALPHA
          packedParam = packedParam | LAUNCH_ALPHA_MASK;  //0x0080 0000
       #endif
 
