@@ -94,6 +94,13 @@ float endAlpha = 1.0;
   float partAge = 1;
 #endif
 
+#ifdef BURSTRATE
+  float burstRate = BURSTRATE;
+#else
+  float burstRate = 0.1;
+#endif
+
+
 #ifdef BURSTRADIUS
   float burstRadius = BURSTRADIUS;
 #else
@@ -178,7 +185,7 @@ fire()
       launchMsg += "," + (string)burstRadius;
       launchMsg += "," + (string)partAge;
       launchMsg += "," + (string)startAlpha + "," + (string)endAlpha;
-      
+      launchMsg += "," + (string)burstRate; 
       
 
       rezChan = (integer) llFrand(255);
