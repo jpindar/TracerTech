@@ -88,7 +88,7 @@ boom()
    setGlow(LINK_THIS,0.0);
    if (systemAge>0)
       llSleep(systemAge);
-   AllOff(TRUE);
+   AllOff(FALSE);
    llSetTimerEvent(0);
    if (rezParam !=0)
    {
@@ -105,7 +105,7 @@ AllOff(integer blacken)
    llParticleSystem([]);
    setGlow(LINK_THIS,0.0);
    if (blacken)
-   setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
+      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
 }
@@ -239,7 +239,8 @@ default
       partAge = llList2Float(params,10);
       startAlpha =  llList2Float(params,11);
       endAlpha =  llList2Float(params,12);
-
+      burstRate =  llList2Float(params,13);
+      
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
