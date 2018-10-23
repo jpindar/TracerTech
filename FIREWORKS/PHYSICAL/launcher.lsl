@@ -29,13 +29,7 @@
 string texture = TEXTURE1;
 string sound = LAUNCHSOUND;
 
-#if defined SPARKBALL
-  // string sound = SOUND_CRACKLE2; //3sec crackle
-#else
-  /// string sound = SOUND_ROCKETLAUNCH1;
-  //string sound = SOUND_WHOOSH001;
-  // string sound = SOUND_CHEE;
-#endif
+
 
 string color1;
 string color2;
@@ -63,7 +57,6 @@ list colors;
 integer numOfBalls;
 float speed;
 integer flightTime;
-float burstRadius;
 integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
@@ -81,7 +74,20 @@ float startGlow = 0.0;
 float endGlow = ENDGLOW;
 #else
 float endGlow = 0.0;
+#endif  
+
+#ifdef PARTAGE
+  float partAge = PARTAGE;
+#else
+  float partAge = 1;
 #endif
+
+#ifdef BURSTRADIUS
+  float burstRadius = BURSTRADIUS;
+#else
+  float burstRadius = 1;
+#endif
+
 
 #define bouyancy 50
 #define NOTECARD_IN_THIS_PRIM
@@ -140,29 +146,25 @@ fire()
    {
       setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
       setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
+
+      launchMsg=texture;
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
          string colorA = llList2String(colors,(i));
-         launchMsg=texture+","+colorA+","+colorA+","+colorA;
+         launchMsg += ","+colorA+","+colorA+","+colorA;
          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
       }else{  // i = 0
          string colorA = llList2String(colors,(i*3));
          string colorB = llList2String(colors,(i*3)+1);
          string colorC = llList2String(colors,(i*3)+2);
-         launchMsg=texture+","+colorA+","+colorB+","+colorC;
+         launchMsg += ","+colorA+","+colorB+","+colorC;
          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       }
-      launchMsg = launchMsg+","+(string)systemAge+","+(string)volume;
-      launchMsg = launchMsg+","+(string)startGlow+","+(string)endGlow;
-      launchMsg = launchMsg + "," + BOOMSOUND;
-      burstRadius= BURSTRADIUS;
-      launchMsg = launchMsg + "," + (string)burstRadius;
-
-      float partAge;
-      #ifdef PARTAGE
-         partAge = PARTAGE;
-      #endif
-      launchMsg = launchMsg + "," + (string)partAge;
+      launchMsg += ","+(string)systemAge+","+(string)volume;
+      launchMsg += ","+(string)startGlow+","+(string)endGlow;
+      launchMsg += "," + BOOMSOUND;
+      launchMsg += "," + (string)burstRadius;
+      launchMsg += "," + (string)partAge;
 
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
