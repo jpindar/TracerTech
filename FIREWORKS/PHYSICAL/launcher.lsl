@@ -74,7 +74,19 @@ float startGlow = 0.0;
 float endGlow = ENDGLOW;
 #else
 float endGlow = 0.0;
-#endif  
+#endif
+
+#if defined STARTALPHA
+float startAlpha = STARTALPHA;
+#else
+float startAlpha = 1.0;
+#endif
+
+#if defined ENDALPHA
+float endAlpha = ENDALPHA;
+#else
+float endAlpha = 1.0;
+#endif
 
 #ifdef PARTAGE
   float partAge = PARTAGE;
@@ -165,6 +177,9 @@ fire()
       launchMsg += "," + BOOMSOUND;
       launchMsg += "," + (string)burstRadius;
       launchMsg += "," + (string)partAge;
+      launchMsg += "," + (string)startAlpha + "," + (string)endAlpha;
+      
+      
 
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
