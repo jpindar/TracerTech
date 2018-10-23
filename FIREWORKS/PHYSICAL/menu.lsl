@@ -26,6 +26,7 @@ integer chatChan;
 integer menuChan;
 integer access;
 integer menuMode = 1;
+integer enabled = FALSE;
 
 #include "LIB\lib.lsl"
 
@@ -58,6 +59,8 @@ default
 
    touch_start(integer num)
    {
+      if (! enabled)
+         return;
       integer timeout = 10;
       string menuText = "listening on channel " + (string)chatChan;
       toucher=llDetectedKey(0);
@@ -115,6 +118,7 @@ default
          menuMode = getInteger(notecard,"menu");
          //debugSay("got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
+         enabled = TRUE;
      }
    }
 
