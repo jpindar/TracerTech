@@ -139,12 +139,15 @@
 #define SOUND_BOOM001 "e53efc67-f50d-4ec5-809b-d13d487e9666"  //metallic boom/gong sound
 
 #elif defined TRACERGRID
-   #define SOUND_WHOOSH001 "a120d4b5-e56c-4f28-ac02-f606862d269e"
-   #define SOUND_PUREBOOM  "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
+   #define SOUND_WHOOSH001  "a120d4b5-e56c-4f28-ac02-f606862d269e"
+   #define SOUND_CHEE       "2494e177-c350-4868-a609-d14a0d9488ea"
+   
+   #define SOUND_PUREBOOM   "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
    #define SOUND_CLANGECHO  "69f401d1-1e61-476b-99b1-dce18531996b"
+   #define SOUND_BANG1      "562f55da-414d-4ae7-b89a-7648f17a836f"
 #elif defined SOAS
-   #define SOUND_WHOOSH001 "3a3882d0-d8a6-4e03-b440-be31c37c805d"
-   #define SOUND_PUREBOOM  "bbfcb1bf-93b2-4071-832e-89492dd04d68"
+   #define SOUND_WHOOSH001  "3a3882d0-d8a6-4e03-b440-be31c37c805d"
+   #define SOUND_PUREBOOM   "bbfcb1bf-93b2-4071-832e-89492dd04d68"
 #endif
 
 // masks for encoding options into a short message
