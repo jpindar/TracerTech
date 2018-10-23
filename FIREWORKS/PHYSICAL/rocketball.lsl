@@ -9,7 +9,6 @@
 //#define DEBUG
 
 
-
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
 
@@ -18,11 +17,9 @@ float boomVolume = 1.0;                // overridden by notecard via chat
 
 vector launchColor = <1.0,1.0,1.0>;    //OK for now
 float launchAlpha;                     // determined by rez param
-
 string primColor;
 float primGlow = 0.0;
 vector primSize = <0.3,0.3,0.3>;
-
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;  // 5 to 20
@@ -45,55 +42,11 @@ integer armed = FALSE;
 
 
 #if defined RINGBALL
-   //#define PRIM_ROTATION
-   float endAlpha = 0;
-   vector startSize = <1.5,1.5,0.0>; //or 1.9
-   vector endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
-   float rate = 0.1; //0.1 to 5
-   //float partRadius = 1.5; //or 1
-   //float radius = 1.5; //or 1
-   float partAge = 1.0; // 1.0 to 5
-   //float primGlow = 0.0;
-
-   //full or half ring?
-   //float beginAngle = PI_BY_TWO;
-   float beginAngle = PI;
-   float endAngle = 0;
-
-   #if defined TRICOLOR
-      float partRadius = 1.0; //or 1
-      #include "LIB\effects\effect_ringball3.lsl"
-   #else
-      float partRadius = 1.5; //or 1
-      #include "LIB\effects\effect_ringball1.lsl"
-      //#include "effects\effect_ringball2.lsl"
-      //#include "effects\effect_ringball4.lsl"
-   #endif
-#elif defined SPIRALBALL
-   integer effectsType = 12;
-   float endAlpha = 0;
-   vector startSize = <1.9,1.9,1.9>;
-   vector endSize = <1.9,1.9,1.9>;
-   //vector particleOmega = <0.0,30.0, 0.0>;
-   vector omega = <0.0,30.0, 0.0>;
-   //float primGlow = 0.4;
-   //float partRadius = 1.0;
-#elif defined TRAILBALL
-   float partSpeed = 10;
-   //vector partOmega = <0.0,0.0,10*PI>;
-   //vector particleOmega = <0.0,0.0,10*PI>;
-   //float partRadius = 1.0;
-   integer wind = 0;
-   //float primGlow = 0.4;
-   #include "LIB\effects\effect_trailball.lsl"
-#elif defined SPARKLERBALL
-#elif defined FIREBALL
-   #include "LIB\effects\effect_jopseys_fire.lsl"
+   #include "LIB\effects\effect_ringball1.lsl"
 #else
-   // #define PARTICLE_SCALE 4  // moved to header
    //#include "LIB\effects\effect_standard_rocketball.lsl"
-  #include "LIB\effects\effect_standard_burst.lsl"
-   #endif
+   #include "LIB\effects\effect_standard_burst.lsl"
+#endif
 
 
 boom()
@@ -162,6 +115,16 @@ default
 {
    state_entry()
    {
+   #if defined RINGBALL
+      startSize = <1.5,1.5,0.0>; //or 1.9
+      endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
+      rate = 0.1; //0.1 to 5
+      //full or half ring?
+      //float beginAngle = PI_BY_TWO;
+      beginAngle = PI;
+      endAngle = 0;  
+   #endif
+
       #if defined DESCRIPTION
          llSetObjectDesc(Version + " " + DESCRIPTION);
       #endif
@@ -228,9 +191,7 @@ default
       if (p & FREEZE_MASK)
          freezeOnBoom = TRUE;
       if (p & FOLLOW_VELOCITY_MASK)
-      {
          followVelocity = TRUE;
-      }
       llCollisionSound("", 1.0);  //  Disable collision sounds
 
       //setting prim size sets velocity to zero
@@ -274,6 +235,11 @@ default
       startGlow =  llList2Float(params,6);
       endGlow =  llList2Float(params,7);
       sound1 =  llList2String(params,8);
+      burstRadius = llList2Float(params,9);
+      partAge = llList2Float(params,10);
+      startAlpha =  llList2Float(params,11);
+      endAlpha =  llList2Float(params,12);
+
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
