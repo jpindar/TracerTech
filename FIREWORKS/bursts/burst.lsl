@@ -105,6 +105,9 @@ default
       emitters = getLinknumbers(emitterNames);
       oldAlpha = llGetAlpha(ALL_SIDES);
       allOff();
+      #if defined DESCRIPTION
+         llSetObjectDesc((string)chatChan+" "+Version+" "+DESCRIPTION);
+      #endif
    }
 
    //link messages come from the controller
