@@ -13,7 +13,7 @@ state readNotecardToList
 {
    state_entry()
    {
-      llSleep(2);
+      llSleep(1.5);
       notecardName = getNotecardName("");
       if (notecardName == "")
       {
