@@ -42,7 +42,9 @@ integer armed = FALSE;
 
 
 #if defined RINGBALL
-   #include "LIB\effects\effect_ringball1.lsl"
+   #include "LIB\effects\effect_ringball1.lsl"  
+#elif defined SPIRALBALL
+   #include "LIB\effects\effect_spiral_1.lsl"
 #else
    //#include "LIB\effects\effect_standard_rocketball.lsl"
    #include "LIB\effects\effect_standard_burst.lsl"
@@ -168,6 +170,7 @@ default
          setColor(LINK_SET,launchColor,launchAlpha);
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+         // llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       }
       else
       {
@@ -330,4 +333,5 @@ default
    }
    #endif
 }
+
 
