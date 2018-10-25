@@ -42,8 +42,10 @@ integer armed = FALSE;
 
 
 #if defined RINGBALL
-   #include "LIB\effects\effect_ringball1.lsl"  
+   //#define PRIM_ROTATION
+   #include "LIB\effects\effect_ringball1.lsl"
 #elif defined SPIRALBALL
+   //#define PRIM_ROTATION
    #include "LIB\effects\effect_spiral_1.lsl"
 #else
    //#include "LIB\effects\effect_standard_rocketball.lsl"
@@ -170,7 +172,8 @@ default
          setColor(LINK_SET,launchColor,launchAlpha);
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-         // llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+         //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+         //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       }
       else
       {
@@ -215,7 +218,7 @@ default
       #endif
 
       if (rezParam>0)
-      {   //use timer instead of sleeping to allow other events
+      {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
       debugSay("end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
@@ -243,7 +246,7 @@ default
       startAlpha =  llList2Float(params,11);
       endAlpha =  llList2Float(params,12);
       burstRate =  llList2Float(params,13);
-      
+
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
@@ -333,5 +336,4 @@ default
    }
    #endif
 }
-
 
