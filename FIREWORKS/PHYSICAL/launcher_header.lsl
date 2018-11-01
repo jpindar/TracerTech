@@ -13,12 +13,13 @@
 //#define DEBUG
 #define TRACERGRID
 #define DESCRIPTION "plain spikestar"
-#define STARTGLOW 0.1
-#define ENDGLOW 0.0
-#define BURSTRADIUS 6
+#define STARTGLOW 0.2
+#define ENDGLOW 0.1
+#define BURSTRADIUS 10
 #define LAUNCHALPHA 1
-#define PARTAGE 2
-
+#define PARTAGE 2.0
+#define SYSTEMAGE 1.0
+//#define PARTICLE_SCALE 5
 //#define TEXTURE1 TEXTURE_NAUTICAL_STAR
 //#define TEXTURE1 TEXTURE_RAINBOWBURST
 //#define TEXTURE1 TEXTURE_CLASSIC
