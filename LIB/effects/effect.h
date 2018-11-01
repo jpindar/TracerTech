@@ -32,14 +32,14 @@ v1.0
    #endif
     
     
-   vector startSize = <0.5,0.5,0.0>;
-   vector endSize = <0.5,0.5,0.0>;
+   vector startScale = <0.5,0.5,0.0>;
+   vector endScale = <0.5,0.5,0.0>;
 
-   #if defined PARTICLE_SCALE
-   float partSizeScale = PARTICLE_SCALE;
-   #else
-   float partSizeScale = 1.0;
-   #endif
+   //#if defined PARTICLE_SCALE
+   //float partSizeScale = PARTICLE_SCALE;
+   //#else
+   //float partSizeScale = 1.0;
+   //#endif
 
    #ifdef BURSTRADIUS
    float burstRadius = BURSTRADIUS;
