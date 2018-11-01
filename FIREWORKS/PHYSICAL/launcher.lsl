@@ -10,11 +10,10 @@
 *
 *
 */
-#define Version "3.1"
+#define VERSION "3.1.1"
 //#define DEBUG
 #define TRACERGRID
 
-//#define RAINBOW
 //#define TRICOLOR
 //#define LAUNCH_ROT
 //#define LAUNCH_ROT_90Y  // makes ring perp to flight axis
@@ -62,7 +61,12 @@ integer packedParam;
 float angle = 0;
 float launchDelay = 0.5;
 integer code = 0;
-float systemAge = 1;   //overridden by notecard
+
+#if defined SYSTEMAGE
+float systemAge = SYSTEMAGE;
+#else
+float systemAge = 1.0;
+#endif
 
 #if defined STARTGLOW
 float startGlow = STARTGLOW;
@@ -225,7 +229,7 @@ default
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
       #if defined DESCRIPTION
-         llSetObjectDesc((string)chatChan+" "+Version+" "+DESCRIPTION);
+         llSetObjectDesc((string)chatChan+" "+version+" "+DESCRIPTION);
       #endif
       //code = getInteger(notecardList,"code");
 
@@ -242,7 +246,6 @@ default
 
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
-      systemAge = getFloat(notecardList, "systemAge");
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
@@ -259,8 +262,9 @@ default
       //integer(<127) + integer (<=100, typically 50)
       // so     b    mmmmmmmm mmmmmmmm mmmbbbbb bfffffff
       //        h        0x10       00       00       00
-
-      packedParam = (bouyancy<<7) + flightTime;
+      // but rezChan*0x4000 where rezChan is 0-255
+      //                        rezChan        0x03FC000
+      packedParam = (bouyancy<<7) + flightTime; //0x0000 1FFF
       #ifndef NO_FOLLOW_VELOCITY
          packedParam = packedParam | FOLLOW_VELOCITY_MASK; //0x2000 0000
          debugSay("follow velocity");
@@ -274,7 +278,7 @@ default
       if (wind >0)
          packedParam = packedParam | WIND_MASK;
       #if defined DEBUG
-         packedParam = packedParam | DEBUG_MASK; // 0x0100 0000
+         packedParam = packedParam | DEBUG_MASK;         // 0x0100 0000
       #endif
       #if defined LAUNCHALPHA
          packedParam = packedParam | LAUNCH_ALPHA_MASK;  //0x0080 0000
