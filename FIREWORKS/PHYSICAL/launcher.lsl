@@ -26,7 +26,6 @@
 
 
 string texture = TEXTURE1;
-string sound = LAUNCHSOUND;
 
 
 
@@ -195,8 +194,8 @@ fire()
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
-      llPlaySound(sound,volume);
-      repeatSound(sound,volume);
+      llPlaySound(LAUNCHSOUND,volume);
+      repeatSound(LAUNCHSOUND,volume);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
       setGlow(muzzleLink,0.0);
       setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
@@ -219,31 +218,20 @@ default
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
+
       chatChan = getChatChan(notecardList);
-      owner = llGetOwner();
+      #if defined DESCRIPTION
+         llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
+      #endif
+
+      numOfBalls = getInteger(notecardList,"balls");
+      if (numOfBalls < 1)
+          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
+
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
       explodeOnLowVelocity = getInteger(notecardList, "lowvelocity");
       access = getAccess(notecardList);
-      //id  = owner;
-      handle = llListen( chatChan, "",id, "" );
-      llOwnerSay("listening on channel "+(string)chatChan);
-      #if defined DESCRIPTION
-         llSetObjectDesc((string)chatChan+" "+version+" "+DESCRIPTION);
-      #endif
-      //code = getInteger(notecardList,"code");
-
-      numOfBalls = getInteger(notecardList,"balls");
-      //debugSay((string)numOfBalls + " balls from notecard");
-      if (numOfBalls < 1)
-          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
-      #if defined RAINBOW
-          numOfBalls = 6;
-      #elif defined TRICOLOR
-          numOfBalls = 3;
-      #endif
-      //debugSay((string)numOfBalls + " ball(s)");
-
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
       freezeOnBoom = getInteger(notecardList,"freeze");
@@ -256,8 +244,8 @@ default
       colors = colors + parseColor(notecardList,"color4");
       colors = colors + parseColor(notecardList,"color5");
       colors = colors + parseColor(notecardList,"color6");
-
       debugSay("[" + (string)colors + "]");
+
       // max int 0x80000000  (32 bits)
       //integer(<127) + integer (<=100, typically 50)
       // so     b    mmmmmmmm mmmmmmmm mmmbbbbb bfffffff
@@ -284,7 +272,7 @@ default
          packedParam = packedParam | LAUNCH_ALPHA_MASK;  //0x0080 0000
       #endif
 
-      llPreloadSound(sound);
+      llPreloadSound(LAUNCHSOUND);
       llPreloadSound(BOOMSOUND);
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
@@ -299,6 +287,10 @@ default
       zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
       if (zOffset > 10.0) //can't rez more than 10 m away
          zOffset = 9.0;
+
+      handle = llListen( chatChan, "",llGetOwner(), "" );
+      //handle = llListen( chatChan, "","", "" );
+      llOwnerSay("listening on channel "+(string)chatChan);
    }
 
    //link messages come from the menu script
