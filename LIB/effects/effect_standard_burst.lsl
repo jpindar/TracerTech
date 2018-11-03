@@ -11,11 +11,6 @@ makeParticles(integer link, string color1, string color2)
    endAngle = PI;
    partOmega = <0.0,0.0,0.0>;
 
-   //startSize = <0.5,0.5,0.0>;
-   //endSize = <0.5,0.5,0.0>;
-   //startSize = <1.5,1.5,0.0>;
-   //endSize = <0.5,0.5,0.0>;
-   
    #ifdef PARTICLECOUNT
    partCount = PARTICLECOUNT;
    #else
@@ -28,8 +23,8 @@ makeParticles(integer link, string color1, string color2)
    llOwnerSay("partAge "+(string)partAge);
    llOwnerSay("startAlpha "+(string)startAlpha);
    llOwnerSay("endAlpha "+(string)endAlpha);
-   llOwnerSay("startSize "+(string)(startScale*startSize));
-   llOwnerSay("endSize "+(string)(endScale*endSize));
+   llOwnerSay("startSize "+(string)(startScale));
+   llOwnerSay("endSize "+(string)(endScale));
    llOwnerSay("maxPartSpeed "+(string)maxPartSpeed);
    llOwnerSay("minPartSpeed "+(string)minPartSpeed);
    llOwnerSay(" partCount "+(string) partCount);
@@ -59,8 +54,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_ALPHA,       endAlpha,
    PSYS_PART_START_GLOW,      startGlow,
    PSYS_PART_END_GLOW,        endGlow,
-   PSYS_PART_START_SCALE,     startScale*startSize,
-   PSYS_PART_END_SCALE,       endScale*endSize,
+   PSYS_PART_START_SCALE,     startScale,
+   PSYS_PART_END_SCALE,       endScale,
    PSYS_SRC_TEXTURE,          texture,
    PSYS_SRC_MAX_AGE,          systemSafeSet,
    PSYS_PART_MAX_AGE,         partAge,

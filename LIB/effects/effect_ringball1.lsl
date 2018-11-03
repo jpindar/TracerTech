@@ -9,12 +9,10 @@ makeParticles(integer link, string color1, string color2)
    //endAngle = PI;
    partOmega = <0.0,0.0,0.0>;
 
-   //vector startSize = <1.5,1.5,0.0>;
-   //vector endSize = <0.5,0.5,0.0>;
    //float minPartSpeed = 1.0;
    //float maxPartSpeed = 1.0;
-   #ifdef PARTICLECOUNT
-   partCount = PARTICLECOUNT;
+   #ifdef PARTCOUNT
+   partCount = PARTCOUNT;
    #else
    partCount = 350;
    #endif
@@ -25,8 +23,8 @@ makeParticles(integer link, string color1, string color2)
    llOwnerSay("partAge "+(string)partAge);
    llOwnerSay("startAlpha "+(string)startAlpha);
    llOwnerSay("endAlpha "+(string)endAlpha);
-   llOwnerSay("startSize "+(string)(startScale*startSize));
-   llOwnerSay("endSize "+(string)(endScale*endSize));
+   llOwnerSay("startSize "+(string)(startScale));
+   llOwnerSay("endSize "+(string)(endScale));
    llOwnerSay("maxPartSpeed "+(string)maxPartSpeed);
    llOwnerSay("minPartSpeed "+(string)minPartSpeed);
    llOwnerSay(" partCount "+(string) partCount);
@@ -54,8 +52,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_COLOR,       (vector)color2,
    PSYS_PART_START_ALPHA,     startAlpha,
    PSYS_PART_END_ALPHA,       endAlpha,
-   PSYS_PART_START_SCALE,     startSize,
-   PSYS_PART_END_SCALE,       endSize,
+   PSYS_PART_START_SCALE,     startScale,
+   PSYS_PART_END_SCALE,       endScale,
    PSYS_PART_START_GLOW,      startGlow,
    PSYS_PART_END_GLOW,        endGlow,
    PSYS_SRC_TEXTURE,          texture,
