@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.1.1"
+#define VERSION "3.1.2"
 //#define DEBUG
 #define TRACERGRID
 
@@ -110,6 +110,23 @@ float endAlpha = 1.0;
   float burstRadius = 1;
 #endif
 
+#if defined STARTSCALE
+vector startScale = STARTSCALE;
+#else
+vector startScale = <1.0,1.0,0.0>;
+#endif
+
+#if defined ENDSCALE
+vector  endScale = ENDSCALE;
+#else
+vector  endScale = <1.0,1.0,0.0>;
+#endif
+
+#ifdef PARTCOUNT
+  integer partCount = PARTCOUNT;
+#else
+  integer partCount = 2;
+#endif
 
 #define bouyancy 50
 #define NOTECARD_IN_THIS_PRIM
@@ -189,7 +206,8 @@ fire()
       launchMsg += "," + (string)partAge;
       launchMsg += "," + (string)startAlpha + "," + (string)endAlpha;
       launchMsg += "," + (string)burstRate; 
-      
+      launchMsg += "," + (string)startScale + "," + (string)endScale;
+      launchMsg += "," + (string)partCount; 
 
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
