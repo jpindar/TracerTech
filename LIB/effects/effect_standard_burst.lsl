@@ -11,11 +11,11 @@ makeParticles(integer link, string color1, string color2)
    endAngle = PI;
    partOmega = <0.0,0.0,0.0>;
 
-   #ifdef PARTICLECOUNT
-   partCount = PARTICLECOUNT;
-   #else
-   partCount = 200;
-   #endif
+   //#ifdef PARTICLECOUNT
+   //partCount = PARTICLECOUNT;
+   //#else
+   //partCount = 200;
+   //#endif
 
    #ifdef DEBUG
    llOwnerSay("radius "+(string)burstRadius);
