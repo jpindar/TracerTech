@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.1.6"
+#define Version "3.1.9"
 
 //#define DEBUG
 
@@ -120,13 +120,10 @@ default
    state_entry()
    {
    #if defined RINGBALL
-      startSize = <1.5,1.5,0.0>; //or 1.9
-      endSize = <0.5,0.5,0.0>;  //0.5 to 1.9
       rate = 0.1; //0.1 to 5
       //full or half ring?
-      //float beginAngle = PI_BY_TWO;
-      beginAngle = PI;
-      endAngle = 0;  
+      //beginAngle = PI_BY_TWO;
+      //beginAngle = PI;
    #endif
 
       #if defined DESCRIPTION
@@ -246,7 +243,9 @@ default
       startAlpha =  llList2Float(params,11);
       endAlpha =  llList2Float(params,12);
       burstRate =  llList2Float(params,13);
-
+      startScale =  llList2Vector(params,14);
+      endScale =  llList2Vector(params,15);
+      partCount = llList2Integer(params,16);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
