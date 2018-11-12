@@ -101,13 +101,10 @@ default
 
    state_entry()
    {
-      llPreloadSound(sound);
-      emitters = getLinknumbers(emitterNames);
-      oldAlpha = llGetAlpha(ALL_SIDES);
-      allOff();
-      #if defined DESCRIPTION
-         llSetObjectDesc((string)chatChan+" "+Version+" "+DESCRIPTION);
-      #endif
+   llPreloadSound(sound);
+   emitters = getLinknumbers(emitterNames);
+   oldAlpha = llGetAlpha(ALL_SIDES);
+   allOff();
    }
 
    //link messages come from the controller
@@ -119,11 +116,6 @@ default
          list note = llCSV2List(msg);
          volume = getVolume(note);
          wind = getInteger(note, "wind");
-         systemAge = getFloat(note, "systemAge");
-         partAge = getFloat(note, "particleAge");
-         //startGlow = getFloat(note,"startGlow");
-         //endGlow = getFloat(note,"endGlow");
-
       }
       if ( num & FIRE_CMD ) //to allow for packing more data into num
       {
