@@ -60,8 +60,25 @@ v1.0
       integer followVelocity = FALSE;
    #endif
    
-   float burstRate = 0.2;
+   #ifdef BURSTRATE
+      float burstRate = BURSTRATE;
+   #else
+      float burstRate = 0.1;  // was 0.2
+   #endif
+
+   #if defined SYSTEMAGE
+   float systemAge = SYSTEMAGE;
+   #else
+   float systemAge = 1.0;
+   #endif
    
+   #ifdef PARTAGE
+   float partAge = PARTAGE;
+   #else
+   float partAge = 1;
+   #endif
+
+
    //float maxPartSpeed = 2.0;
    //float minPartSpeed = 2.0;
    float maxPartSpeed = 1.5;
@@ -69,13 +86,6 @@ v1.0
    vector partOmega = <0.0,0.0,0.0>;
    float burstCount;
    vector partAccel;
-
-///   float partAge = 5;
-   float partAge = 1;
-   float systemAge = 1;
-   
    string texture;
-   float rate ;
-
    //integer flags;
 
