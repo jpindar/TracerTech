@@ -11,24 +11,19 @@ makeParticles(integer link, string color1, string color2)
    endAngle = PI;
    partOmega = <0.0,0.0,0.0>;
 
-   //#ifdef PARTICLECOUNT
-   //partCount = PARTICLECOUNT;
-   //#else
-   //partCount = 200;
-   //#endif
-
    #ifdef DEBUG
-   llOwnerSay("radius "+(string)burstRadius);
-   llOwnerSay("systemAge "+(string)systemAge);
-   llOwnerSay("partAge "+(string)partAge);
-   llOwnerSay("startAlpha "+(string)startAlpha);
-   llOwnerSay("endAlpha "+(string)endAlpha);
-   llOwnerSay("startSize "+(string)(startScale));
-   llOwnerSay("endSize "+(string)(endScale));
-   llOwnerSay("maxPartSpeed "+(string)maxPartSpeed);
-   llOwnerSay("minPartSpeed "+(string)minPartSpeed);
-   llOwnerSay(" partCount "+(string) partCount);
-   llOwnerSay("burstRat "+(string)burstRate);
+
+   llOwnerSay("radius "+(string)burstRadius);   //defined in effect.h
+   llOwnerSay("systemAge "+(string)systemAge);   //defined in effect.h
+   llOwnerSay("partAge "+(string)partAge);   //defined in effect.h
+   llOwnerSay("startAlpha "+(string)startAlpha);   //defined in effect.h
+   llOwnerSay("endAlpha "+(string)endAlpha);   //defined in effect.h
+   llOwnerSay("startSize "+(string)(startScale));   //defined in effect.h
+   llOwnerSay("endSize "+(string)(endScale));   //defined in effect.h
+   llOwnerSay("maxPartSpeed "+(string)maxPartSpeed);   //defined in effect.h
+   llOwnerSay("minPartSpeed "+(string)minPartSpeed);   //defined in effect.h
+   llOwnerSay(" partCount "+(string) partCount);   //defined in effect.h
+   llOwnerSay("burstRat "+(string)burstRate);   //defined in effect.h
    #endif
 
    systemSafeSet = systemAge;
