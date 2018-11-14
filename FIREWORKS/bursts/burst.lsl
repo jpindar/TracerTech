@@ -26,6 +26,7 @@ float speed = SPEED;
 float speed = 1;
 #endif
 float oldAlpha;
+vector oldColor;
 list colors;
 list emitters;
 list params;
@@ -51,6 +52,7 @@ fire()
    integer i;
    integer e;
 
+   oldColor = llGetColor(ALL_SIDES);
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
    // try repeating this section to make FAST series bursts
@@ -86,11 +88,11 @@ allOff()
       setParamsFast(e,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
       llLinkParticleSystem(e,[]);
    }
-   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
+ //setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    llLinkParticleSystem(LINK_SET,[]);
    setGlow(LINK_SET,0.0);
-   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,oldAlpha]);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,oldColor,oldAlpha]);
 }
 
 default
@@ -103,6 +105,7 @@ default
    llPreloadSound(BOOMSOUND);
    emitters = getLinknumbers(emitterNames);
    oldAlpha = llGetAlpha(ALL_SIDES);
+   oldColor = llGetColor(ALL_SIDES);
    allOff();
    }
 
