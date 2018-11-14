@@ -20,11 +20,6 @@ string sound = BOOMSOUND;
 float intensity = 1.0;
 float lightRadius = 20;
 float falloff = 0.1;
-#ifdef SPEED
-float speed = SPEED;
-#else
-float speed = 1;
-#endif
 float oldAlpha;
 vector oldColor;
 list colors;
@@ -43,7 +38,7 @@ float flashTime = 0.2;
    //list emitterNames = ["e1"];
    list emitterNames = ["e1","e2","e3"];
    integer numOfEmitters = 1;
-   float interEmitterDelay = 0.5;
+   float interEmitterDelay = 0.0;
    #include "LIB\effects\effect_standard_burst.lsl"
 #endif
 
@@ -51,12 +46,12 @@ fire()
 {
    integer i;
    integer e;
-
+   //llOwnerSay("BOOM");
    oldColor = llGetColor(ALL_SIDES);
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
    // try repeating this section to make FAST series bursts
-
+   numOfEmitters = 1;
    for(i=0;i<numOfEmitters;i++)
    {
       llPlaySound(BOOMSOUND, volume);
@@ -71,9 +66,10 @@ fire()
       llSleep(flashTime);
       setGlow(LINK_SET,0.0);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
-      llSleep(interEmitterDelay);
+      if (interEmitterDelay>0) llSleep(interEmitterDelay);
    }
    llSleep(systemAge+partAge);
+   //llSleep(systemAge);
    allOff();
 }
 
@@ -89,7 +85,7 @@ allOff()
       llLinkParticleSystem(e,[]);
    }
  //setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)  lightColor,intensity,lightRadius,falloff]);
    llLinkParticleSystem(LINK_SET,[]);
    setGlow(LINK_SET,0.0);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,oldColor,oldAlpha]);
