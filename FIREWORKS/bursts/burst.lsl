@@ -16,7 +16,7 @@ string color2;
 string color3;
 string lightColor;
 //string sound = SOUND_BURST1;
-string sound = SOUND_PUREBOOM;
+string sound = BOOMSOUND;
 float intensity = 1.0;
 float lightRadius = 20;
 float falloff = 0.1;
@@ -57,9 +57,8 @@ fire()
 
    for(i=0;i<numOfEmitters;i++)
    {
-      //llPlaySound(sound, volume/numOfEmitters);  //only if the are simultaneous?
-      llPlaySound(sound, volume);
-      repeatSound(sound,volume);
+      llPlaySound(BOOMSOUND, volume);
+      //repeatSound(BOOMSOUND,volume);
       color1 = llList2String(colors,i*2);
       color2 = llList2String(colors,(i*2)+1);
       e = llList2Integer(emitters,i);
@@ -101,7 +100,7 @@ default
 
    state_entry()
    {
-   llPreloadSound(sound);
+   llPreloadSound(BOOMSOUND);
    emitters = getLinknumbers(emitterNames);
    oldAlpha = llGetAlpha(ALL_SIDES);
    allOff();
