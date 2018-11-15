@@ -5,11 +5,10 @@
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
 */
-#define TRACERGRID
-//#define SOAS
+
 
 //#define DEBUG
-
+string version = "3.02";
 #define NOTECARD_IN_THIS_PRIM
 #include "LIB\lib.lsl"
 #include "LIB\readNotecardToList.h"
@@ -45,7 +44,7 @@ fire()
      fireMsg =fireMsg + "," + color;
    }
 
-   debugSay("controller: sending fire msg " + fireMsg);
+   debugSay(2,"controller: sending fire msg " + fireMsg);
    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg, texture);
    //llSleep(delay);
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
@@ -56,26 +55,26 @@ fire()
 
 msgHandler(string sender, string msg)
 {
-   //debugSay("got message <" + msg +">");
+   //debugSay(12"got message <" + msg +">");
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-   //debugSay("got message <" + msg +">");
+   //debugSay(2,"got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
    {
-       fire();
+      fire();
    }
    else if (msg == "hide")
    {
-       llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
-       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
+      llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
+      llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, 0.0]);
    }
    else if (msg == "show")
    {
-       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
-       llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowAmount]);
+      llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+      llSetPrimitiveParams([PRIM_GLOW, ALL_SIDES, glowAmount]);
    }
 }
 
@@ -98,10 +97,10 @@ default
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
-         llSetObjectDesc((string)chatChan);
+         llSetObjectDesc((string)chatChan + " "+(string)version + DESCRIPTION);
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
-      //debugSay("preloader is "+(string)preloadLink);
+      //debugSay(3,"preloader is "+(string)preloadLink);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
    }
@@ -109,15 +108,15 @@ default
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
    {
-       debugSay("controller: got link  message " + msg );
-       msgHandler(owner, msg);
+      debugSay(2, "got link  message " + msg );
+      msgHandler(owner, msg);
    }
 
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       debugSay("controller: got message " + msg + " on channel " + (string) chan);
-       msgHandler(id, msg);
+      debugSay(2,"got message " + msg + " on channel " + (string) chan);
+      msgHandler(id, msg);
    }
 }
 
