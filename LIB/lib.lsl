@@ -3,17 +3,18 @@
   #include "libh.lsl"
 #endif
 
-debugSay(string msg)
+debugSay(integer debugLevel, string msg)
 {
    #ifdef DEBUG
       llOwnerSay(msg);
    #else
-   if (debug)
+   if (debug >= debugLevel)
       llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
    //llShout(0,msg);
    #endif
 }
+
 
 integer assert(integer b, string s)
 {
@@ -23,7 +24,7 @@ integer assert(integer b, string s)
    }
    else
    {
-   debugSay(s);
+   debugSay(1,s);
    return FALSE;
    }
 }
