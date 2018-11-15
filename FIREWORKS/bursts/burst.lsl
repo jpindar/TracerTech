@@ -3,10 +3,7 @@
 *Tracer Ping Sept 2018
 */
 
-#define TRACERGRID
-//#define SOAS
-//#define DEBUG
-string version = "3.0";
+string version = "3.02";
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -121,8 +118,7 @@ default
          {
             //expected format is
             //UUID,color,color......
-            //although more than the frst two colors may not be used
-            debugSay(" listener got: "+ msg);
+            debugSay(2," listener got: "+ msg);
             params = llCSV2List(msg);
             integer len = llGetListLength(params);
             texture = llList2String(params,0);

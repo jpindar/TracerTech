@@ -58,13 +58,13 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //if (!armed)
    //  return;
-   debugSay("boom at " + (string)llGetPos() + (string)llGetVel());
+   debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
    setColor(LINK_THIS,(vector)primColor,0.0);
    setGlow(LINK_THIS,primGlow);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
    if (freezeOnBoom)
    {
-      debugSay("freezing");
+      debugSay(2,"freezing");
       llSetStatus(STATUS_PHYSICS,FALSE);
       llSetStatus(STATUS_PHANTOM,TRUE);
    }
@@ -120,7 +120,7 @@ default
    state_entry()
    {
    #if defined RINGBALL
-      rate = 0.1; //0.1 to 5
+      //rate = 0.1; //0.1 to 5
       //full or half ring?
       //beginAngle = PI_BY_TWO;
       //beginAngle = PI;
@@ -159,7 +159,7 @@ default
    {
       llResetTime();
       debug = (p & DEBUG_MASK);
-      debugSay("initial velocity "+(string)llGetVel());
+      debugSay(2,"initial velocity "+(string)llGetVel());
       if (p > 0)
       {
          if (p & LAUNCH_ALPHA_MASK)
@@ -218,7 +218,7 @@ default
       {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
-      debugSay("end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
+      debugSay(2,"end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
    }
 
    listen( integer chan, string name, key id, string msg )
@@ -229,7 +229,7 @@ default
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
 
       llListenRemove(handle);
-      debugSay("got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
+      debugSay(2,"got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       texture = llList2String(params,0);
       color2 = llList2String(params,2);
       color3 = llList2String(params,3);
@@ -256,7 +256,7 @@ default
    {
       float tim = llGetTime();
       vector v = llGetVel();
-      debugSay("llGetTime "+(string)tim+", velocity: "+(string)v);
+      debugSay(2,"llGetTime "+(string)tim+", velocity: "+(string)v);
       #if defined POINTFORWARD
       llLookAt(v+llGetPos(), 0.5, 0.1);
       //or
@@ -265,7 +265,7 @@ default
 
       if (tim>flightTime)
       {
-         debugSay("timed out");
+         debugSay(2,"timed out");
          llSetTimerEvent(0);
          if (armed)
             boom();
@@ -274,7 +274,7 @@ default
       {
          if (v.z< minimumVelocity)
          {
-            debugSay("at low velocity" + (string)v.z);
+            debugSay(2,"at low velocity" + (string)v.z);
             llSetTimerEvent(0);
             if (armed && explodeOnLowVelocity)
                boom();
@@ -289,14 +289,14 @@ default
       integer f = 0;
       key id;
       vector spd;
-      debugSay(llGetScriptName() + ": collision ");
+      debugSay(2,llGetScriptName() + ": collision ");
       if ((explodeOnCollision==0) || (!armed))
          return;
-      debugSay(llGetScriptName() + ": acting on collision ");
-      debugSay( "me @ " +(string)llVecMag(llGetVel())+"m/s");
+      debugSay(2,llGetScriptName() + ": acting on collision ");
+      debugSay(2, "me @ " +(string)llVecMag(llGetVel())+"m/s");
       for (f=0; f<n; f++)
       {
-         debugSay(llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
+         debugSay(2,llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
       }
       f = 0;
       do
@@ -321,7 +321,7 @@ default
    {
       if ((explodeOnCollision==0) || (!armed))
          return;
-      debugSay("collision with land");
+      debugSay(2,"collision with land");
       if (rezParam !=0)
       {
          #if defined TRAILBALL

@@ -19,8 +19,8 @@ makeParticles(integer link, string color1, string color2)
    //partCount = 9;
 minPartSpeed = 3.6;
 maxPartSpeed = 3.6;
-//partAge = 1.9;
-//followVelocity = TRUE;
+partAge = 1.9;
+
 partOmega = <0.000000,12.00000,0.000000>;    //vary this
 burstRate = 0.01; //vary this a little
   burstRadius = 0;   
