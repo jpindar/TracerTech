@@ -23,6 +23,7 @@ float systemAge = 5;
 float startGlow = STARTGLOW;  //notecard will override these
 float endGlow = ENDGLOW;
 float speed = SPEED;
+vector partOmega = PARTOMEGA;
 
 #if defined RAINFALL
    ///float speed = 5;
@@ -47,6 +48,7 @@ fire()
    //llPlaySound(sound, volume/numOfEmitters);
    //repeatSound(sound,volume/numOfEmitters);
    llPlaySound(EFFECTSOUND, volume);
+   //llLoopSound(EFFECTSOUND, volume);
    repeatSound(EFFECTSOUND,volume);
    for(i=0;i<numOfEmitters;i++)
    {
@@ -56,10 +58,37 @@ fire()
        setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
        //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
        setGlow(e,1.0);
+       debugSay(2,"fire() " + (string)systemAge);
        makeParticles(e,color1,color2);
    }
    llSleep(systemAge);
    allOff();
+}
+
+fireOn()
+{
+   integer i;
+   integer e;
+
+   oldAlpha = llGetAlpha(ALL_SIDES);
+   //llPlaySound(sound, volume/numOfEmitters);
+   //repeatSound(sound,volume/numOfEmitters);
+   //llPlaySound(EFFECTSOUND, volume);
+   //llLoopSound(EFFECTSOUND, volume);
+   //repeatSound(EFFECTSOUND,volume);
+   //for(i=0;i<numOfEmitters;i++)
+   //{
+     i = 0;
+     color1 = llList2String(colors,i*2);
+     color2 = llList2String(colors,(i*2)+1);
+     e = llList2Integer(emitters,i);
+     setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
+     //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
+     setGlow(e,1.0);
+     systemAge = 0;
+     debugSay(2,"fireOn() " + (string)systemAge);
+     makeParticles(e,color1,color2);
+   //}
 }
 
 
@@ -95,6 +124,7 @@ default
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
    {
+      debugSay(2,"num "+(string)num);
       if (num & RETURNING_NOTECARD_DATA)
       {
          list note = llCSV2List(msg);
@@ -103,20 +133,45 @@ default
          startGlow = getFloat(note,"startGlow");
          endGlow = getFloat(note,"endGlow");
       }
-      if ( num & FIRE_CMD ) //to allow for packing more data into num
+       //to allow for packing more data into num
+      if (num & FIRE_CMD)
       {
+         debugSay(2,"emitter fired");
          if (llStringLength(msg) > 0)
          {
             debugSay(2," emitter got: "+ msg);
             params = llCSV2List(msg);
             texture = llList2String(params,0);
             systemAge = llList2String(params,1);
+            debugSay(2,"read " + (string)systemAge + " from notecard");
             color1 = llList2String(params,2);
             lightColor = color1;
             colors = [color1];
             colors += llList2String(params,3);
          }
          fire();
+      }
+      if (num & ON_CMD)
+      {
+         debugSay(2,"emitter on");
+         if (llStringLength(msg) > 0)
+         {
+            debugSay(2," emitter got: "+ msg);
+            params = llCSV2List(msg);
+            texture = llList2String(params,0);
+            systemAge = 0;
+            debugSay(2,"systemAge in listen " + (string)systemAge);
+            color1 = llList2String(params,2);
+            lightColor = color1;
+            colors = [color1];
+            colors += llList2String(params,3);
+         }
+         fireOn();
+      }
+      if (num&OFF_CMD)
+      {
+         debugSay(2,"emitter off");
+         allOff();
       }
    }
 }
