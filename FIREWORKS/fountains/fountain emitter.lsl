@@ -3,14 +3,9 @@
 *Tracer Ping Sept 2018
 */
 
-#define TRACERGRID
-//#define SOAS
-
 #include "LIB\lib.lsl"
 //#define RAINFALL
 //#define MINIFOUNTAIN
-string sound = SOUND_WHOOSH001;
-//SOUND_SPARKLE1_5S;
 
 string color1;
 string color2;
@@ -51,8 +46,8 @@ fire()
    oldAlpha = llGetAlpha(ALL_SIDES);
    //llPlaySound(sound, volume/numOfEmitters);
    //repeatSound(sound,volume/numOfEmitters);
-   llPlaySound(sound, volume);
-   repeatSound(sound,volume);
+   llPlaySound(EFFECTSOUND, volume);
+   repeatSound(EFFECTSOUND,volume);
    for(i=0;i<numOfEmitters;i++)
    {
        color1 = llList2String(colors,i*2);
@@ -91,7 +86,7 @@ default
 
    state_entry()
    {
-      llPreloadSound(sound);
+      llPreloadSound(EFFECTSOUND);
       emitters = getLinknumbers(emitterNames);
       oldAlpha = llGetAlpha(ALL_SIDES);
       allOff();
@@ -112,7 +107,7 @@ default
       {
          if (llStringLength(msg) > 0)
          {
-            debugSay(" emitter got: "+ msg);
+            debugSay(2," emitter got: "+ msg);
             params = llCSV2List(msg);
             texture = llList2String(params,0);
             systemAge = llList2String(params,1);
