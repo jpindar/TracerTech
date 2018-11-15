@@ -252,13 +252,13 @@ default
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
-      numOfBalls = getInteger(notecardList,"balls");
-      if (numOfBalls < 1)
+      //numOfBalls = getInteger(notecardList,"balls");
+      //if (numOfBalls < 1)
           numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
 
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
-      explodeOnLowVelocity = getInteger(notecardList, "lowvelocity");
+      explodeOnLowVelocity = getInteger(notecardList, "peak");
       access = getAccess(notecardList);
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
@@ -315,8 +315,8 @@ default
       if (zOffset > 10.0) //can't rez more than 10 m away
          zOffset = 9.0;
 
-      handle = llListen( chatChan, "",llGetOwner(), "" );
-      //handle = llListen( chatChan, "","", "" );
+      string id = "";
+      handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
    }
 
