@@ -31,9 +31,17 @@ v1.0
    float endGlow = 0.0;
    #endif
     
-    
-   vector startScale = <0.5,0.5,0.0>;
-   vector endScale = <0.5,0.5,0.0>;
+   #if defined STARTSCALE
+      vector startScale = STARTSCALE;
+   #else
+      vector startScale = <0.5,0.5,0.0>;
+   #endif
+
+   #if defined ENDSCALE
+      vector  endScale = ENDSCALE;
+   #else
+      vector endScale = <0.5,0.5,0.0>;
+   #endif
 
    //#if defined PARTICLE_SCALE
    //float partSizeScale = PARTICLE_SCALE;
