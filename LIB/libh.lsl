@@ -15,6 +15,7 @@
 #define ACCESS_OWNER 3
 
 #define FIRE_CMD 1
+#define CMD_FIRE 1
 #define PRELOAD_TEXTURE_CMD 2
 #define READ_NOTECARD_CMD 4
 #define RETURNING_NOTECARD_DATA 8
@@ -23,7 +24,10 @@
 #define FIRE_CMD2 64
 #define FIRE_CMD3 128
 #define ON_CMD 256
+#define CMD_ON 256
 #define OFF_CMD 512
+#define CMD_OFF 512
+
 
 #ifdef INWORLDZ
 #define TEXTURE_CLASSIC         "6189b78f-c7e2-4508-9aa2-0881772c7e27" //"classic", also standard fountain texture
@@ -176,7 +180,7 @@
 
 #define MAX_INT           0x80000000
 // this will do for now
-#define ERROR_FLAG        -9999
+#define ERROR_FLAG        -8989
 
 // global variables
 integer debug = FALSE;
