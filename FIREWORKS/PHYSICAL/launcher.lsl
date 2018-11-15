@@ -142,13 +142,13 @@ msgHandler(string sender, string msg)
       if (access == ACCESS_OWNER)
       {
          llSay(0,"sorry, access is set to owner-only");
-      return;
+         return;
       }
       //if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       if ((access == ACCESS_GROUP) && (!llSameGroup(sender) ))
       {
          llSay(0,"sorry, access is set to group-only");
-      return;
+         return;
       }
    }
    msg = llToLower(msg);
@@ -235,7 +235,7 @@ fire()
    }
 }
 
-
+//{ default()    this allows folding in NP++ 
 default
 {
    on_rez(integer n){llResetScript();}
@@ -254,7 +254,7 @@ default
 
       //numOfBalls = getInteger(notecardList,"balls");
       //if (numOfBalls < 1)
-          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
+      numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
 
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
@@ -319,18 +319,19 @@ default
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
    }
+//}
 
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
    {
-       msgHandler(owner, msg);
+      msgHandler(owner, msg);
    }
 
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
       debugSay(2,"got message " + msg + " on channel " + (string) chan);
-       msgHandler(id, msg);
+      msgHandler(id, msg);
    }
 }
 
