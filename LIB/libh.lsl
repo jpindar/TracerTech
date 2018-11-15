@@ -86,6 +86,11 @@
 #define TEXTURE_COURIER_NEW_BOLD_B  "c290a675-7383-449a-9c77-87a5aed545de"
 #define TEXTURE_COURIER_NEW_BOLD_C  "d3eb6aca-d7d1-46ad-99da-fb2320031a7f"
 
+#elif defined ISLANDZ
+
+#define TEXTURE_SPIKESTAR "af0a4586-6eb2-4186-a309-cb5def8a3a49"
+#define TEXTURE_CLASSIC   "4a241b2f-502d-42e6-9053-e6dec5333a68"   
+
 #elif defined SOAS
 #define TEXTURE_CLASSIC   "e51dfec9-b481-4ea0-aa67-545632d0b3fd"
 #define TEXTURE_SPIKESTAR "9fe0e79b-f810-481a-9b6f-6a6931ed50ca"
@@ -138,6 +143,14 @@
 #define SOUND_WHOOSH001 "cbe0f64f-fb02-4aaa-8b8d-8dd729d3cda0"
 #define SOUND_BOOM001 "e53efc67-f50d-4ec5-809b-d13d487e9666"  //metallic boom/gong sound
 
+
+#elif defined ISLANDZ
+
+   #define SOUND_WHOOSH001 "bee638d7-f52d-4977-b758-223110203864"
+   #define SOUND_CHEE      "743fe473-a0a6-4770-bd62-e30f564907f4"
+   #define SOUND_PUREBOOM  "12ed8997-c03b-4e58-bd03-22d2e7e39d96"
+   #define SOUND_BANG1     "2439aa72-e4e2-47da-b82c-72ef16654a0a"
+
 #elif defined TRACERGRID
    #define SOUND_WHOOSH001  "a120d4b5-e56c-4f28-ac02-f606862d269e"
    #define SOUND_CHEE       "2494e177-c350-4868-a609-d14a0d9488ea"
@@ -145,6 +158,7 @@
    #define SOUND_PUREBOOM   "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"
    #define SOUND_CLANGECHO  "69f401d1-1e61-476b-99b1-dce18531996b"
    #define SOUND_BANG1      "562f55da-414d-4ae7-b89a-7648f17a836f"
+   #define SOUND_CRACKLE3S "35eaaf68-23ff-4c6a-bf7f-7c9235d6a661"
 #elif defined SOAS
    #define SOUND_WHOOSH001  "3a3882d0-d8a6-4e03-b440-be31c37c805d"
    #define SOUND_PUREBOOM   "bbfcb1bf-93b2-4071-832e-89492dd04d68"
@@ -163,15 +177,14 @@
 #define MAX_INT           0x80000000
 // this will do for now
 #define ERROR_FLAG        -9999
+
 // global variables
 integer debug = FALSE;
 float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
 float systemSafeSet = 0.00;//prevents erroneous particle emissions
 list linknumberList;
-float partSpeed1 = 1.0;
-float partSpeed2 = 1.0;
-//integer menuMode = 0;
 integer wind;
-#endif
 
+
+#endif  /* ifndef LIB_H */
 
