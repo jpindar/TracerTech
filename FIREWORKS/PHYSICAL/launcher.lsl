@@ -136,11 +136,21 @@ msgHandler(string sender, string msg)
 {
    debugSay(3,"got message " + msg );
    debugSay(3,"from "+ (string)sender);
-   if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
+   //allow sameOwner so message can be from a trigger owned by our owner
+   if (!sameOwner(sender)) 
+   {
+      if (access == ACCESS_OWNER)
+      {
+         llSay(0,"sorry, access is set to owner-only");
       return;
-   if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      }
+      //if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
+      if ((access == ACCESS_GROUP) && (!llSameGroup(sender) ))
+      {
+         llSay(0,"sorry, access is set to group-only");
       return;
-
+      }
+   }
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -236,7 +246,7 @@ default
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
-
+      owner=llGetOwner();
       chatChan = getChatChan(notecardList);
       #if defined DESCRIPTION
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
