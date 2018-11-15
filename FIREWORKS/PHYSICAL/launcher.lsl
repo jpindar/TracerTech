@@ -11,8 +11,6 @@
 *
 */
 #define VERSION "3.1.2"
-//#define DEBUG
-#define TRACERGRID
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -136,6 +134,8 @@ vector  endScale = <1.0,1.0,0.0>;
  */
 msgHandler(string sender, string msg)
 {
+   debugSay(3,"got message " + msg );
+   debugSay(3,"from "+ (string)sender);
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
@@ -218,7 +218,7 @@ fire()
       setGlow(muzzleLink,0.0);
       setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
       llSleep(0.2);
-      debugSay("launchMsg " + launchMsg);
+      debugSay(1,"launchMsg " + launchMsg);
       llRegionSay(rezChan, launchMsg);
       if (launchDelay > 0.0)
          llSleep(launchDelay);
@@ -262,7 +262,7 @@ default
       colors = colors + parseColor(notecardList,"color4");
       colors = colors + parseColor(notecardList,"color5");
       colors = colors + parseColor(notecardList,"color6");
-      debugSay("[" + (string)colors + "]");
+      debugSay(2,"[" + (string)colors + "]");
 
       // max int 0x80000000  (32 bits)
       //integer(<127) + integer (<=100, typically 50)
@@ -273,7 +273,6 @@ default
       packedParam = (bouyancy<<7) + flightTime; //0x0000 1FFF
       #ifndef NO_FOLLOW_VELOCITY
          packedParam = packedParam | FOLLOW_VELOCITY_MASK; //0x2000 0000
-         debugSay("follow velocity");
       #endif
       if (explodeOnLowVelocity >0)
          packedParam = packedParam | LOW_VELOCITY_MASK; //0x1000 0000
@@ -297,7 +296,7 @@ default
          llSetLinkTexture(preloadLink,texture,preloadFace);
 
       muzzleLink = getLinkWithName(muzzlePrimName);
-      debugSay("muzzle is link number " + (string)muzzleLink);
+      debugSay(3,"muzzle is link number " + (string)muzzleLink);
       assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
       //llSetLinkTexture(muzzleLink, texture,muzzleFace);
 
@@ -320,7 +319,7 @@ default
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       //debugSay("got message " + msg + " on channel " + (string) chan);
+      debugSay(2,"got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }
