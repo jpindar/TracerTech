@@ -4,5 +4,4 @@
 *
 */
 //#define LINKED
-#include "FIREWORKS\fountains\menu.lsl"    
-
+#include "FIREWORKS\fountains\menu.lsl"

@@ -1,10 +1,10 @@
 /*
-*fireworks menu v1.4
+*fireworks menu v1.5
 *copyright Tracer Tech aka Tracer Ping 2018
 *
 *gets notecard data via link message
-*responds to touch
-*listens only to menu
+*responds to touch , either by sending fire message immediately
+* or by creating a menu and listening to it
 *
 * when touched either sends fire command (via chat or linkmessage, determined at compiletime) or opens a popup menu.
 *
@@ -66,37 +66,60 @@ default
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
-          if (menuMode == 0)
-          {
-             sendMsg("fire");
-           }
-           else
-           {
-              llDialog(toucher,menuText,buttonsOwner,menuChan);
-           }
+      debugSay(1,"you are the owner");
+      debugSay(1,"menuMode = " + (string)menuMode);
+         if (menuMode == 0)
+         {
+            sendMsg("fire");
+         }
+         else
+         {
+            llDialog(toucher,menuText,buttonsOwner,menuChan);
+         }
       }
-      else if ((access == ACCESS_GROUP) && (llSameGroup(toucher)))
+      //else if (llDetectedGroup(0))
+      else if (llSameGroup(toucher))
       {
-          //else if ((access == ACCESS_GROUP) && (llDetectedGroup(0)))
-          if (menuMode == 0)
-          {
-             sendMsg("fire");
-          }
-          else
-          {
-             llDialog(toucher,menuText,buttonsOwner,menuChan);
-          }
+         //llOwnerSay("you are in the group");
+         if ((access == ACCESS_GROUP) || (access == ACCESS_PUBLIC))
+         {
+            if (menuMode == 0)
+            {
+               sendMsg("fire");
+            }
+            else
+            {
+               llDialog(toucher,menuText,buttonsOwner,menuChan);
+            }
+         }
+         else
+         {
+            llInstantMessage(toucher,"sorry, access is set to owner-only");
+            return;
+         }
       }
-      else //access == ACCESS_PUBLIC
+      else //public
       {
-          if (menuMode == 0)
-          {
-             sendMsg("fire");
-          }
-          else
-          {
+         debugSay(1,"you are in the public");
+         if (access == ACCESS_PUBLIC)
+         {
+            if (menuMode == 0)
+            {
+               sendMsg("fire");
+            }
+            else
+            {
               llDialog(toucher,menuText,buttonsPublic,menuChan);
-          }
+            }
+         }
+         else
+         {
+            if (access == ACCESS_GROUP)
+               llInstantMessage(toucher,"sorry, access is set to group-only");
+            else
+               llInstantMessage(toucher,"sorry, access is set to owner-only");
+            return;
+         }
       }
       handle=llListen(menuChan,"",toucher,"");
       llSetTimerEvent(timeout);
@@ -104,8 +127,8 @@ default
 
    timer()
    {
-       llSetTimerEvent(0);
-       llListenRemove(handle);
+      llSetTimerEvent(0);
+      llListenRemove(handle);
    }
 
   link_message( integer sender, integer num, string msg, key id )
@@ -113,11 +136,12 @@ default
      if (num & RETURNING_NOTECARD_DATA)
      {
          list notecard = llCSV2List(msg);
-         //debugSay("got list:" + llDumpList2String(notecard,"-"));
+         //debugSay(2,"got list:" + llDumpList2String(notecard,"-"));
          chatChan = getChatChan(notecard);
          menuMode = getInteger(notecard,"menu");
-         //debugSay("got menuMode = " + (string)menuMode);
+         //debugSay(3,"got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
+         //debugSay(3,"access from notecard = " + (string)access);
          enabled = TRUE;
      }
    }
