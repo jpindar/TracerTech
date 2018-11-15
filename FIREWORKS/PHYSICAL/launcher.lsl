@@ -126,6 +126,12 @@ vector  endScale = <1.0,1.0,0.0>;
   integer partCount = 2;
 #endif
 
+#ifdef PARTOMEGA
+   vector partOmega = PARTOMEGA;
+#else
+   vector partOmega = <0.0,0.0,0.0>;
+#endif   
+
 #define bouyancy 50
 #define NOTECARD_IN_THIS_PRIM
 
@@ -218,7 +224,8 @@ fire()
       launchMsg += "," + (string)burstRate; 
       launchMsg += "," + (string)startScale + "," + (string)endScale;
       launchMsg += "," + (string)partCount; 
-
+      launchMsg += "," + (string)partOmega; 
+      
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
