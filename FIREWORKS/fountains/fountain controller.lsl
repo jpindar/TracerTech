@@ -31,9 +31,9 @@ integer access;
 //integer delay = 2;
 float systemAge = 1;
 
-fire()
+fire(float time)
 {
-   string fireMsg1 = texture+"," +(string)systemAge+","+color1+","+color2+","+color3;
+   string fireMsg1 = texture+"," +(string)time+","+color1+","+color2+","+color3;
    //string fireMsg1 = texture+","+color1+","+color1+","+color1;
    //string fireMsg2 = texture+","+color2+","+color2+","+color2;
    //string fireMsg3 = texture+","+color3+","+color3+","+color3;
@@ -45,6 +45,12 @@ fire()
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg3, texture);
 }
 
+fireOn(float time)
+{
+   string fireMsg1 = texture+"," +(string)time+","+color1+","+color2+","+color3;
+   debugSay(2, "sending fireOn msg "+ fireMsg1);
+   llMessageLinked(LINK_SET, ON_CMD, fireMsg1, texture);
+}
 
 msgHandler(string sender, string msg)
 {
@@ -57,8 +63,20 @@ msgHandler(string sender, string msg)
    msg = llToLower(msg);
    if (msg == "fire")
    {
-       fire();
+      debugSay(2,"fire");
+      fire(systemAge);
    }
+   if (msg == "on")
+   {
+      debugSay(2,"on");
+      fireOn(0.0);
+   }
+   if (msg == "off")
+   {
+      debugSay(2,"off");
+      llMessageLinked(LINK_SET, CMD_OFF , "", "");
+   }
+
    else if (msg == "hide")
    {
        llSetLinkAlpha(LINK_SET,0.0, ALL_SIDES);
