@@ -1,6 +1,7 @@
 /*
-*fireworks menu 
-*copyright Tracer Tech aka Tracer Ping 2015
+* fireworks menu 
+* Tracer Prometheus aka Tracer Ping Sept 2018
+* TracerPing@gmail.com
 *
 *gets notecard data via link message
 *responds to touch
