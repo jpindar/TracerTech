@@ -1,5 +1,5 @@
 /*
-* fireworks fountain controller v2.6
+* fireworks fountain controller
 * copyright Tracer Ping 2018
 *
 * reads data from notecard and forwards it via linkmessage
@@ -15,7 +15,7 @@
 #define NOTECARD_IN_THIS_PRIM
 #include "LIB\lib.lsl"
 #include "LIB\readNotecardToList.h"
-
+string version = "3.1";
 string texture = TEXTURE;
 
 string color1;
@@ -112,7 +112,7 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
          #if defined DESCRIPTION
-            llSetObjectDesc((string)chatChan+" "+Version+" "+DESCRIPTION);
+            llSetObjectDesc((string)chatChan+" "+version+" "+DESCRIPTION);
          #endif
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
