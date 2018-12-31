@@ -1,17 +1,17 @@
 /*
-*Fireworks Fountain emitter v2.6
-*Tracer Ping Sept 2018
+*Fireworks Fountain emitter 
+*Tracer Prometheus aka Tracer Ping Sept 2018
 */
 
 #include "LIB\lib.lsl"
+#include "LIB\effects\effect.h"
 //#define RAINFALL
 //#define MINIFOUNTAIN
-
+string version = "3.1";
 string color1;
 string color2;
 string color3;
 string lightColor;
-string texture;
 list emitterNames = ["e1"];//["e1","e2","e3"];
 float oldAlpha;
 list colors;
@@ -19,11 +19,7 @@ list emitters;
 list params;
 integer numOfEmitters = 1;
 float glowAmount = PRIMGLOW;
-float systemAge = 5;
-float startGlow = STARTGLOW;  //notecard will override these
-float endGlow = ENDGLOW;
 float speed = SPEED;
-vector partOmega = PARTOMEGA;
 
 #if defined RAINFALL
    ///float speed = 5;
