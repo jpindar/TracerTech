@@ -1,8 +1,11 @@
 /*
 *Fireworks Fountain emitter
-*Tracer Ping Oct 2018
+*Tracer Prometheus Dec 2018
 */
 #define TRACERGRID
+#define DESCRIPTION "fountain"
+#define STARTSCALE <0.5,0.5,0.0>
+#define ENDSCALE <2.5,2.5,0.0>
 #define STARTGLOW 0.05
 #define ENDGLOW 0.01
 #define PRIMGLOW 1.00
