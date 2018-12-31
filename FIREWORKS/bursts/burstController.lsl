@@ -55,12 +55,12 @@ fire()
 
 msgHandler(string sender, string msg)
 {
-   //debugSay(12"got message <" + msg +">");
+   debugSay(2,"got message <" + msg +">");
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-   //debugSay(2,"got message <" + msg +">");
+   debugSay(2,"got message <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
    {
@@ -97,10 +97,10 @@ default
          //id  = owner;
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
-         llSetObjectDesc((string)chatChan + " "+(string)version + DESCRIPTION);
+         llSetObjectDesc((string)chatChan + " "+version + DESCRIPTION);
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
-      //debugSay(3,"preloader is "+(string)preloadLink);
+      debugSay(3,"preloader is "+(string)preloadLink);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
    }
