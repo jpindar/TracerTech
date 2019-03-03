@@ -45,7 +45,7 @@ fire()
    //repeatSound(sound,volume/numOfEmitters);
    llPlaySound(EFFECTSOUND, volume);
    //llLoopSound(EFFECTSOUND, volume);
-   repeatSound(EFFECTSOUND,volume);
+   //repeatSound(EFFECTSOUND,volume);
    for(i=0;i<numOfEmitters;i++)
    {
        color1 = llList2String(colors,i*2);
@@ -101,6 +101,10 @@ allOff()
       setGlow(e,0.0);
       setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,oldAlpha]);
    }
+   //TODO test these, they should cut off any already playing sound
+   //llPlaySound(SOUND_SILENCE, volume);
+   //repeatSound(SOUND_SILENCE,volume);
+   //llStopSound() /// only for llLoopSound()??
 }
 
 
