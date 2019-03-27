@@ -112,7 +112,9 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
          #if defined DESCRIPTION
-            llSetObjectDesc((string)chatChan+" "+version+" "+DESCRIPTION);
+            llSetObjectDesc("channel "+(string)chatChan+version+" "+DESCRIPTION);
+         #else
+            llSetObjectDesc("channel "+(string)chatChan+version);
          #endif
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
