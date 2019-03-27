@@ -37,7 +37,7 @@ fire(float time)
    //string fireMsg1 = texture+","+color1+","+color1+","+color1;
    //string fireMsg2 = texture+","+color2+","+color2+","+color2;
    //string fireMsg3 = texture+","+color3+","+color3+","+color3;
-   debugSay(2, "sending fire msg "+ fireMsg1);
+   debugSay(2, "controller: sending fire linkmsg "+ fireMsg1);
    llMessageLinked(LINK_SET, FIRE_CMD, fireMsg1, texture);
    //llSleep(delay);
    //llMessageLinked(LINK_SET, FIRE_CMD, fireMsg2, texture);
@@ -54,16 +54,16 @@ fireOn(float time)
 
 msgHandler(string sender, string msg)
 {
-   //debugSay("2, controller script got message <" + msg +">");
+   debugSay(2,"controller: got message <" + msg +">");
    if ((access == ACCESS_OWNER) && (!sameOwner(sender)) )
       return;
    if ((access == ACCESS_GROUP) && (!llSameGroup(sender)) && (owner != id))
       return;
-   //debugSay("2,got message <" + msg +">");
+   debugSay(3,"controller: msg = <" + msg +">");
    msg = llToLower(msg);
    if (msg == "fire")
    {
-      debugSay(2,"fire");
+      debugSay(3,"controller: calling fire()");
       fire(systemAge);
    }
    if (msg == "on")
@@ -112,9 +112,9 @@ default
          handle = llListen( chatChan, "",id, "" );
          llOwnerSay("listening on channel "+(string)chatChan);
          #if defined DESCRIPTION
-            llSetObjectDesc("channel "+(string)chatChan+version+" "+DESCRIPTION);
+            llSetObjectDesc("channel "+(string)chatChan+" "+version+" "+DESCRIPTION);
          #else
-            llSetObjectDesc("channel "+(string)chatChan+version);
+            llSetObjectDesc("channel "+(string)chatChan+" "+version);
          #endif
       #endif
       integer preloadLink = getLinkWithName(preloadPrimName);
@@ -125,14 +125,14 @@ default
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
    {
-       debugSay(2,"got link  message " + msg );
+       debugSay(2,"controller: got link message " + msg );
        msgHandler(owner, msg);
    }
 
    //chat comes from trigger or avatar
    listen( integer chan, string name, key id, string msg )
    {
-       debugSay(2,"got message " + msg + " on channel " + (string) chan);
+       debugSay(2,"controller: got message " + msg + " on channel " + (string) chan);
        msgHandler(id, msg);
    }
 }

@@ -2,7 +2,7 @@
 *Fireworks Fountain emitter 
 *Tracer Prometheus aka Tracer Ping Sept 2018
 */
-
+//#define DEBUG
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
 //#define RAINFALL
@@ -39,7 +39,6 @@ fire()
 {
    integer i;
    integer e;
-
    oldAlpha = llGetAlpha(ALL_SIDES);
    //llPlaySound(sound, volume/numOfEmitters);
    //repeatSound(sound,volume/numOfEmitters);
@@ -54,7 +53,7 @@ fire()
        setParamsFast(e,[PRIM_COLOR,ALL_SIDES,(vector)color1,1.0]);
        //setParamsFast(e,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,radius,falloff]);
        setGlow(e,1.0);
-       debugSay(2,"fire() " + (string)systemAge);
+       debugSay(2,"emitter:6: firing, i = "+(string)i + " e = " + (string)e);
        makeParticles(e,color1,color2);
    }
    llSleep(systemAge);
@@ -65,7 +64,6 @@ fireOn()
 {
    integer i;
    integer e;
-
    oldAlpha = llGetAlpha(ALL_SIDES);
    //llPlaySound(sound, volume/numOfEmitters);
    //repeatSound(sound,volume/numOfEmitters);
@@ -124,7 +122,7 @@ default
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
    {
-      debugSay(2,"num "+(string)num);
+      debugSay(2,"emitter: got linkmessage, num = "+(string)num);
       if (num & RETURNING_NOTECARD_DATA)
       {
          list note = llCSV2List(msg);
@@ -136,14 +134,11 @@ default
        //to allow for packing more data into num
       if (num & FIRE_CMD)
       {
-         debugSay(2,"emitter fired");
          if (llStringLength(msg) > 0)
          {
-            debugSay(2," emitter got: "+ msg);
             params = llCSV2List(msg);
             texture = llList2String(params,0);
-            systemAge = llList2String(params,1);
-            debugSay(2,"read " + (string)systemAge + " from notecard");
+            systemAge = (float)llList2String(params,1);
             color1 = llList2String(params,2);
             lightColor = color1;
             colors = [color1];
