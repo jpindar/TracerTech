@@ -128,8 +128,6 @@ default
          list note = llCSV2List(msg);
          volume = getVolume(note);
          wind = getInteger(note, "wind");
-         startGlow = getFloat(note,"startGlow");
-         endGlow = getFloat(note,"endGlow");
       }
        //to allow for packing more data into num
       if (num & FIRE_CMD)
