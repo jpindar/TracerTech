@@ -7,6 +7,9 @@
 #include "LIB\effects\effect.h"
 //#define RAINFALL
 //#define MINIFOUNTAIN
+#ifndef EFFECTSOUND
+  #define EFFECTSOUND SOUND_SILENCE
+#endif
 string version = "3.1";
 string color1;
 string color2;
