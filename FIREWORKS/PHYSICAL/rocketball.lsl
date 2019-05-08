@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.1.9"
+#define Version "3.3"
 
 //#define DEBUG
 
@@ -19,7 +19,7 @@ vector launchColor = <1.0,1.0,1.0>;    //OK for now
 float launchAlpha;                     // determined by rez param
 string primColor;
 float primGlow = 0.0;
-vector primSize = <0.3,0.3,0.3>;
+vector primSize = <0.1,0.1,0.1>;
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
 float radius = 5;  // 5 to 20
@@ -39,7 +39,8 @@ string color3;
 list params;
 integer handle;
 integer armed = FALSE;
-
+float maxPartSpeed = 1.0;
+float minPartSpeed = 1.0;;
 
 #if defined RINGBALL
    //#define PRIM_ROTATION
@@ -148,8 +149,8 @@ default
    {
       systemAge = 1;
       partAge = 4;
-      color1 = "<1.0,1.0,1.0>";
-      color2 = "<1.0,1.0,1.0>";
+      //color1 = "<1.0,1.0,1.0>";
+      //color2 = "<1.0,1.0,1.0>";
       startGlow = 0.0;
       endGlow = 0.0;
       boom();
@@ -178,14 +179,13 @@ default
       }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       rezParam = p; //save this
-      //debugSay("rezzed("+hex(p)+")");
+      //debugSay(2,"rezzed("+hex(p)+")");
       flightTime = (float)(p & 0x7F);
-      float bouy = (float)((p & 0x3F80) >> 7)/100.0;
-      llSetBuoyancy(bouy);
+      llSetBuoyancy(0.5);
       integer chan = (-42000) -((p & 0x3FC000) >>14);
-      //debugSay("p2 ="+ (string)p2);
-      //debugSay("chan = "+(string)chan);
-      //debugSay("flightTime ="+ (string)flightTime);
+      //debugSay(2,"p2 ="+ (string)p2);
+      //debugSay(2,"chan = "+(string)chan);
+      //debugSay(2,"flightTime ="+ (string)flightTime);
       handle=llListen(chan,"","","");
       if  (p & LOW_VELOCITY_MASK)
          explodeOnLowVelocity = TRUE;
@@ -227,7 +227,6 @@ default
       params = llCSV2List(msg);
       color1 = llList2String(params,1);
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
-
       llListenRemove(handle);
       debugSay(2,"got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       texture = llList2String(params,0);
@@ -246,6 +245,9 @@ default
       startScale =  llList2Vector(params,14);
       endScale =  llList2Vector(params,15);
       partCount = llList2Integer(params,16);
+      partOmega = llList2Vector(params,17);
+      maxPartSpeed = llList2Float(params,18);
+      minPartSpeed = llList2Float(params,19);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
