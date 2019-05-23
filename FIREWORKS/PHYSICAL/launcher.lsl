@@ -51,7 +51,7 @@ integer access;
 string launchMsg;
 list colors;
 integer numOfBalls;
-float speed;
+float speed = 1.0;
 integer flightTime;
 integer freezeOnBoom;
 integer packedParam;
@@ -130,7 +130,20 @@ vector  endScale = <1.0,1.0,0.0>;
    vector partOmega = PARTOMEGA;
 #else
    vector partOmega = <0.0,0.0,0.0>;
-#endif   
+#endif
+
+#if defined MAXPARTSPEED
+   float maxPartSpeed = MAXPARTSPEED;
+#else
+   float maxPartSpeed = 1.0;
+#endif
+
+#if defined MINPARTSPEED
+   float minPartSpeed = MINPARTSPEED;
+#else
+   float minPartSpeed = 1.0;
+#endif
+
 
 #define bouyancy 50
 #define NOTECARD_IN_THIS_PRIM
@@ -225,7 +238,7 @@ fire()
       launchMsg += "," + (string)startScale + "," + (string)endScale;
       launchMsg += "," + (string)partCount; 
       launchMsg += "," + (string)partOmega; 
-      
+      launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
