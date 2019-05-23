@@ -39,8 +39,6 @@ string color3;
 list params;
 integer handle;
 integer armed = FALSE;
-float maxPartSpeed = 1.0;
-float minPartSpeed = 1.0;;
 
 #if defined RINGBALL
    //#define PRIM_ROTATION

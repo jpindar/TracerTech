@@ -86,11 +86,20 @@ v1.0
    float partAge = 1;
    #endif
 
+   // this can be overridden by a launch message, 
+   // but we still want the variables declared here
+   #if defined MAXPARTSPEED
+   float maxPartSpeed = MAXPARTSPEED;
+   #else
+   float maxPartSpeed = 1.0;
+   #endif
 
-   //float maxPartSpeed = 2.0;
-   //float minPartSpeed = 2.0;
-   float maxPartSpeed = 1.5;
-   float minPartSpeed = 1.5;
+   #if defined MINPARTSPEED
+   float minPartSpeed = MINPARTSPEED;
+   #else
+   float minPartSpeed = 1.0;
+   #endif
+
    vector partOmega = <0.0,0.0,0.0>;
    float burstCount;
    vector partAccel;
