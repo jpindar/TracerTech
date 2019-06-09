@@ -1,0 +1,83 @@
+
+TracerTech 3D Fireworks Launcher Instructions
+
+Thank you for purchasing TracerTech 3D Fireworks!
+Remember to make a copy of the fireworks before editing them.
+
+These fireworks are controlled by touch, by chat command, or by a trigger. 
+
+Touch:
+They can be configured (by notecard) to either fire when touched, or pop up a menu when touched.
+
+Chat:
+They listen for chat commands on the channel specified in the notecard.
+If you set several fireworks to the same channel, you can set them off simultaneously with one command (or from one trigger).
+
+The commands are "fire", "hide" and "show".
+
+Trigger:
+The trigger just says "fire" on the chat channel indicated by the description of the prim the trigger script is in.  
+If you wish, you can put the trigger script in another object, or even put trigger scripts in several prims of an object to make a control panel or HUD.
+
+
+Notecard:
+Not all these options apply to all products.
+Please make a copy of the notecard before changing anything.
+Everything on a notecard line past // is a comment, and is ignored.
+
+The options are:
+
+channel
+This is the channel for chat commands
+
+access
+controls who can operate the device: public, group-only, or owner-only.
+
+menu
+this determines whether the firework should fire as soon as you touch it, or pop up a menu giving you some commands to choose from (including "fire").
+
+volume 
+This is the sound volume, from 1.0 for loud to 0.0 for silent
+ 
+wind
+This determines whether the  effect will be affected by the local wind.
+
+color1, color2
+These only apply to iColor type fireworks.
+iColor means you can specify some common color names (white, red, gold, etc.), 
+or you can enter the colors in RGB format (i.e. <1.0,0.0,0.0> for red).
+ 
+collision
+This determines whether the projectile will explode on collision with the ground or another object.
+
+freeze
+This determines whether the projectile will stop moving when it explodes, or keep moving balistically while it explodes.
+
+peak
+This determines whether the projectile will explode at the peak of its trajectory (i.e. when it starts to move downward).
+
+speed
+The speed at which the projectile is launched. Typically about 8 to 15
+
+flighttime
+The length of time in seconds before the projectile will explode (if it hasn't already exploded due to collision or to reaching its peak).
+Typically 3 to 10, or set it to 99 if you want the device to only explode due to collision or peak trajectory.
+
+angle
+This is an angle in degrees, which only affects certain types of projectile whose effects are not symmetrical.
+
+
+
+Hints:
+
+In addition to aiming the launcher, try rotating it along its axis. Some of the projectile effects are not symmetrical.
+
+
+If a device produces black particles, it’s probably because it did not read the notecard, or didn’t understand it. To make it try again, edit the notecard which will make the scripts reset.
+
+
+Tracer Prometheus
+TracerPing@gmail.com
+
+
+ 
