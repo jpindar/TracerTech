@@ -65,11 +65,6 @@
 #define TEXTURE_COURIER_NEW_BOLD_B  "c290a675-7383-449a-9c77-87a5aed545de"
 #define TEXTURE_COURIER_NEW_BOLD_C  "d3eb6aca-d7d1-46ad-99da-fb2320031a7f"
 
-#elif defined ISLANDZ
-
-#define TEXTURE_SPIKESTAR "af0a4586-6eb2-4186-a309-cb5def8a3a49"
-#define TEXTURE_CLASSIC   "4a241b2f-502d-42e6-9053-e6dec5333a68"   
-
 #elif defined SOAS
 #define TEXTURE_CLASSIC   "e51dfec9-b481-4ea0-aa67-545632d0b3fd"
 #define TEXTURE_SPIKESTAR "9fe0e79b-f810-481a-9b6f-6a6931ed50ca"
@@ -104,15 +99,6 @@
 
 //string color = "<0.42,0.017,0.59>";
 
-#ifdef ISLANDZ
-
-   #define SOUND_WHOOSH001 "bee638d7-f52d-4977-b758-223110203864"
-   #define SOUND_CHEE      "743fe473-a0a6-4770-bd62-e30f564907f4"
-   #define SOUND_PUREBOOM  "12ed8997-c03b-4e58-bd03-22d2e7e39d96"
-   #define SOUND_BANG1     "2439aa72-e4e2-47da-b82c-72ef16654a0a"
-   #define SOUND_SILENCE   "806f9a16-5799-43cb-a8e7-4430b44b2d2e"
-   
-   
 #elif defined TRACERGRID
    #define SOUND_WHOOSH001  "a120d4b5-e56c-4f28-ac02-f606862d269e"
    #define SOUND_CHEE       "2494e177-c350-4868-a609-d14a0d9488ea"
