@@ -3,7 +3,15 @@
    #define LIB_H
 
 #if defined TRACERGRID
-   #define HYPERGRID
+   #ifndef HYPERGRID
+      #define HYPERGRID
+   #endif
+#endif
+
+#if defined HYPERGRID
+   #ifndef TRACERGRID
+      #define TRACERGRID
+   #endif   
 #endif
 
 #define UNKNOWN -9999
@@ -70,6 +78,11 @@
    #define TEXTURE_SPIKESTAR "9fe0e79b-f810-481a-9b6f-6a6931ed50ca"
 #elif defined KITELY
    #define TEXTURE_CLASSIC "663340da-e9b4-41a5-8d89-c5259b72ad8b"
+#elif defined AMARYLLIS
+   #define TEXTURE_CLASSIC   "9bcfe4c3-0e6a-41ad-b7ca-1a6936dfa6c0"
+   #define TEXTURE_SPIKESTAR "3b4d481c-a4a4-4d0c-9875-9a4ed27df9be"
+   #define TEXTURE_CLASSIC2  "9e31a480-c4fe-4340-90ae-747abdbee6fc"
+   #define TEXTURE_PATRIOTIC_STAR    "20bc5407-8666-4598-829e-3040d6633cea"
 #endif
 
 
@@ -113,6 +126,13 @@
 #elif defined SOAS
    #define SOUND_WHOOSH001  "3a3882d0-d8a6-4e03-b440-be31c37c805d"
    #define SOUND_PUREBOOM   "bbfcb1bf-93b2-4071-832e-89492dd04d68"
+#elif defined AMARYLLIS
+   #define SOUND_PUREBOOM    "520c5354-db61-4ac4-9fe4-2f3753a1735f"
+   #define SOUND_WHOOSH001   "48c633b4-91a3-4712-a651-35d52905b1e3"
+   #define SOUND_CHEE        "8e98cc7c-85ff-4513-91a1-4b2e5ec85608"
+   #define SOUND_BANG1       "41e4d1ab-4261-4651-bd0a-cf9b1a8a9836"
+   #define SOUND_SPARKLER_5  "16f68c93-0017-453b-83a3-261a50ca8d10"
+   #define SOUND_SILENCE "1b54648f-7f6c-4957-a015-9b3bc3274c35"
 #endif
 
 // masks for encoding options into a short message
