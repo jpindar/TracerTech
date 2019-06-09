@@ -1,33 +1,30 @@
-//say commands on this channel
-//(hide, show, or fire)
-channel,2002
 
-//volume from 0 .0 to 1.0
-volume, 1.0
+// configuration notecard for 
+// TracerTech fireworks launchers
 
-//1 = menu, 0 = touch
-menu, 0
+// anything on a line after // is a comment, ignored by the device
+// each line should be one keyword, a comma, and a value
 
-//1 = explode on collision, 0 = don't
-collision, 1
+// some color names work, for other colors use the rgb format
+// i.e  <1.0,1.0,1.0>
 
-//1 =  freeze on explosion, 0 = keep moving
-freeze,1
+channel,  2055  //say commands (hide, show, or fire) on this channel
 
-//1 = public; 2 = group; 3 = owner
-access,1
+access,1        //who can control the device,  1 = public; 2 = group; 3 = owner
 
-// number of balls, typically 1
-balls, 1
+menu, 0        // 1 = menu, 0 = touch
 
-//speed typically 8 to 30
-//flighttime typically 2 or 3
-//bouyancy typically 50 or 55
+volume, 1.0    //volume from 0.0 to 1.0
 
-speed, 8, flighttime, 2,  bouyancy,50
+collision, 0           //1 = explode on collision, 0 = don't
+freeze, 1              //1 = stop moving when you explode, 0 = don't
+peak, 1                //1 = explode at the peak of the trajectory, 0 = don't
+speed, 8              //speed typically 8 to 30 // 15
+flighttime, 1.5     //typically 3 to 10, or 99 to avoid 'timing out'
+angle,0                //in degrees, only affects some projectiles    
+wind, 1          // 1 = affected by wind, 0 = ignore wind   , only affects some projectiles 
 
-//particletime varies, start with 1
-particletime, 1
-
- color1, <1.0,0.0,0.0>, color2, <0.0,0.0,1.0>
-
+color1, gold
+color2, red
+ 
+ 
