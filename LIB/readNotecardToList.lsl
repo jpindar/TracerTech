@@ -18,7 +18,7 @@ state readNotecardToList
       if (notecardName == "")
       {
          doneReadingNotecard = TRUE;
-         llOwnerSay("Can't find the config notecard");
+         llOwnerSay("Can't find the notecard");
          state default;
       }
       notecardLineIndex = 0;
