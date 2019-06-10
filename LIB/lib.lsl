@@ -1,7 +1,17 @@
 
+/*
+ *  lib.lsl    main library
+ *
+ */
+
 #ifndef LIB_H
   #include "libh.lsl"
 #endif
+
+#if defined TRACERGRID
+   #define HYPERGRID
+#endif
+
 
 debugSay(integer debugLevel, string msg)
 {
@@ -121,10 +131,18 @@ integer randomChan()
    return (integer)(llFrand(-1000000000.0) - 1000000000.0);
 }
 
+integer ownerChan()
+{
+   return (integer)("0xF" + llGetSubString(llGetOwner(),0,6));
+}   
+
 repeatSound(key sound, float volume)
 {
    llRegionSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
-}
+   //llShout(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
+   //llSay(SOUND_REPEAT_CHAN, (string)sound + ":" + (string)volume);
+   //llShout(0, (string)sound + ":" + (string)volume);
+ }
 
 integer objectDescToInt()
 {
