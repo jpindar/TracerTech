@@ -2,6 +2,24 @@
  standard burst
  The ANGLE_CONE pattern can be used to imitate the EXPLODE pattern
  by explicitly setting PSYS_SRC_ANGLE_BEGIN to 0 and PSYS_SRC_ANGLE_END to PI or vice versa
+
+ defined in effect.h: 
+ beginAngle & endAngle    set to 0 and PI
+ startAlpha & endAlpha    STARTALPHA ENDALPHA
+ startGlow & endGlow      STARTGLOW
+ startScale & endScale    STARTSCALE
+ partCount                PARTCOUNT
+ burstRadius              BURSTRADIUS
+ burstRate                BURSTRATE
+ followVelocity           FOLLOWVELOCITY
+ systemAge                SYSTEMAGE
+ partAge                  PARTAGE
+ minPartSpeed             MINPARTSPEED
+ maxPartSpeed             MAXPARTSPEED
+ partOmega                set to <0,0,0>
+ burstCount
+ partAccel 
+ texture
 */
 
 
@@ -12,18 +30,17 @@ makeParticles(integer link, string color1, string color2)
    partOmega = <0.0,0.0,0.0>;
 
    #ifdef DEBUG
-
-   llOwnerSay("radius "+(string)burstRadius);   //defined in effect.h
-   llOwnerSay("systemAge "+(string)systemAge);   //defined in effect.h
-   llOwnerSay("partAge "+(string)partAge);   //defined in effect.h
-   llOwnerSay("startAlpha "+(string)startAlpha);   //defined in effect.h
-   llOwnerSay("endAlpha "+(string)endAlpha);   //defined in effect.h
-   llOwnerSay("startSize "+(string)(startScale));   //defined in effect.h
-   llOwnerSay("endSize "+(string)(endScale));   //defined in effect.h
-   llOwnerSay("maxPartSpeed "+(string)maxPartSpeed);   //defined in effect.h
-   llOwnerSay("minPartSpeed "+(string)minPartSpeed);   //defined in effect.h
-   llOwnerSay(" partCount "+(string) partCount);   //defined in effect.h
-   llOwnerSay("burstRat "+(string)burstRate);   //defined in effect.h
+   llOwnerSay("radius "+(string)burstRadius);        //defined in effect.h
+   llOwnerSay("systemAge "+(string)systemAge);       //defined in effect.h
+   llOwnerSay("partAge "+(string)partAge);           //defined in effect.h
+   llOwnerSay("startAlpha "+(string)startAlpha);     //defined in effect.h
+   llOwnerSay("endAlpha "+(string)endAlpha);         //defined in effect.h
+   llOwnerSay("startSize "+(string)(startScale));    //defined in effect.h
+   llOwnerSay("endSize "+(string)(endScale));        //defined in effect.h
+   llOwnerSay("maxPartSpeed "+(string)maxPartSpeed); //defined in effect.h
+   llOwnerSay("minPartSpeed "+(string)minPartSpeed); //defined in effect.h
+   llOwnerSay(" partCount "+(string) partCount);     //defined in effect.h
+   llOwnerSay("burstRat "+(string)burstRate);        //defined in effect.h
    #endif
 
    systemSafeSet = systemAge;
@@ -32,11 +49,13 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_EMISSIVE_MASK |
    PSYS_PART_INTERP_COLOR_MASK |
    PSYS_PART_INTERP_SCALE_MASK;
+
    if (followVelocity)
       flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
+
    if (wind > 0)
       flags = flags | PSYS_PART_WIND_MASK;
-      
+
    list particles = [
    PSYS_SRC_PATTERN,          PSYS_SRC_PATTERN_ANGLE_CONE,
    PSYS_SRC_BURST_RADIUS,     burstRadius,
