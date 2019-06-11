@@ -278,9 +278,11 @@ default
          if (v.z< minimumVelocity)
          {
             debugSay(2,"at low velocity" + (string)v.z);
-            llSetTimerEvent(0);
             if (armed && explodeOnLowVelocity)
+            {
+               llSetTimerEvent(0);
                boom();
+            }
          }
       }
    }
