@@ -145,7 +145,6 @@ vector  endScale = <1.0,1.0,0.0>;
 #endif
 
 
-#define bouyancy 50
 #define NOTECARD_IN_THIS_PRIM
 
 
@@ -296,11 +295,19 @@ default
 
       // max int 0x80000000  (32 bits)
       //integer(<127) + integer (<=100, typically 50)
-      // so     b    mmmmmmmm mmmmmmmm mmmbbbbb bfffffff
-      //        h        0x10       00       00       00
-      // but rezChan*0x4000 where rezChan is 0-255
-      //                        rezChan        0x03FC000
-      packedParam = (bouyancy<<7) + flightTime; //0x0000 1FFF
+      //  follow vel   1----- -------- -------- --------  = 0x2000 0000
+      //  low vel       1---- -------- -------- --------  = 0x1000 0000
+      //  wind           1--- -------- -------- --------  = 0x0800 0000
+      //  freeze          1-- -------- -------- --------  = 0x0400 0000
+      //  collision        1- -------- -------- --------  = 0x0200 0000
+      //  debug             1 -------- -------- --------  = 0x0100 0000
+      //  launchalpha       - 1------- -------- --------  = 0x0080 0000
+      //  unused              -1------ -------- --------  = 0x0040 0000
+      //  rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
+      //  unused                       --111111 1-------  =      0x3F80
+      //  flighttime                            -1111111  =      0x007F
+      
+      packedParam = flightTime;  //up to 0x007F
       #ifndef NO_FOLLOW_VELOCITY
          packedParam = packedParam | FOLLOW_VELOCITY_MASK; //0x2000 0000
       #endif
