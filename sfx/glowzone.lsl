@@ -11,14 +11,17 @@
 
 */
 
-#define TRACERGRID
+//#define TRACERGRID
+#define COLOR1 COLOR_RED
+#define COLOR2 COLOR_WHITE
+#define COLOR3 COLOR_BRIGHT_BLUE
 
 #include "LIB\lib.lsl"
 
 //string texture = "";
 //string texture = TEXTURE_BLANK;
-//string texture = TEXTURE_SPIKESTAR;
-string texture = TEXTURE_CLASSIC;
+string texture = TEXTURE_SPIKESTAR;
+//string texture = TEXTURE_CLASSIC;
 
 string color;
 integer on = FALSE;
@@ -40,7 +43,7 @@ makeParticles(integer link, vector color)
    PSYS_PART_BLEND_FUNC_SOURCE,PSYS_PART_BF_SOURCE_ALPHA,
    PSYS_PART_BLEND_FUNC_DEST,PSYS_PART_BF_ONE_MINUS_SOURCE_ALPHA,
    PSYS_PART_START_SCALE,<0.1,0.1,0.0>,
-   PSYS_PART_END_SCALE,<2.5,0.5,0.0>,
+   PSYS_PART_END_SCALE,<0.5,0.5,0.0>,
    PSYS_SRC_TEXTURE,texture,
    PSYS_SRC_MAX_AGE,0,
    PSYS_PART_MAX_AGE,3,
@@ -82,9 +85,9 @@ default
       on = !on;
       if (on)
       {
-         makeParticles(1, COLOR_RED);
-         makeParticles(2, COLOR_GREEN);
-         makeParticles(3, COLOR_BRIGHT_BLUE);
+         makeParticles(1, (vector)COLOR1);
+         makeParticles(2, (vector)COLOR2);
+         makeParticles(3, (vector)COLOR3);
       }
       else
       {
