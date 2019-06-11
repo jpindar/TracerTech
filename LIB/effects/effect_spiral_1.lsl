@@ -6,26 +6,8 @@ ORIENTATION MATTERS
 
 makeParticles(integer link, string color1, string color2)
 {
-   beginAngle = 0;
-   endAngle = 0.0314;
-
-   
-   #ifdef PARTCOUNT
-   partCount = PARTCOUNT;
-   #else
-   partCount = 10;
-
-   #endif
-   //partCount = 9;
-minPartSpeed = 3.6;
-maxPartSpeed = 3.6;
-//partAge = 1.9;
-//followVelocity = TRUE;
-partOmega = <0.000000,12.00000,0.000000>;    //vary this
-burstRate = 0.01; //vary this a little
-  burstRadius = 0;   
-startScale = <0.400000,0.400000,0.000000>;
-endScale =   <2.000000,2.000000,0.000000>;
+   debugSay(2,"angles: " + (string)beginAngle + " " + (string)endAngle);
+   debugSay(2,"speeds: " + (string)minPartSpeed + " " + (string)maxPartSpeed);
    systemSafeSet = systemAge;
 
    integer flags =
@@ -58,10 +40,10 @@ endScale =   <2.000000,2.000000,0.000000>;
    PSYS_PART_MAX_AGE,         partAge,
    PSYS_SRC_BURST_RATE,       burstRate,
    PSYS_SRC_BURST_PART_COUNT, partCount,
-   PSYS_SRC_ACCEL,<0.0,0.0,0.0>,
+   PSYS_SRC_ACCEL,            <0.0,0.0,0.0>,
    PSYS_SRC_OMEGA,             partOmega,
-   PSYS_SRC_BURST_SPEED_MIN,   minPartSpeed,
-   PSYS_SRC_BURST_SPEED_MAX,   maxPartSpeed,
+   PSYS_SRC_BURST_SPEED_MIN,  minPartSpeed,
+   PSYS_SRC_BURST_SPEED_MAX,  maxPartSpeed,
    PSYS_PART_FLAGS,flags
    ];
    llLinkParticleSystem(link,particles);
