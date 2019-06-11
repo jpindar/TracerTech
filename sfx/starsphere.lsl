@@ -47,14 +47,14 @@ float burstRadius = TT_BURST_RADIUS;
 float burstRadius = 5;
 #endif
 
-vector startSize = <1.5,1.5,0.0>;//or1.9
-vector endSize = <0.5,0.5,0.0>;  // 0.5 to 1.5
+vector startSize = <2.5,2.5,0.0>;//or1.9
+vector endSize = <3.5,3.5,0.0>;  // 0.5 to 1.5
 
-float particleAge = 1.0;
+float particleAge = 2.0;
 
 float systemAge = 0; // 0.2 to 0.3
 float speed = 0.1;
-
+integer partCount = 200;
 
 #include "LIB\effects\effect_hollow_burst.lsl"
 
