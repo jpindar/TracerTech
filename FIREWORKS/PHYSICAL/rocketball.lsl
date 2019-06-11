@@ -43,12 +43,15 @@ integer armed = FALSE;
 #if defined RINGBALL
    //#define PRIM_ROTATION
    #include "LIB\effects\effect_ringball1.lsl"
+   #define DESCRIPTION " ringball "
 #elif defined SPIRALBALL
    //#define PRIM_ROTATION
    #include "LIB\effects\effect_spiral_1.lsl"
+   #define DESCRIPTION " spiralball "
 #else
    //#include "LIB\effects\effect_standard_rocketball.lsl"
-   #include "LIB\effects\effect_standard_burst.lsl"
+   #include "LIB\effects\effect_stadard_burst.lsl"
+   #define DESCRIPTION " roundball "
 #endif
 
 

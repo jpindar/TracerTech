@@ -6,8 +6,19 @@ v1.0
 
 */
 
-   float beginAngle = 0;
-   float endAngle = PI;
+   #if defined BEGINANGLE
+      float beginAngle = BEGINANGLE;
+   #elif defined STARTANGLE
+      float beginAngle = STARTANGLE;
+   #else
+      float beginAngle = 0;
+   #endif
+   
+   #if defined ENDANGLE
+      float endAngle = ENDANGLE;
+   #else
+      float endAngle = PI;
+   #endif
 
    #if defined STARTALPHA
    float startAlpha = STARTALPHA;

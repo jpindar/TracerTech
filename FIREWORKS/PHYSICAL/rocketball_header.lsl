@@ -5,10 +5,7 @@
 */
 #define TRACERGRID
 //#define DEBUG
-#define DESCRIPTION "PLAIN ROUNDBALL"
 //#define RINGBALL
-//#define RINGBALL
-//#define SPHERE_BALL
 //#define TRAILBALL
 //#define SPIRALBALL
 //#define HOTLAUNCH
