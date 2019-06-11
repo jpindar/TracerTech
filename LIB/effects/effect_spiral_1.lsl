@@ -1,6 +1,12 @@
 /* basic spiral ball
 
-ORIENTATION MATTERS
+ORIENTATION MATTERS   
+
+former default angles were 0 and 0.0314
+former default speed was 3.6
+partcount was 10
+partomega  <0,12,0>
+scale <0.4,0.4,0.0> to <2.0,2.0,0.0>
 */
 
 
