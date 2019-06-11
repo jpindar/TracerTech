@@ -77,6 +77,12 @@ string nameToColor(string c)
    if(c=="brightblue")  return COLOR_BRIGHT_BLUE;
    if(c=="teal")  return COLOR_TEAL;
    if(c=="cyan")  return COLOR_CYAN;
+   if(c=="pridered")  return COLOR_PRIDE_RED;
+   if(c=="prideorange")  return COLOR_PRIDE_ORANGE;
+   if(c=="prideyellow")  return COLOR_PRIDE_YELLOW;
+   if(c=="pridegreen")  return COLOR_PRIDE_GREEN;
+   if(c=="prideblue")  return COLOR_PRIDE_BLUE;
+   if(c=="pridepurple")  return COLOR_PRIDE_PURPLE;
    return "<0.0,0.0,0.0>";
 #endif
 }
