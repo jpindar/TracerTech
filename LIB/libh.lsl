@@ -114,6 +114,15 @@
 #define COLOR_AQUA          "<0.5,0.86,1.00>"  //but cyan == aqua?
 #define COLOR_CYAN          "<0.0,1.00,1.00>"
 #define COLOR_LIME          "<0.00,1.0,0.44>"
+#define COLOR_PRIDE_RED      "<0.906, 0.000, 0.000>"
+#define COLOR_PRIDE_ORANGE   "<1.000, 0.549, 0.000>"
+#define COLOR_PRIDE_YELLOW   "<1.000, 0.937, 0.000>"
+//#define COLOR_PRIDE_GREEN  "<0.000, 0.506, 0.122>" //too dark for fireworks
+#define COLOR_PRIDE_GREEN    "<0.000, 0.980, 0.216>" 
+//#define COLOR_PRIDE_BLUE   "<0.000, 0.267, 1.000>" //too dark for fireworks
+#define COLOR_PRIDE_BLUE     "<0.161, 0.380, 1.000>"
+//#define COLOR_PRIDE_PURPLE "<0.463, 0.000, 0.537>" //too dark for fireworks
+#define COLOR_PRIDE_PURPLE   "<0.808, 0.000, 0.941>" 
 
 //string color = "<0.42,0.017,0.59>";
 
