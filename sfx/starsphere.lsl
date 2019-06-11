@@ -8,9 +8,7 @@
 
 */
 
-#define TRACERGRID
-//#define RAINBOW
-//#define REPEATER
+//#define TRACERGRID
 
 #include "LIB\lib.lsl"
 
@@ -26,8 +24,6 @@ string color1 = (string)COLOR_WHITE;
 string color2 = (string)COLOR_WHITE;
 
 integer on = FALSE;
-float startAlpha = 1;
-float endAlpha = 0;
 
 #if defined STARTGLOW
 float startGlow = STARTGLOW;  //notecard will override these
@@ -47,8 +43,26 @@ float burstRadius = TT_BURST_RADIUS;
 float burstRadius = 5;
 #endif
 
-vector startSize = <2.5,2.5,0.0>;//or1.9
-vector endSize = <3.5,3.5,0.0>;  // 0.5 to 1.5
+#if defined STARTALPHA
+  float startAlpha = STARTALPHA;
+#else
+  float startAlpha = 1.0;
+#endif
+#if defined ENDALPHA
+  endAlpha = ENDALPHA;
+#else
+  float endAlpha = 0.0;
+#endif
+
+#ifdef ANGLE_END
+   float angleEnd = ANGLE_END;
+#else
+   float angleEnd = PI;
+#endif 
+//vector startScale = <12.5,12.5,0.0>;//or1.9
+//vector endScale = <3.5,3.5,0.0>;  // 0.5 to 1.5
+vector startScale = <0.5,0.5,0.0>;//or1.9
+vector endScale = <0.5,0.5,0.0>;  // 0.5 to 1.5
 
 float particleAge = 2.0;
 
@@ -56,7 +70,49 @@ float systemAge = 0; // 0.2 to 0.3
 float speed = 0.1;
 integer partCount = 200;
 
-#include "LIB\effects\effect_hollow_burst.lsl"
+makeParticles(integer link, string color1, string color2)
+{
+   vector particleOmega = <0.0,0.0,0.0>;
+   systemSafeSet = systemAge;
+   integer flags =
+   PSYS_PART_EMISSIVE_MASK |
+   PSYS_PART_INTERP_COLOR_MASK |
+   PSYS_PART_INTERP_SCALE_MASK ;
+
+   #ifndef NOFOLLOWVELOCITY
+   flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
+   #endif
+
+   if (wind > 0)
+      flags = flags | PSYS_PART_WIND_MASK;
+
+   list particles = [
+   PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
+   PSYS_SRC_BURST_RADIUS,      burstRadius,
+   PSYS_SRC_ANGLE_BEGIN,       0.0,
+   PSYS_SRC_ANGLE_END,         angleEnd,
+   PSYS_PART_START_COLOR,      (vector)color1,
+   PSYS_PART_END_COLOR,        (vector)color2,
+   PSYS_PART_START_ALPHA,      startAlpha,
+   PSYS_PART_END_ALPHA,        endAlpha,
+   PSYS_PART_START_GLOW,       startGlow,
+   PSYS_PART_END_GLOW,         endGlow,
+   PSYS_PART_START_SCALE,      startScale,
+   PSYS_PART_END_SCALE,        endScale,
+   PSYS_SRC_TEXTURE,           texture,
+   PSYS_SRC_MAX_AGE,           systemSafeSet,
+   PSYS_PART_MAX_AGE,          particleAge,
+   PSYS_SRC_BURST_RATE,        0.1,
+   PSYS_SRC_BURST_PART_COUNT,  140,
+   PSYS_SRC_ACCEL,             <0.0,0.0,-0.3>,
+   PSYS_SRC_OMEGA,             particleOmega,
+   PSYS_SRC_BURST_SPEED_MIN,   (1.5*speed),
+   PSYS_SRC_BURST_SPEED_MAX,   (1.5*speed),
+   PSYS_PART_FLAGS,flags
+   ];
+   llLinkParticleSystem(link,particles);
+   systemSafeSet = 0.0;
+}
 
 boom()
 {
