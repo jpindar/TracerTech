@@ -28,13 +28,24 @@ float flashTime = 0.2;
    float glowAmount = 1.0; // or 0.2
    list emitterNames = ["e1"];
    integer numOfEmitters = 1;
+   integer numOfIterations = 1;
    float interEmitterDelay = 0.1;
    #include "LIB\effects\effect_standard_burst_exp1.lsl"
+#elif defined RAINBOW1
+   float glowAmount = 0.5; // or 0.2
+   list emitterNames = ["e1"];
+   integer numOfEmitters = 1;
+   integer numOfIterations = 6;
+   //float interEmitterDelay = 0.0;
+   float interEmitterDelay = systemAge;
+   #include "LIB\effects\effect_standard_burst.lsl"
+   #define SHARPCUTOFF
 #else
    float glowAmount = 0.5; // or 0.2
    //list emitterNames = ["e1"];
    list emitterNames = ["e1","e2","e3"];
    integer numOfEmitters = 1;
+   integer numOfIterations = 1;
    float interEmitterDelay = 0.0;
    #include "LIB\effects\effect_standard_burst.lsl"
 #endif
@@ -48,14 +59,17 @@ fire()
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
    // try repeating this section to make FAST series bursts
-   numOfEmitters = 1;
-   for(i=0;i<numOfEmitters;i++)
+
+   for(i=0;i<numOfIterations;i++)
    {
       llPlaySound(BOOMSOUND, volume);
-      //repeatSound(BOOMSOUND,volume);
+      repeatSound(BOOMSOUND,volume);
       color1 = llList2String(colors,i*2);
       color2 = llList2String(colors,(i*2)+1);
-      e = llList2Integer(emitters,i);
+      if (i < numOfEmitters)
+         e = llList2Integer(emitters,i);
+      else
+         e = llList2Integer(emitters,0);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)color1,intensity,lightRadius,falloff]);
       setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)color1,0.0]);
       setGlow(e,glowAmount);
@@ -65,6 +79,15 @@ fire()
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
       if (interEmitterDelay>0) llSleep(interEmitterDelay);
    }
+   #if defined SHARPCUTOFF
+       llParticleSystem([]);
+       //TODO just doing llParticleSystem([]) didn't work if interEmitterDelay < systemAge
+       //if you don't want interEmitterDelay >= systemAge, use this:
+       //float temp = systemAge;
+       //systemAge = 0.01;
+       //makeParticles(e,color1,color2);
+       //systemAge = temp;
+   #endif
    llSleep(systemAge+partAge);
    //llSleep(systemAge);
    allOff();
@@ -96,7 +119,8 @@ default
    state_entry()
    {
    llPreloadSound(BOOMSOUND);
-   emitters = getLinknumbers(emitterNames);
+   emitters = getLinknumbers(emitterNames); 
+   numOfEmitters = llGetListLength(emitters);
    oldAlpha = llGetAlpha(ALL_SIDES);
    oldColor = llGetColor(ALL_SIDES);
    allOff();
