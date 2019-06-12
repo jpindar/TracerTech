@@ -83,6 +83,10 @@ string nameToColor(string c)
    if(c=="pridegreen")  return COLOR_PRIDE_GREEN;
    if(c=="prideblue")  return COLOR_PRIDE_BLUE;
    if(c=="pridepurple")  return COLOR_PRIDE_PURPLE;
+   //usually non-colors should be black, but in some special cases
+   //we may want to pass them through to be handled later
+   if(llGetSubString(c,0,0) =="!")  return c;
+   if(llGetSubString(c,-1,-1) =="!")  return c;
    return "<0.0,0.0,0.0>";
 #endif
 }
