@@ -24,7 +24,7 @@ integer chatChan;
 key id = "";
 integer access;
 float delay = 0.0;  // 0.3 for multiburst
-integer maxColors = 6;
+integer maxColors = 12;
 
 
 /* for multiburst,
