@@ -50,7 +50,7 @@ integer armed = FALSE;
    #define DESCRIPTION " spiralball "
 #else
    //#include "LIB\effects\effect_standard_rocketball.lsl"
-   #include "LIB\effects\effect_stadard_burst.lsl"
+   #include "LIB\effects\effect_standard_burst.lsl"
    #define DESCRIPTION " roundball "
 #endif
 
