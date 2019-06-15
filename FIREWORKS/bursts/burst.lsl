@@ -50,6 +50,16 @@ float flashTime = 0.2;
    float interEmitterDelay = systemAge;
    #include "LIB\effects\effect_standard_burst.lsl"
    #define SHARPCUTOFF
+#elif defined RINGBALL
+   float glowAmount = 0.5; // or 0.2
+   list emitterNames = ["e1"];
+   integer numOfEmitters = 1;
+   integer numOfIterations = 6;
+   //float interEmitterDelay = 0.0;
+   float interEmitterDelay = 1.0;
+   #include "LIB\effects\effect_ringball1.lsl"
+   //#define DESCRIPTION " ringball "
+   #define SHARPCUTOFF
 #else
    float glowAmount = 0.5; // or 0.2
    //list emitterNames = ["e1"];
