@@ -12,9 +12,19 @@ string color1;
 string color2;
 string color3;
 string lightColor;
-//string sound = SOUND_BURST1;
-string sound = BOOMSOUND;
+
+#if def BOOMSOUND
+   string sound = BOOMSOUND;
+#else
+   string sound = SOUND_SILENCE;
+#endif
+
+#ifdef NOFLASH
+float intensity = 0.0;
+#else
 float intensity = 1.0;
+#endif
+
 float lightRadius = 20;
 float falloff = 0.1;
 float oldAlpha;
@@ -54,7 +64,7 @@ fire()
 {
    integer i;
    integer e;
-   //llOwnerSay("BOOM");
+   debugSay(1,"BOOM");
    oldColor = llGetColor(ALL_SIDES);
    oldAlpha = llGetAlpha(ALL_SIDES);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_WHITE,0.0]);
@@ -88,8 +98,10 @@ fire()
        //makeParticles(e,color1,color2);
        //systemAge = temp;
    #endif
+   #ifndef NOWAIT
    llSleep(systemAge+partAge);
    //llSleep(systemAge);
+   #endif
    allOff();
 }
 
