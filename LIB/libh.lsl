@@ -88,6 +88,12 @@
    #define TEXTURE_SPIKESTAR "3b4d481c-a4a4-4d0c-9875-9a4ed27df9be"
    #define TEXTURE_CLASSIC2  "9e31a480-c4fe-4340-90ae-747abdbee6fc"
    #define TEXTURE_PATRIOTIC_STAR    "20bc5407-8666-4598-829e-3040d6633cea"
+   #define TEXTURE_RAINBOWS "1df76716-d4a6-4782-b21a-7164563decb6"
+   #define TEXTURE_SANNA_CONFETTI "d3c72527-71b3-4dce-940e-3b9514737b54"
+   #define TEXTURE_ONE_RING "0ccad152-7db6-4d2b-bde1-dbe37286bb6e"
+   #define TEXTURE_OS_CONFETTI "398e644d-fd55-48e2-b210-7e82ab18610b"
+   #define TEXTURE_STARWHEEL   "16c953d4-7c42-466b-81fa-23d40f2f77c5"
+   #define TEXTURE_FIVECONTRAILS "7e818905-1646-42b8-a1eb-6bdab1639859"
 #endif
 
 
@@ -148,7 +154,13 @@
    #define SOUND_CHEE        "8e98cc7c-85ff-4513-91a1-4b2e5ec85608"
    #define SOUND_BANG1       "41e4d1ab-4261-4651-bd0a-cf9b1a8a9836"
    #define SOUND_SPARKLER_5  "16f68c93-0017-453b-83a3-261a50ca8d10"
-   #define SOUND_SILENCE "1b54648f-7f6c-4957-a015-9b3bc3274c35"
+   #define SOUND_SILENCE     "1b54648f-7f6c-4957-a015-9b3bc3274c35"
+   #define SOUND_BANG2       "5fef7055-3f3a-443e-a72d-9d47027fa108"
+   #define SOUND_HOLLOWBANG1 "fb9842bb-472d-42fc-b683-ba21c73454cf"
+   #define SOUND_LAUNCH1     "d6c19db6-67cd-4798-97bb-0e1ebffdb1c2"
+   #define SOUND_LAUNCH2     "4399e82e-1c26-4dfe-9fb7-963baf7b4b85"
+   #define SOUND_LAUNCH3     "3630a7c9-4309-491d-822c-670727c8e429"
+   #define SOUND_BANG3       "e5cd5c92-e5a6-4f8c-a5d3-7e09e362a66f"
 #endif
 
 // masks for encoding options into a short message
