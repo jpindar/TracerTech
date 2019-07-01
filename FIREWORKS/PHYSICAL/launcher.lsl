@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.5"
+#define VERSION "3.5.1"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -172,8 +172,7 @@ vector  endScale = <1.0,1.0,0.0>;
  */
 msgHandler(string sender, string msg)
 {
-   debugSay(3,"got message " + msg );
-   debugSay(3,"from "+ (string)sender);
+   debugSay(3,"got message " + msg + " from "+ (string)sender);
    //allow sameOwner so message can be from a trigger owned by our owner
    if (!sameOwner(sender)) 
    {
@@ -220,7 +219,6 @@ fire()
 
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
-      //rotation rot2 = llEuler2Rot(<0, 0, 0>) * rot; //putting the constant first means local rotation
    #elif defined LAUNCH_ROT_90Y
       rotation rot2 = llEuler2Rot(<0, PI_BY_TWO, 0>) * rot; //putting the constant first means local rotation
    #elif defined LAUNCH_ROT_ZERO
@@ -268,7 +266,10 @@ fire()
       setGlow(muzzleLink,0.0);
       setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
       llSleep(0.2);
-      debugSay(1,"launchMsg " + launchMsg);
+      debugSay(1,"launch vel " + (string)vel);
+      debugSay(1,"launcher rot " + (string)rot  + " or " + (string)llRot2Euler(rot));
+      debugSay(1,"   launch rot " + (string)rot2 + " or " + (string)llRot2Euler(rot2));
+      debugSay(1,"sending launchMsg *********\n" + launchMsg+ "\n*********");
       llRegionSay(rezChan, launchMsg);
       if (launchDelay > 0.0)
          llSleep(launchDelay);
@@ -312,7 +313,7 @@ default
       colors = colors + parseColor(notecardList,"color4");
       colors = colors + parseColor(notecardList,"color5");
       colors = colors + parseColor(notecardList,"color6");
-      debugSay(2,"[" + (string)colors + "]");
+      debugSay(2,"notecard color list is [" + (string)colors + "]");
 
       // max int 0x80000000  (32 bits)
       //integer(<127) + integer (<=100, typically 50)
@@ -354,7 +355,7 @@ default
          llSetLinkTexture(preloadLink,texture,preloadFace);
 
       muzzleLink = getLinkWithName(muzzlePrimName);
-      debugSay(3,"muzzle is link number " + (string)muzzleLink);
+      //debugSay(3,"muzzle is link number " + (string)muzzleLink);
       assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
       //llSetLinkTexture(muzzleLink, texture,muzzleFace);
 
