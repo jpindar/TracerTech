@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.5.2"
+#define VERSION "3.6"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -219,12 +219,16 @@ fire()
 
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
-   #elif defined LAUNCH_ROT_90Y
-      rotation rot2 = llEuler2Rot(<0, PI_BY_TWO, 0>) * rot; //putting the constant first means local rotation
    #elif defined LAUNCH_ROT_ZERO
       rotation rot2 = <0.0,0.0,0.0,0.0>;
+   #elif defined LAUNCH_ROT_ABSOLUTE4
+      rotation rot2 = LAUNCH_ROT_ABSOLUTE4;
+   #elif defined LAUNCH_ROT_ABSOLUTE
+      rotation rot2 = llEuler2Rot(LAUNCH_ROT_ABSOLUTE);
+   #elif defined LAUNCH_ROT_RELATIVE
+      rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE) *rot;
    #else // angle is in radians, either as initialized or read from notecard
-      rotation rot2 = llEuler2Rot(<0,angle,0>) * rot;
+      rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
 
    for (i = 0; i<numOfBalls; i++)
