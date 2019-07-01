@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.4"
+#define Version "3.5"
 
 //#define DEBUG
 
@@ -229,6 +229,7 @@ default
       color1 = llList2String(params,1);
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
       llListenRemove(handle);
+      debugSay(2,"msg = "+msg);
       debugSay(2,"got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       texture = llList2String(params,0);
       color2 = llList2String(params,2);
@@ -249,6 +250,8 @@ default
       partOmega = llList2Vector(params,17);
       maxPartSpeed = llList2Float(params,18);
       minPartSpeed = llList2Float(params,19);
+      beginAngle = llList2Float(params,20);
+      endAngle = llList2Float(params,21);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
