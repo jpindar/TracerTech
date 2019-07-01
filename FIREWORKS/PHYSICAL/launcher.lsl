@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.5.1"
+#define VERSION "3.5.2"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -293,9 +293,9 @@ default
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
-      //numOfBalls = getInteger(notecardList,"balls");
-      //if (numOfBalls < 1)
-      numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
+      numOfBalls = getInteger(notecardList,"balls");
+      if (numOfBalls < 1)  //if not specified by notecard
+         numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
 
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
