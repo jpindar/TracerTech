@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.1.2"
+#define VERSION "3.5"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -56,8 +56,28 @@ integer flightTime;
 integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
-float launchDelay = 0.5;
 integer code = 0;
+
+#if defined LAUNCHDELAY
+float launchDelay = LAUNCHDELAY;
+#else
+float launchDelay = 0.5;
+#endif
+
+#if defined BEGINANGLE
+float beginAngle = BEGINANGLE;
+#elif defined STARTANGLE
+float beginAngle = STARTANGLE;
+#else
+float beginAngle = 0;
+#endif
+
+#if defined ENDANGLE
+float endAngle = ENDANGLE;
+#else
+float endAngle = PI;
+#endif
+
 
 #if defined SYSTEMAGE
 float systemAge = SYSTEMAGE;
@@ -238,6 +258,7 @@ fire()
       launchMsg += "," + (string)partCount; 
       launchMsg += "," + (string)partOmega; 
       launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+      launchMsg += "," + (string)beginAngle+","+(string)endAngle;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
@@ -284,7 +305,7 @@ default
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
-      launchDelay = getFloat(notecardList, "delay");
+      // launchDelay = getFloat(notecardList, "delay");
       colors = colors + parseColor(notecardList,"color1");
       colors = colors + parseColor(notecardList,"color2");
       colors = colors + parseColor(notecardList,"color3");
