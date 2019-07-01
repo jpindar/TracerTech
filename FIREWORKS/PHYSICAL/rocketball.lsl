@@ -22,7 +22,7 @@ float primGlow = 0.0;
 vector primSize = <0.1,0.1,0.1>;
 string lightColor = COLOR_WHITE;
 float intensity = 1.0;
-float radius = 5;  // 5 to 20
+float lightRadius = 20;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
 
 integer explodeOnCollision = 0;        //overridden by notecard via rez param
@@ -63,7 +63,7 @@ boom()
    debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
    setColor(LINK_THIS,(vector)primColor,0.0);
    setGlow(LINK_THIS,primGlow);
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
    if (freezeOnBoom)
    {
       debugSay(2,"freezing");
@@ -90,7 +90,7 @@ boom()
       llPlaySound(sound1,boomVolume);
       repeatSound(sound1,boomVolume);
    }
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (systemAge>0)
       llSleep(systemAge);
@@ -112,7 +112,7 @@ AllOff(integer blacken)
    setGlow(LINK_THIS,0.0);
    if (blacken)
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,radius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
 }
 
@@ -169,7 +169,7 @@ default
          else
             launchAlpha = 0.0;
          setColor(LINK_SET,launchColor,launchAlpha);
-         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
          //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
          //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
@@ -254,7 +254,7 @@ default
       endAngle = llList2Float(params,21);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,radius,falloff]);
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       armed = TRUE;
    }
 
