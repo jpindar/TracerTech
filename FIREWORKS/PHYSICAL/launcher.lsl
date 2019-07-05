@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.6"
+#define VERSION "3.6.1"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -231,6 +231,14 @@ fire()
       rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
 
+   #if defined MIRRORPAIR
+       numOfBalls = 2;
+   #endif 
+
+   #if defined PAIR
+       numOfBalls = 2;
+   #endif
+
    for (i = 0; i<numOfBalls; i++)
    {
       setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
@@ -258,7 +266,14 @@ fire()
       launchMsg += "," + (string)burstRate; 
       launchMsg += "," + (string)startScale + "," + (string)endScale;
       launchMsg += "," + (string)partCount; 
-      launchMsg += "," + (string)partOmega; 
+      vector partOmega2 = partOmega;
+
+      #if defined MIRRORPAIR
+         if (i == 1)
+            partOmega2 = -1 * partOmega2;
+      #endif 
+
+      launchMsg += "," + (string)partOmega2;
       launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
       launchMsg += "," + (string)beginAngle+","+(string)endAngle;
       rezChan = (integer) llFrand(255);
