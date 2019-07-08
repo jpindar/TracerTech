@@ -109,7 +109,7 @@ default
             makeParticles(1, (vector)COLOR_RED);
             makeParticles(2, (vector)COLOR_WHITE);
             makeParticles(3, (vector)COLOR_BLUE);
-         #elif
+         #else
             makeParticles(1, (vector)COLOR1);
             makeParticles(2, (vector)COLOR2);
             makeParticles(3, (vector)COLOR3);
