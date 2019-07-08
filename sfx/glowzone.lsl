@@ -85,9 +85,32 @@ default
       on = !on;
       if (on)
       {
-         makeParticles(1, (vector)COLOR1);
-         makeParticles(2, (vector)COLOR2);
-         makeParticles(3, (vector)COLOR3);
+         #if defined PRIDE
+            makeParticles(1, (vector)COLOR_PRIDE_RED);
+            makeParticles(2, (vector)COLOR_PRIDE_ORANGE);
+            makeParticles(3, (vector)COLOR_PRIDE_YELLOW);
+            makeParticles(4, (vector)COLOR_PRIDE_GREEN);
+            makeParticles(5, (vector)COLOR_PRIDE_BLUE);
+            makeParticles(6, (vector)COLOR_PRIDE_PURPLE);
+         #elif defined WHITE
+            makeParticles(1, (vector)COLOR_WHITE);
+            makeParticles(2, (vector)COLOR_WHITE);
+            makeParticles(3, (vector)COLOR_WHITE);
+            makeParticles(4, (vector)COLOR_WHITE);
+            makeParticles(5, (vector)COLOR_WHITE);
+            makeParticles(6, (vector)COLOR_WHITE);
+         #elif defined USA
+            makeParticles(1, (vector)COLOR_RED);
+            makeParticles(2, (vector)COLOR_WHITE);
+            makeParticles(3, (vector)COLOR_BLUE);
+         #elif
+            makeParticles(1, (vector)COLOR1);
+            makeParticles(2, (vector)COLOR2);
+            makeParticles(3, (vector)COLOR3);
+            makeParticles(4, (vector)COLOR4);
+            makeParticles(5, (vector)COLOR5);
+            makeParticles(6, (vector)COLOR6);
+         #endif
       }
       else
       {
