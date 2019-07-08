@@ -12,6 +12,7 @@
 */
 
 //#define TRACERGRID
+//#define AMARYLLIS
 #define COLOR1 COLOR_RED
 #define COLOR2 COLOR_WHITE
 #define COLOR3 COLOR_BRIGHT_BLUE
@@ -20,14 +21,23 @@
 
 //string texture = "";
 //string texture = TEXTURE_BLANK;
-string texture = TEXTURE_SPIKESTAR;
+//string texture = TEXTURE_SPIKESTAR;
 //string texture = TEXTURE_CLASSIC;
+//string texture =  TEXTURE_SANNA_CONFETTI; 
+string texture = TEXTURE;
 
 string color;
 integer on = FALSE;
 
 makeParticles(integer link, vector color)
 {
+   integer flags = PSYS_PART_EMISSIVE_MASK
+      | PSYS_PART_INTERP_COLOR_MASK
+      | PSYS_PART_INTERP_SCALE_MASK;
+      
+   #if defined FOLLOWVELOCITY
+      flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
+    #endif
    llLinkParticleSystem(link, [
    PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE_CONE,
    PSYS_SRC_BURST_RADIUS,0,
@@ -36,7 +46,7 @@ makeParticles(integer link, vector color)
    PSYS_SRC_TARGET_KEY,llGetKey(),
    PSYS_PART_START_COLOR,color,
    PSYS_PART_END_COLOR,color,
-   PSYS_PART_START_ALPHA,0.5,
+   PSYS_PART_START_ALPHA,1.0,
    PSYS_PART_END_ALPHA,1,
    PSYS_PART_START_GLOW,0.2,
    PSYS_PART_END_GLOW,0.2,
@@ -53,11 +63,7 @@ makeParticles(integer link, vector color)
    PSYS_SRC_OMEGA,<0.0,0.0,0.0>,
    PSYS_SRC_BURST_SPEED_MIN,3,
    PSYS_SRC_BURST_SPEED_MAX,3.9,
-   PSYS_PART_FLAGS,
-      PSYS_PART_EMISSIVE_MASK
-      | PSYS_PART_FOLLOW_VELOCITY_MASK
-      | PSYS_PART_INTERP_COLOR_MASK
-      | PSYS_PART_INTERP_SCALE_MASK
+   PSYS_PART_FLAGS, flags
       ]);
 }
 
