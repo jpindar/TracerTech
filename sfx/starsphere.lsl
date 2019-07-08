@@ -122,9 +122,9 @@ makeParticles(integer link, string color1, string color2)
    systemSafeSet = 0.0;
 }
 
-boom()
+boom(integer n)
 {
-   makeParticles(LINK_THIS,color1,color2);
+   makeParticles(n,color1,color2);
    llSleep(systemAge);
    //allOff();
 }
@@ -133,11 +133,13 @@ boom()
 allOff()
 {
    llParticleSystem([]);
-   llLinkParticleSystem(LINK_THIS,[]);
+   llLinkParticleSystem(LINK_SET,[]);
 }
 
 go(integer on)
 {
+   if (on)
+   {
       #if defined PRIDE
       integer i;
       list params = llCSV2List("pridered,prideorange,prideyellow,pridegreen,prideblue,pridepurple");
@@ -148,7 +150,7 @@ go(integer on)
          color1 = nameToColor( llList2String(params,i));
          //color1= llList2String(params,i);
          color2 = color1;
-         boom();
+         boom(i+1);
       }
       #elif defined USA
       integer i;
@@ -161,8 +163,13 @@ go(integer on)
          boom(i+1);
       }
       #else
-         boom();
+         boom(LINK_THIS);
       #endif
+   }
+   else
+   {
+      allOff();
+   }
 
 }
 
