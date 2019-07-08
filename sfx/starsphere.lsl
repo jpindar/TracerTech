@@ -130,20 +130,31 @@ allOff()
 
 go(integer on)
 {
-   #if defined RAINBOW
-   integer i;
-   list params = llCSV2List("red,orange,yellow,green,blue,purple");
-   //params = llCSV2List("<1,0,0,>,<1,1,0>,<0,1,0>,<0,0,1>,<0,1,1>,<1,1,1>");
-   for (i=0; i<6; i++)
-   {
-      color1 = nameToColor( llList2String(params,i));
-      //color1= llList2String(params,i);
-      color2 = color1;
-      boom();
-   }
-   #else
-      boom();
-   #endif
+      #if defined PRIDE
+      integer i;
+      list params = llCSV2List("pridered,prideorange,prideyellow,pridegreen,prideblue,pridepurple");
+      //params = llCSV2List("<1,0,0,>,<1,1,0>,<0,1,0>,<0,0,1>,<0,1,1>,<1,1,1>");
+      for (i=0; i<6; i++)
+      {
+         //color1 = llList2String(params,i);
+         color1 = nameToColor( llList2String(params,i));
+         //color1= llList2String(params,i);
+         color2 = color1;
+         boom();
+      }
+      #elif defined USA
+      integer i;
+      list params = llCSV2List("red,white,blue");
+      for (i=0; i<3; i++)
+      {
+         //color1 = llList2String(params,i);
+         color1 = nameToColor( llList2String(params,i));
+         color2 = color1;
+         boom(i+1);
+      }
+      #else
+         boom();
+      #endif
 
 }
 
