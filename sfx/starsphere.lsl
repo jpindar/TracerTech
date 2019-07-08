@@ -15,9 +15,10 @@
 //string texture = "";
 //string texture = TEXTURE_BLANK;
 string texture = TEXTURE_SPIKESTAR;
+//string texture = TEXTURE_PATRIOTIC_STAR;
 //string texture = TEXTURE_CLASSIC;
 
-float delay = 1;
+
 
 string color = (string)COLOR_WHITE;
 string color1 = (string)COLOR_WHITE;
@@ -59,6 +60,14 @@ float burstRadius = 5;
 #else
    float angleEnd = PI;
 #endif 
+
+#ifdef SYSTEMAGE
+float systemAge = SYSTEMAGE; // 0.2 to 0.3
+float delay = SYSTEMAGE;
+#else
+float systemAge = 0; // 0.2 to 0.3
+float delay = 1;
+#endif
 //vector startScale = <12.5,12.5,0.0>;//or1.9
 //vector endScale = <3.5,3.5,0.0>;  // 0.5 to 1.5
 vector startScale = <0.5,0.5,0.0>;//or1.9
@@ -66,7 +75,6 @@ vector endScale = <0.5,0.5,0.0>;  // 0.5 to 1.5
 
 float particleAge = 2.0;
 
-float systemAge = 0; // 0.2 to 0.3
 float speed = 0.1;
 integer partCount = 200;
 
