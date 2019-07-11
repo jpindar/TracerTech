@@ -148,6 +148,10 @@ vector  endScale = <1.0,1.0,0.0>;
 
 #ifdef PARTOMEGA
    vector partOmega = PARTOMEGA;
+#elif defined PARTOMEGA_REL
+   vector partOmega = PARTOMEGA_REL;
+#elif defined PARTOMEGA_ABS
+   vector partOmega = PARTOMEGA_ABS;
 #else
    vector partOmega = <0.0,0.0,0.0>;
 #endif
@@ -227,6 +231,13 @@ fire()
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_ABSOLUTE);
    #elif defined LAUNCH_ROT_RELATIVE
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE) *rot;
+   #elif defined LAUNCH_ROT_RELATIVE2
+      vector flat_rot = llRot2Euler(rot);
+      flat_rot.x = 0.0;
+      flat_rot.y = 0.0;
+      //flat_rot.z = 0;
+      rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE2) *llEuler2Rot(flat_rot);
+
    #else // angle is in radians, either as initialized or read from notecard
       rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
@@ -268,13 +279,30 @@ fire()
       launchMsg += "," + (string)partCount; 
       vector partOmega2 = partOmega;
 
+      #if defined PARTOMEGA_REL
+         //this is probably not right, should probably be only 2 dimensional  
+         partOmega2 = partOmega2 * rot;
+         //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
+      #elif defined PARTOMEGA_REL2
+         //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
+         partOmega2 = partOmega2 * rot;
+         partOmega2.z = 0.0;
+      #endif
+
       #if defined MIRRORPAIR
          if (i == 1)
             partOmega2 = -1 * partOmega2;
       #endif 
 
       launchMsg += "," + (string)partOmega2;
+      #if defined BURSTOUT
+      if (i==0) 
+           launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+      else 
+           launchMsg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
+      #else
       launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+      #endif
       launchMsg += "," + (string)beginAngle+","+(string)endAngle;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);

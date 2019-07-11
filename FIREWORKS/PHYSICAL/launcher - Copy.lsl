@@ -339,7 +339,7 @@ default
       #if defined DESCRIPTION
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
-      debugList(3, notecardList);
+
       numOfBalls = getInteger(notecardList,"balls");
       if (numOfBalls < 1)  //if not specified by notecard
          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
