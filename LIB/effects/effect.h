@@ -112,8 +112,7 @@ v1.0
    #endif
 
    vector partOmega = <0.0,0.0,0.0>;
-   float burstCount;
-   vector partAccel;
+   integer burstCount;
    string texture;
    //integer flags;
 

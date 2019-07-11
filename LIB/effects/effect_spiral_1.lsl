@@ -24,7 +24,7 @@ makeParticles(integer link, string color1, string color2)
       flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
    if (wind > 0)
       flags = flags | PSYS_PART_WIND_MASK;
-      
+
    list particles = [
    PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE,
    PSYS_SRC_BURST_RADIUS,     burstRadius,
@@ -46,8 +46,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_MAX_AGE,         partAge,
    PSYS_SRC_BURST_RATE,       burstRate,
    PSYS_SRC_BURST_PART_COUNT, partCount,
-   PSYS_SRC_ACCEL,            <0.0,0.0,0.0>,
-   PSYS_SRC_OMEGA,             partOmega,
+   PSYS_SRC_ACCEL,            partAccel,
+   PSYS_SRC_OMEGA,            partOmega,
    PSYS_SRC_BURST_SPEED_MIN,  minPartSpeed,
    PSYS_SRC_BURST_SPEED_MAX,  maxPartSpeed,
    PSYS_PART_FLAGS,flags

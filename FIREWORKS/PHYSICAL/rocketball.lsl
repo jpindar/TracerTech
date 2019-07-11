@@ -4,10 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.5"
-
-//#define DEBUG
-
+#define Version "3.6"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -39,13 +36,12 @@ string color3;
 list params;
 integer handle;
 integer armed = FALSE;
+vector partAccel;
 
 #if defined RINGBALL
-   //#define PRIM_ROTATION
    #include "LIB\effects\effect_ringball1.lsl"
    #define DESCRIPTION " ringball "
 #elif defined SPIRALBALL
-   //#define PRIM_ROTATION
    #include "LIB\effects\effect_spiral_1.lsl"
    #define DESCRIPTION " spiralball "
 #else
@@ -121,24 +117,11 @@ default
 {
    state_entry()
    {
-   #if defined RINGBALL
-      //rate = 0.1; //0.1 to 5
-      //full or half ring?
-      //beginAngle = PI_BY_TWO;
-      //beginAngle = PI;
-   #endif
-
       #if defined DESCRIPTION
          llSetObjectDesc(Version + " " + DESCRIPTION);
       #endif
       #if !defined HOTLAUNCH
          AllOff(FALSE);
-      #endif
-      #if defined RINGBALL
-         //llTargetOmega(<0,0,0.05>,4*PI,1.0);
-         //llTargetOmega(<0,0,0>,PI,1.0);
-         //partSpeed1 = 0.7;
-         //partSpeed2 = 0.7;
       #endif
       #if defined TRICOLOR
          tricolor = TRUE;
@@ -150,8 +133,6 @@ default
    {
       systemAge = 1;
       partAge = 4;
-      //color1 = "<1.0,1.0,1.0>";
-      //color2 = "<1.0,1.0,1.0>";
       startGlow = 0.0;
       endGlow = 0.0;
       boom();
@@ -184,9 +165,7 @@ default
       flightTime = (float)(p & 0x7F);
       llSetBuoyancy(0.5);
       integer chan = (-42000) -((p & 0x3FC000) >>14);
-      //debugSay(2,"p2 ="+ (string)p2);
-      //debugSay(2,"chan = "+(string)chan);
-      //debugSay(2,"flightTime ="+ (string)flightTime);
+      debugList(2,["p =",p,"=",hex(p),"chan = ",chan,"flightTime =",flightTime]);
       handle=llListen(chan,"","","");
       if  (p & LOW_VELOCITY_MASK)
          explodeOnLowVelocity = TRUE;
@@ -252,6 +231,7 @@ default
       minPartSpeed = llList2Float(params,19);
       beginAngle = llList2Float(params,20);
       endAngle = llList2Float(params,21);
+      partAccel = llList2Vector(params,22);
       lightColor = color1;
       //e = llList2Integer(emitters,i);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);

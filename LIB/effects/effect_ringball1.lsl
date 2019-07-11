@@ -21,7 +21,7 @@
  burstCount
  partAccel 
  texture
- */
+*/
 
 
 makeParticles(integer link, string color1, string color2)
@@ -37,7 +37,7 @@ makeParticles(integer link, string color1, string color2)
    llOwnerSay("endSize "+(string)(endScale));        //defined in effect.h
    llOwnerSay("maxPartSpeed "+(string)maxPartSpeed); //defined in effect.h
    llOwnerSay("minPartSpeed "+(string)minPartSpeed); //defined in effect.h
-   llOwnerSay("partCount "+(string) partCount);     //defined in effect.h
+   llOwnerSay("partCount "+(string) partCount);      //defined in effect.h
    llOwnerSay("burstRat "+(string)burstRate);        //defined in effect.h
    #endif
 
@@ -47,10 +47,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_EMISSIVE_MASK |
    PSYS_PART_INTERP_COLOR_MASK |
    PSYS_PART_INTERP_SCALE_MASK;
-
    if (followVelocity)
       flags = flags | PSYS_PART_FOLLOW_VELOCITY_MASK;
-
    if (wind > 0)
       flags = flags | PSYS_PART_WIND_MASK;
 
@@ -73,10 +71,10 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_MAX_AGE,         partAge,
    PSYS_SRC_BURST_RATE,       burstRate,
    PSYS_SRC_BURST_PART_COUNT, partCount,
-   PSYS_SRC_ACCEL,            <0.0,0.0,0.0>,
-   PSYS_SRC_OMEGA,             partOmega,
-   PSYS_SRC_BURST_SPEED_MIN,   minPartSpeed,
-   PSYS_SRC_BURST_SPEED_MAX,   maxPartSpeed,
+   PSYS_SRC_ACCEL,            partAccel,
+   PSYS_SRC_OMEGA,            partOmega,
+   PSYS_SRC_BURST_SPEED_MIN,  minPartSpeed,
+   PSYS_SRC_BURST_SPEED_MAX,  maxPartSpeed,
    PSYS_PART_FLAGS,flags
    ];
    llLinkParticleSystem(link,particles);

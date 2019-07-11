@@ -168,6 +168,11 @@ vector  endScale = <1.0,1.0,0.0>;
    float minPartSpeed = 1.0;
 #endif
 
+#if defined PARTACCEL
+   vector partAccel = PARTACCEL;
+#else
+   vector partAccel = <0,0,0>;
+#endif
 
 #define NOTECARD_IN_THIS_PRIM
 
@@ -304,6 +309,7 @@ fire()
       launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
       #endif
       launchMsg += "," + (string)beginAngle+","+(string)endAngle;
+      launchMsg += "," + (string)partAccel;
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
