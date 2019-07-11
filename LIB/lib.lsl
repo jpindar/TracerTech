@@ -25,6 +25,15 @@ debugSay(integer debugLevel, string msg)
    #endif
 }
 
+debugList(integer debugLevel, list values)
+{
+   #ifdef DEBUG
+      llOwnerSay (llList2CSV (values));
+   #else
+   if (debug >= debugLevel)
+      llOwnerSay (llList2CSV (values));
+   #endif
+}
 
 integer assert(integer b, string s)
 {
