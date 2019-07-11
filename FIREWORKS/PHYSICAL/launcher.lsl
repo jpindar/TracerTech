@@ -315,7 +315,6 @@ default
       numOfBalls = getInteger(notecardList,"balls");
       if (numOfBalls < 1)  //if not specified by notecard
          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
-
       volume = getVolume(notecardList);
       explodeOnCollision = getexplodeOnCollision(notecardList);
       explodeOnLowVelocity = getInteger(notecardList, "peak");
