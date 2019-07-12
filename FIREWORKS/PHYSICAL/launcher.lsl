@@ -331,9 +331,9 @@ default
    state_entry()
    {
       #if defined TEXTURE1
-         string texture = TEXTURE1;
+         texture = TEXTURE1;
       #else
-         string texture = getTextureFromInventory(0);
+         texture = getTextureFromInventory(0);
       #endif
 
       #ifdef NOTECARD_IN_THIS_PRIM
