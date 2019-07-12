@@ -50,13 +50,18 @@ integer explodeOnLowVelocity = 0;
 integer access;
 string launchMsg;
 list colors;
-integer numOfBalls;
 float speed = 1.0;
 integer flightTime;
 integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
 integer code = 0;
+
+#if defined BALLCOUNT
+integer numOfBalls = BALLCOUNT;
+#else
+integer numOfBalls = 0;
+#endif
 
 #if defined LAUNCHDELAY
 float launchDelay = LAUNCHDELAY;
@@ -247,14 +252,6 @@ fire()
       rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
 
-   #if defined MIRRORPAIR
-       numOfBalls = 2;
-   #endif 
-
-   #if defined PAIR
-       numOfBalls = 2;
-   #endif
-
    for (i = 0; i<numOfBalls; i++)
    {
       setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
@@ -293,9 +290,8 @@ fire()
          partOmega2 = partOmega2 * rot;
          partOmega2.z = 0.0;
       #endif
-
-      #if defined MIRRORPAIR
-         if (i == 1)
+      #if defined MIRROR
+         if ((i%2) == 1)
             partOmega2 = -1 * partOmega2;
       #endif 
 
@@ -346,7 +342,6 @@ default
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
-      numOfBalls = getInteger(notecardList,"balls");
       if (numOfBalls < 1)  //if not specified by notecard
          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       volume = getVolume(notecardList);
