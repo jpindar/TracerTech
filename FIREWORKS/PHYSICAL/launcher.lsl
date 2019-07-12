@@ -23,10 +23,7 @@
 #include "LIB\readNotecardToList.h"
 
 
-string texture = TEXTURE1;
-
-
-
+string texture;
 string color1;
 string color2;
 integer payloadIndex = 0;
@@ -333,6 +330,12 @@ default
 
    state_entry()
    {
+      #if defined TEXTURE1
+         string texture = TEXTURE1;
+      #else
+         string texture = getTextureFromInventory(0);
+      #endif
+
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
