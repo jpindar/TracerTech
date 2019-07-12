@@ -28,7 +28,6 @@ integer freezeOnBoom = FALSE;          //overridden by notecard via rez param
 float flightTime = 99;                 //overridden by notecard via rez param
 float minimumVelocity = 0.1;        //constant
 float minimumCollisionSpeed = 10;   //constant
-integer tricolor = FALSE;     //overridden by #define?
 integer rezParam;
 string color1;
 string color2;
@@ -70,22 +69,10 @@ boom()
       setRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
    #endif
 
-   if (tricolor)
-   {
-      makeParticles(LINK_THIS,color1,color1);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color2,color2);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color3,color3);
-   }else{
-      makeParticles(LINK_THIS,color1,color2);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-   }
+   makeParticles(LINK_THIS,color1,color2);
+   //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
+   llPlaySound(sound1,boomVolume);
+   repeatSound(sound1,boomVolume);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (systemAge>0)
@@ -123,9 +110,6 @@ default
       #if !defined HOTLAUNCH
          AllOff(FALSE);
       #endif
-      #if defined TRICOLOR
-         tricolor = TRUE;
-      #endif
    }
 
    //having touch_start makes some effects easier to debug
@@ -141,6 +125,7 @@ default
    on_rez(integer p)
    {
       llResetTime();
+      llSetBuoyancy(0.5);
       debug = (p & DEBUG_MASK);
       debugSay(2,"initial velocity "+(string)llGetVel());
       if (p > 0)
@@ -161,11 +146,9 @@ default
       }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       rezParam = p; //save this
-      //debugSay(2,"rezzed("+hex(p)+")");
       flightTime = (float)(p & 0x7F);
-      llSetBuoyancy(0.5);
       integer chan = (-42000) -((p & 0x3FC000) >>14);
-      debugList(2,["p =",p,"=",hex(p),"chan = ",chan,"flightTime =",flightTime]);
+      debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan,"flightTime =",flightTime]);
       handle=llListen(chan,"","","");
       if  (p & LOW_VELOCITY_MASK)
          explodeOnLowVelocity = TRUE;
@@ -206,10 +189,13 @@ default
       // we want to set the prim color ASAP
       params = llCSV2List(msg);
       color1 = llList2String(params,1);
+      lightColor = color1;
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+
       llListenRemove(handle);
+      debugList(2,["got msg at ",llGetTime()," velocity: ",llGetVel()]);
       debugSay(2,"msg = "+msg);
-      debugSay(2,"got msg at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       texture = llList2String(params,0);
       color2 = llList2String(params,2);
       color3 = llList2String(params,3);
@@ -232,9 +218,6 @@ default
       beginAngle = llList2Float(params,20);
       endAngle = llList2Float(params,21);
       partAccel = llList2Vector(params,22);
-      lightColor = color1;
-      //e = llList2Integer(emitters,i);
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       armed = TRUE;
    }
 
