@@ -4,9 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.7"
-
-//#define MULTIBURST
+#define Version "3.8"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -40,6 +38,7 @@ list params;
 integer handle;
 integer armed = FALSE;
 vector partAccel;
+integer mode;
 
 #if defined RINGBALL
    #include "LIB\effects\effect_ringball1.lsl"
@@ -72,7 +71,8 @@ boom()
       setRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
    #endif
 
-   #if defined MULTIBURST
+   if (mode == MODE_MULTIBURST)
+   {
       integer i;
       float interEmitterDelay = systemAge;
       float flashTime = 0.2;
@@ -104,7 +104,9 @@ boom()
       systemAge = 0.01;
       makeParticles(LINK_THIS,startColor,endColor);
       systemAge = temp;
-   #else
+    }
+    else
+    {
       startColor = llList2String(colors,0);
       endColor = llList2String(colors,1);
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
@@ -114,7 +116,7 @@ boom()
       //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
       llPlaySound(sound1,boomVolume);
       repeatSound(sound1,boomVolume);
-   #endif
+    }
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (systemAge>0)
@@ -188,10 +190,13 @@ default
       }
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
       rezParam = p; //save this
-      flightTime = (float)(p & 0x7F);
-      integer chan = (-42000) -((p & 0x3FC000) >>14);
-      debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan,"flightTime =",flightTime]);
+      integer chan = (-42000) -((p & CHANNEL_MASK) >>CHANNEL_OFFSET);
+      debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan]);
       handle=llListen(chan,"","","");
+      // why is flighttime a float?   
+      // because I going to divide recieved flighttime by 10?
+      flightTime = (float)(p & FLIGHTTIME_MASK);
+      mode = (p & MULTIMODE_MASK) >>MULTIMODE_OFFSET;
       if  (p & LOW_VELOCITY_MASK)
          explodeOnLowVelocity = TRUE;
       if (p & COLLISION_MASK)
@@ -258,7 +263,8 @@ default
       endAngle = llList2Float(params,21);
       partAccel = llList2Vector(params,22);
 
-      #if defined MULTIBURST
+      if (mode == MODE_MULTIBURST)
+      {
       if (color1 == "!pride")
       {
          colors = [COLOR_PRIDE_RED,COLOR_PRIDE_RED,COLOR_PRIDE_ORANGE,COLOR_PRIDE_ORANGE,COLOR_PRIDE_YELLOW,COLOR_PRIDE_YELLOW,COLOR_PRIDE_GREEN,COLOR_PRIDE_GREEN,COLOR_PRIDE_BLUE,COLOR_PRIDE_BLUE,COLOR_PRIDE_PURPLE,COLOR_PRIDE_PURPLE];
@@ -271,14 +277,22 @@ default
          color1 = COLOR_PRIDE_RED;
          numOfIterations = 3;
       }
+      else if ((color1 == "!hot"))
+      {
+         colors = [COLOR_WHITE,COLOR_GOLD,COLOR_GOLD,COLOR_ORANGE,COLOR_ORANGE,COLOR_RED];
+         color1 = COLOR_WHITE;
+         numOfIterations = 3;
+      }
       else
       {
          colors = [color1, color1, color2, color2, color3,color3];
          numOfIterations = 3;
       }
-      #else
+      }
+      else
+      {
          colors = [color1,color2,color3];
-      #endif
+      }
       lightColor = color1;
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       armed = TRUE;

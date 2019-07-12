@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.6.1"
+#define VERSION "3.8"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -53,6 +53,13 @@ integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
 integer code = 0;
+
+
+#if defined MODE
+  integer mode = MODE;
+#else
+  integer mode = 0;
+#endif
 
 #if defined BALLCOUNT
 integer numOfBalls = BALLCOUNT;
@@ -303,12 +310,15 @@ fire()
       #endif
       launchMsg += "," + (string)beginAngle+","+(string)endAngle;
       launchMsg += "," + (string)partAccel;
+
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
       llPlaySound(LAUNCHSOUND,volume);
       repeatSound(LAUNCHSOUND,volume);
+
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
+
       setGlow(muzzleLink,0.0);
       setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
       llSleep(0.2);
@@ -380,22 +390,23 @@ default
       //  flighttime                            -1111111  =      0x007F
       
       packedParam = flightTime;  //up to 0x007F
-      #ifndef NO_FOLLOW_VELOCITY
-         packedParam = packedParam | FOLLOW_VELOCITY_MASK; //0x2000 0000
+      packedParam = packedParam | (mode << MULTIMODE_OFFSET);
+      #if defined LAUNCHALPHA
+         packedParam = packedParam | LAUNCH_ALPHA_MASK;
       #endif
-      if (explodeOnLowVelocity >0)
-         packedParam = packedParam | LOW_VELOCITY_MASK; //0x1000 0000
+      #if defined DEBUG
+         packedParam = packedParam | DEBUG_MASK;
+      #endif
       if (explodeOnCollision >0)
          packedParam = packedParam | COLLISION_MASK;
       if (freezeOnBoom >0)
          packedParam = packedParam | FREEZE_MASK;
       if (wind >0)
          packedParam = packedParam | WIND_MASK;
-      #if defined DEBUG
-         packedParam = packedParam | DEBUG_MASK;         // 0x0100 0000
-      #endif
-      #if defined LAUNCHALPHA
-         packedParam = packedParam | LAUNCH_ALPHA_MASK;  //0x0080 0000
+      if (explodeOnLowVelocity >0)
+         packedParam = packedParam | LOW_VELOCITY_MASK;
+      #ifndef NO_FOLLOW_VELOCITY
+         packedParam = packedParam | FOLLOW_VELOCITY_MASK;
       #endif
 
       llPreloadSound(LAUNCHSOUND);
