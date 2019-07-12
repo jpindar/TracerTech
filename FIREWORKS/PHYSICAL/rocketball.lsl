@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.6"
+#define Version "3.7"
 
 //#define MULTIBURST
 
@@ -56,13 +56,12 @@ vector partAccel;
 
 boom()
 {
+   string startColor;
+   string endColor;
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //if (!armed)
    //  return;
    debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
-   setColor(LINK_THIS,(vector)primColor,0.0);
-   setGlow(LINK_THIS,primGlow);
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
    if (freezeOnBoom)
    {
       debugSay(2,"freezing");
@@ -74,8 +73,6 @@ boom()
    #endif
 
    #if defined MULTIBURST
-      string startColor;
-      string endColor;
       integer i;
       float interEmitterDelay = systemAge;
       float flashTime = 0.2;
@@ -108,22 +105,15 @@ boom()
       makeParticles(LINK_THIS,startColor,endColor);
       systemAge = temp;
    #else
-   if (tricolor)
-   {
-      makeParticles(LINK_THIS,color1,color1);
+      startColor = llList2String(colors,0);
+      endColor = llList2String(colors,1);
+      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
+      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
+      setGlow(LINK_THIS,primGlow);
+      makeParticles(LINK_THIS,startColor,endColor);
       //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
       llPlaySound(sound1,boomVolume);
       repeatSound(sound1,boomVolume);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color2,color2);
-      llSleep(systemAge);
-      makeParticles(LINK_THIS,color3,color3);
-   }else{
-      makeParticles(LINK_THIS,color1,color2);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-   }
    #endif
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
@@ -242,7 +232,6 @@ default
       params = llCSV2List(msg);
       color1 = llList2String(params,1);
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
-
       llListenRemove(handle);
       debugList(2,["got msg at ",llGetTime()," velocity: ",llGetVel()]);
       debugSay(2,"msg = "+msg);
@@ -287,6 +276,8 @@ default
          colors = [color1, color1, color2, color2, color3,color3];
          numOfIterations = 3;
       }
+      #else
+         colors = [color1,color2,color3];
       #endif
       lightColor = color1;
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
