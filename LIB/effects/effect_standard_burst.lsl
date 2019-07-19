@@ -1,8 +1,16 @@
 /*
+  Multipurpose effect
+  
  standard burst
  The ANGLE_CONE pattern can be used to imitate the EXPLODE pattern
- by explicitly setting PSYS_SRC_ANGLE_BEGIN to 0 and PSYS_SRC_ANGLE_END to PI or vice versa
-
+ set PSYS_SRC_ANGLE_BEGIN to 0 and PSYS_SRC_ANGLE_END to PI or vice versa
+ 
+ ring effect
+ PSYS_SRC_PATTERN_ANGLE with a full (0 - PI) angle
+ 
+ spiral effect
+ PSYS_SRC_PATTERN_ANGLE with a small angle and a particle omega
+ 
  defined in effect.h: 
  beginAngle & endAngle    set to 0 and PI
  startAlpha & endAlpha    STARTALPHA ENDALPHA
@@ -23,9 +31,8 @@
 */
 
 
-makeParticles(integer link, string color1, string color2)
+makeParticles(integer link, integer pattern, string color1, string color2)
 {
-
    #ifdef DEBUG
    llOwnerSay("radius "+(string)burstRadius);        //defined in effect.h
    llOwnerSay("systemAge "+(string)systemAge);       //defined in effect.h
@@ -51,18 +58,25 @@ makeParticles(integer link, string color1, string color2)
    if (wind > 0)
       flags = flags | PSYS_PART_WIND_MASK;
 
-   list particles = [
-   PSYS_SRC_PATTERN,          PSYS_SRC_PATTERN_ANGLE_CONE,
+   list particles;
+   if ((pattern & PARTICLE_MODE_MASK) == MODE_ANGLECONE)
+      particles = [PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE_CONE];
+   else if ((pattern & PARTICLE_MODE_MASK) == MODE_ANGLE)
+      particles = [PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE];
+
+   particles = particles + [
    PSYS_SRC_BURST_RADIUS,     burstRadius,
    PSYS_SRC_ANGLE_BEGIN,      beginAngle,
    PSYS_SRC_ANGLE_END,        endAngle,
-   //PSYS_SRC_TARGET_KEY,     llGetKey(),
+   PSYS_SRC_TARGET_KEY,       llGetKey(),
    PSYS_PART_START_COLOR,     (vector)color1,
    PSYS_PART_END_COLOR,       (vector)color2,
    PSYS_PART_START_ALPHA,     startAlpha,
    PSYS_PART_END_ALPHA,       endAlpha,
    PSYS_PART_START_GLOW,      startGlow,
    PSYS_PART_END_GLOW,        endGlow,
+   //PSYS_PART_BLEND_FUNC_SOURCE,PSYS_PART_BF_SOURCE_ALPHA,
+   //PSYS_PART_BLEND_FUNC_DEST,PSYS_PART_BF_ONE_MINUS_SOURCE_ALPHA,
    PSYS_PART_START_SCALE,     startScale,
    PSYS_PART_END_SCALE,       endScale,
    PSYS_SRC_TEXTURE,          texture,
