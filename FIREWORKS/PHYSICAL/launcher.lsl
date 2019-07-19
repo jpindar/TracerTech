@@ -55,8 +55,8 @@ float angle = 0;
 integer code = 0;
 
 
-#if defined MODE
-  integer mode = MODE;
+#if defined MULTIBURST
+  integer mode = MODE_MULTIBURST;
 #else
   integer mode = 0;
 #endif
@@ -290,6 +290,7 @@ fire()
          partOmega2 = partOmega2 * rot;
          //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
       #elif defined PARTOMEGA_REL2
+         // still not right
          //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
          partOmega2 = partOmega2 * rot;
          partOmega2.z = 0.0;
@@ -345,10 +346,22 @@ default
       #else
          texture = getTextureFromInventory(0);
       #endif
+      debugList(2,["entering state_entry, mode is ", mode, " or ", hex(mode)]);
 
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
+      // code before this point can be executed more than once!
+      #if defined RINGBALL
+         mode = mode | MODE_ANGLE;
+      #elif defined SPIRALBALL
+         mode = mode | MODE_ANGLE;
+      #else
+         mode = mode | MODE_ANGLECONE;
+      #endif
+     debugList(2,["after adding ball type, mode is ", mode, " or ", hex(mode)]);  
+      
+      
       owner=llGetOwner();
       chatChan = getChatChan(notecardList);
       #if defined DESCRIPTION
@@ -363,6 +376,8 @@ default
       access = getAccess(notecardList);
       speed = getFloat(notecardList,"speed");
       flightTime = getInteger(notecardList,"flighttime");
+      if (flightTime > 126)
+          flightTime =  127;
       freezeOnBoom = getInteger(notecardList,"freeze");
       wind = getInteger(notecardList,"wind");
       angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
@@ -388,9 +403,10 @@ default
       //  rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
       //  unused                       --111111 1-------  =      0x3F80
       //  flighttime                            -1111111  =      0x007F
-      
+      debugList(2,["mode is ", mode, " or ", hex(mode)]);
       packedParam = flightTime;  //up to 0x007F
       packedParam = packedParam | (mode << MULTIMODE_OFFSET);
+      debugList(2,["packedParam is ", packedParam, " or ", hex(packedParam)]);
       #if defined LAUNCHALPHA
          packedParam = packedParam | LAUNCH_ALPHA_MASK;
       #endif
