@@ -63,6 +63,8 @@ makeParticles(integer link, integer pattern, string color1, string color2)
       particles = [PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE_CONE];
    else if ((pattern & PARTICLE_MODE_MASK) == MODE_ANGLE)
       particles = [PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE];
+   else
+      particles = [PSYS_SRC_PATTERN,PSYS_SRC_PATTERN_ANGLE_CONE];  // default to ball 
 
    particles = particles + [
    PSYS_SRC_BURST_RADIUS,     burstRadius,
