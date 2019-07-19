@@ -40,18 +40,9 @@ integer armed = FALSE;
 vector partAccel;
 integer mode;
 
-#if defined RINGBALL
-   #include "LIB\effects\effect_ringball1.lsl"
-   #define DESCRIPTION " ringball "
-#elif defined SPIRALBALL
-   #include "LIB\effects\effect_spiral_1.lsl"
-   #define DESCRIPTION " spiralball "
-#else
-   //#include "LIB\effects\effect_standard_rocketball.lsl"
-   #include "LIB\effects\effect_standard_burst.lsl"
-   #define DESCRIPTION " roundball "
-#endif
 
+#include "LIB\effects\effect_standard_burst.lsl"
+#define DESCRIPTION " "
 
 boom()
 {
@@ -71,7 +62,7 @@ boom()
       setRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
    #endif
 
-   if (mode == MODE_MULTIBURST)
+   if ((mode & MODE_MULTIBURST) == MODE_MULTIBURST)
    {
       integer i;
       float interEmitterDelay = systemAge;
@@ -89,9 +80,9 @@ boom()
          //else
          //   e = llList2Integer(emitters,0);
          //setGlow(e,primGlow);
-         //makeParticles(e,color1,color2);
+         //makeParticles(e,mode,color1,color2);
          setGlow(LINK_THIS,primGlow);
-         makeParticles(LINK_THIS,startColor,endColor);
+         makeParticles(LINK_THIS,mode,startColor,endColor);
          llSleep(flashTime);
          setGlow(LINK_SET,0.0);
          setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
@@ -102,7 +93,7 @@ boom()
       //if you don't want interEmitterDelay >= systemAge, use this:
       float temp = systemAge;
       systemAge = 0.01;
-      makeParticles(LINK_THIS,startColor,endColor);
+      makeParticles(LINK_THIS,mode,startColor,endColor);
       systemAge = temp;
     }
     else
@@ -112,7 +103,7 @@ boom()
       setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
       setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
       setGlow(LINK_THIS,primGlow);
-      makeParticles(LINK_THIS,startColor,endColor);
+      makeParticles(LINK_THIS,mode,startColor,endColor);
       //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
       llPlaySound(sound1,boomVolume);
       repeatSound(sound1,boomVolume);
@@ -197,6 +188,7 @@ default
       // because I going to divide recieved flighttime by 10?
       flightTime = (float)(p & FLIGHTTIME_MASK);
       mode = (p & MULTIMODE_MASK) >>MULTIMODE_OFFSET;
+      debugList(2,["mode is ",mode, " or ", hex(mode)]);
       if  (p & LOW_VELOCITY_MASK)
          explodeOnLowVelocity = TRUE;
       if (p & COLLISION_MASK)
@@ -263,7 +255,7 @@ default
       endAngle = llList2Float(params,21);
       partAccel = llList2Vector(params,22);
 
-      if (mode == MODE_MULTIBURST)
+      if ((mode & 1) == MODE_MULTIBURST)
       {
       if (color1 == "!pride")
       {
@@ -296,6 +288,7 @@ default
       lightColor = color1;
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       armed = TRUE;
+      debugList(2,colors);
    }
 
    timer()
