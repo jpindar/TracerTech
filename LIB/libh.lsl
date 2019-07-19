@@ -191,7 +191,11 @@
 
 
 #define MODE_MULTIBURST 1
-
+#define MULTIMODE_MASK 0x1
+#define PARTICLE_MODE_MASK 0x6
+#define MODE_ANGLE      2
+#define MODE_ANGLECONE  4
+#define MODE_ANOTHERPARTICLE 6
 
 
 #define MAX_INT           0x80000000
