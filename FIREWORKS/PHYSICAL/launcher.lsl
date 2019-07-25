@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.8"
+#define VERSION "3.8.1"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -33,9 +33,9 @@ integer payloadIndex = 0;
 float zOffset = 0.7; //0.7 to 2.0
 #endif
 float glowOnAmount = 0.0; //or 0.05
-string preloadPrimName = "preloader";
+
 integer preloadFace = 0;
-string muzzlePrimName = "muzzle";
+
 integer muzzleLink;
 key owner;
 integer handle;
@@ -54,12 +54,21 @@ integer packedParam;
 float angle = 0;
 integer code = 0;
 
-
 #if defined MULTIBURST
   integer mode = MODE_MULTIBURST;
 #else
   integer mode = 0;
 #endif
+
+#ifndef PRELOADERPRIM
+   define PRELOADERPRIM "preloader"
+#endif
+string preloadPrimName = PRELOADERPRIM;
+
+#ifndef MUZZLEPRIM
+   #define MUZZLEPRIM "muzzle"
+#endif
+string muzzlePrimName = MUZZLEPRIM;
 
 #if defined BALLCOUNT
 integer numOfBalls = BALLCOUNT;
@@ -250,14 +259,14 @@ vector chooseOmega(vector omega, integer i)
 {
    vector omega2 = omega;
    #if defined PARTOMEGA_REL
-      //this is probably not right, should probably be only 2 dimensional  
-      omega2 = omega2 * rot;
-         //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
+       //this is probably not right, should probably be only 2 dimensional  
+       omega2 = omega2 * rot;
+       //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
    #elif defined PARTOMEGA_REL2
-         // still not right
-         //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
-         omega2 = omega2 * rot;
-         omega2.z = 0.0;
+       // still not right
+       //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
+       omega2 = omega2 * rot;
+       omega2.z = 0.0;
    #endif
    #if defined MIRROR
          if ((i%2) == 1)
@@ -371,6 +380,8 @@ default
       owner=llGetOwner();
       chatChan = getChatChan(notecardList);
       #if defined DESCRIPTION
+         // Note that this sets the prim's description, not the object's.
+         //so it is OK to leave in launcher that is being linked to another object
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
@@ -438,7 +449,7 @@ default
          llSetLinkTexture(preloadLink,texture,preloadFace);
 
       muzzleLink = getLinkWithName(muzzlePrimName);
-      //debugSay(3,"muzzle is link number " + (string)muzzleLink);
+      debugSay(2,"muzzle is link number " + (string)muzzleLink);
       assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
       //llSetLinkTexture(muzzleLink, texture,muzzleFace);
 
