@@ -221,20 +221,8 @@ msgHandler(string sender, string msg)
    }
 }
 
-
-fire()
+rotation chooseRotation(rotation rot)
 {
-   vector muzzleColor = (vector)COLOR_GOLD;
-   float muzzleGlow = 1.0;
-   integer muzzleFace = ALL_SIDES;
-   string rocket;
-   integer i;
-
-   rotation rot = llGetRot();
-   //rez a distance along the the barrel axis
-   vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
-   vector vel = <0,0,speed>*rot; //along the axis of the launcher
-
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
    #elif defined LAUNCH_ROT_ZERO
@@ -255,12 +243,41 @@ fire()
    #else // angle is in radians, either as initialized or read from notecard
       rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
+   return rot2;
+}
+
+vector chooseOmega(vector omega, integer i)
+{
+   vector omega2 = omega;
+   #if defined PARTOMEGA_REL
+      //this is probably not right, should probably be only 2 dimensional  
+      omega2 = omega2 * rot;
+         //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
+   #elif defined PARTOMEGA_REL2
+         // still not right
+         //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
+         omega2 = omega2 * rot;
+         omega2.z = 0.0;
+   #endif
+   #if defined MIRROR
+         if ((i%2) == 1)
+            omega2 = -1 * omega2;
+   #endif 
+   return omega2; 
+}
+
+fire()
+{
+   vector muzzleColor = (vector)COLOR_GOLD;
+   float muzzleGlow = 1.0;
+   integer muzzleFace = ALL_SIDES;
+   string rocket;
+   integer i;
 
    for (i = 0; i<numOfBalls; i++)
    {
       setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
       setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
-
       launchMsg=texture;
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
@@ -283,31 +300,15 @@ fire()
       launchMsg += "," + (string)burstRate; 
       launchMsg += "," + (string)startScale + "," + (string)endScale;
       launchMsg += "," + (string)partCount; 
-      vector partOmega2 = partOmega;
+      launchMsg += "," + (string)chooseOmega(partOmega, i);
 
-      #if defined PARTOMEGA_REL
-         //this is probably not right, should probably be only 2 dimensional  
-         partOmega2 = partOmega2 * rot;
-         //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
-      #elif defined PARTOMEGA_REL2
-         // still not right
-         //partOmega2 = partOmega2 * (<rot.x,rot.y,rot.z>);
-         partOmega2 = partOmega2 * rot;
-         partOmega2.z = 0.0;
-      #endif
-      #if defined MIRROR
-         if ((i%2) == 1)
-            partOmega2 = -1 * partOmega2;
-      #endif 
-
-      launchMsg += "," + (string)partOmega2;
       #if defined BURSTOUT
       if (i==0) 
-           launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+         launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
       else 
-           launchMsg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
+         launchMsg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
       #else
-      launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+         launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
       #endif
       launchMsg += "," + (string)beginAngle+","+(string)endAngle;
       launchMsg += "," + (string)partAccel;
@@ -318,6 +319,11 @@ fire()
       llPlaySound(LAUNCHSOUND,volume);
       repeatSound(LAUNCHSOUND,volume);
 
+      rotation rot = llGetRot();
+      //rez a distance along the the barrel axis
+      vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
+      vector vel = <0,0,speed>*rot; //along the axis of the launcher
+      rotation rot2 =  chooseRotation(rot);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
 
       setGlow(muzzleLink,0.0);
