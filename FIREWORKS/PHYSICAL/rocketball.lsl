@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.8"
+#define Version "3.8.2"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -39,7 +39,10 @@ integer handle;
 integer armed = FALSE;
 vector partAccel;
 integer mode;
-
+vector boomRotation = <0.0,0.0,0.0>;
+integer pointForward = FALSE;
+integer primRotation = FALSE;
+integer trailball = FALSE;
 
 #include "LIB\effects\effect_standard_burst.lsl"
 #define DESCRIPTION " "
@@ -58,9 +61,7 @@ boom()
       llSetStatus(STATUS_PHYSICS,FALSE);
       llSetStatus(STATUS_PHANTOM,TRUE);
    }
-   #if defined ROT_90
-      setRot(llEuler2Rot(<0,PI_BY_TWO,0>) * llGetRot());
-   #endif
+   setRot(llEuler2Rot(boomRotation) * llGetRot());
 
    if ((mode & MODE_MULTIBURST) == MODE_MULTIBURST)
    {
@@ -145,6 +146,12 @@ default
       #if !defined HOTLAUNCH
          AllOff(FALSE);
       #endif
+      #if defined POINTFORWARD
+         pointForward = TRUE;
+      #endif
+      #if defined PRIMROTATION
+         primRotation = TRUE;
+      #endif   
    }
 
    //having touch_start makes some effects easier to debug
@@ -172,6 +179,7 @@ default
          setColor(LINK_SET,launchColor,launchAlpha);
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+         setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
          //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
          //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       }
@@ -205,16 +213,21 @@ default
       //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       //llSetVelocity(v,FALSE);  //because setting the prim size sets velocity to zero
 
-      #if defined POINTFORWARD
+      // Are these mutually exclusive?
+      if (pointForward)
+      {
          vector v = llGetVel();
          llLookAt(v+llGetPos(), 0.5, 0.1);
-      #elif defined PRIM_ROTATION
+      }
+      if (primRotation)
+      {
          rotation r = llGetRot();
          //r.z = -r.z;
          //r.x = -r.x;
          //r.y = -r.y;
          setRot(r);
-      #endif
+      }   
+      
 
       if (rezParam>0)
       {  //use timer instead of sleeping to allow other events
@@ -296,12 +309,13 @@ default
       float tim = llGetTime();
       vector v = llGetVel();
       debugSay(2,"llGetTime "+(string)tim+", velocity: "+(string)v);
-      #if defined POINTFORWARD
+      if (pointForward)
+      {
       llLookAt(v+llGetPos(), 0.5, 0.1);
       //or
       //llLookAt(v+llGetPos(), 1.0, 0.5);
-      #endif
-
+      }
+      
       if (tim>flightTime)
       {
          debugSay(2,"timed out");
@@ -323,8 +337,6 @@ default
       }
    }
 
-   #define EXPLODE_ON_COLLISION
-   #ifdef EXPLODE_ON_COLLISION
    collision_start(integer n)
    {
       integer f = 0;
@@ -346,13 +358,14 @@ default
          {
             if (rezParam!=0)
             {
-               #if defined TRAILBALL
+               if (trailball)
+               {
                   AllOff(TRUE);
                   llSetStatus(STATUS_PHYSICS, FALSE);
                   llDie();
-               #else
+               } else {
                   boom();
-               #endif
+               }
             }
          }
       } while (++f < n);
@@ -365,15 +378,15 @@ default
       debugSay(2,"collision with land");
       if (rezParam !=0)
       {
-         #if defined TRAILBALL
+         if (trailball)
+         {
             AllOff(TRUE);
             llSetStatus(STATUS_PHYSICS, FALSE);
             llDie();
-         #else
-         boom();
-         #endif
+         } else {
+            boom();
+         }
       }
    }
-   #endif
 }
 
