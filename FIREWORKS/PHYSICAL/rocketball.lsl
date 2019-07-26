@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.8.2"
+#define Version "3.8.3"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -47,10 +47,47 @@ integer trailball = FALSE;
 #include "LIB\effects\effect_standard_burst.lsl"
 #define DESCRIPTION " "
 
+
+subBoom1(integer i)
+{
+   float flashTime = 0.2;
+   float interEmitterDelay = systemAge;
+   llPlaySound(sound1, volume);
+   repeatSound(sound1,volume);
+   string startColor = llList2String(colors,i*2);
+   string endColor = llList2String(colors,(i*2)+1);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
+   //if (i < numOfEmitters)
+   //   e = llList2Integer(emitters,i);
+   //else
+   //   e = llList2Integer(emitters,0);
+   //setGlow(e,primGlow);
+   //makeParticles(e,mode,color1,color2);
+   setGlow(LINK_THIS,primGlow);
+   makeParticles(LINK_THIS,mode,startColor,endColor);
+   llSleep(flashTime);
+   setGlow(LINK_SET,0.0);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
+   if (interEmitterDelay>0) llSleep(interEmitterDelay);
+}
+
+subBoom0()
+{
+   string startColor = llList2String(colors,0);
+   string endColor = llList2String(colors,1);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
+   setGlow(LINK_THIS,primGlow);
+   makeParticles(LINK_THIS,mode,startColor,endColor);
+   //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
+   llPlaySound(sound1,boomVolume);
+   repeatSound(sound1,boomVolume);
+}
+
+
 boom()
 {
-   string startColor;
-   string endColor;
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //if (!armed)
    //  return;
@@ -70,45 +107,20 @@ boom()
       float flashTime = 0.2;
       for(i=0;i<numOfIterations;i++)
       {
-         llPlaySound(sound1, volume);
-         repeatSound(sound1,volume);
-         startColor = llList2String(colors,i*2);
-         endColor = llList2String(colors,(i*2)+1);
-         setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
-         setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
-         //if (i < numOfEmitters)
-         //   e = llList2Integer(emitters,i);
-         //else
-         //   e = llList2Integer(emitters,0);
-         //setGlow(e,primGlow);
-         //makeParticles(e,mode,color1,color2);
-         setGlow(LINK_THIS,primGlow);
-         makeParticles(LINK_THIS,mode,startColor,endColor);
-         llSleep(flashTime);
-         setGlow(LINK_SET,0.0);
-         setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
-         if (interEmitterDelay>0) llSleep(interEmitterDelay);
+         subBoom1(i); 
       }
       llParticleSystem([]);
       //just doing llParticleSystem([]) didn't work if interEmitterDelay < systemAge
       //if you don't want interEmitterDelay >= systemAge, use this:
       float temp = systemAge;
       systemAge = 0.01;
-      makeParticles(LINK_THIS,mode,startColor,endColor);
+      makeParticles(LINK_THIS,mode,"<0.0,0.0,0.0>","<0.0,0.0,0.0>");
       systemAge = temp;
-    }
-    else
-    {
-      startColor = llList2String(colors,0);
-      endColor = llList2String(colors,1);
-      setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
-      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
-      setGlow(LINK_THIS,primGlow);
-      makeParticles(LINK_THIS,mode,startColor,endColor);
-      //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
-    }
+   }
+   else
+   {
+      subBoom0();
+   }
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (systemAge>0)
