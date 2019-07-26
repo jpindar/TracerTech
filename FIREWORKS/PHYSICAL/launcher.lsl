@@ -360,6 +360,48 @@ fire()
    }
 }
 
+
+integer generateLaunchParam()
+{
+   // max int 0x80000000  (32 bits)
+   //integer(<127) + integer (<=100, typically 50)
+   //  follow vel   1----- -------- -------- --------  = 0x2000 0000
+   //  low vel       1---- -------- -------- --------  = 0x1000 0000
+   //  wind           1--- -------- -------- --------  = 0x0800 0000
+   //  freeze          1-- -------- -------- --------  = 0x0400 0000
+   //  collision        1- -------- -------- --------  = 0x0200 0000
+   //  debug             1 -------- -------- --------  = 0x0100 0000
+   //  launchalpha       - 1------- -------- --------  = 0x0080 0000
+   //  unused              -1------ -------- --------  = 0x0040 0000
+   //  rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
+   //  unused                       --111111 1-------  =      0x3F80
+   //  flighttime                            -1111111  =      0x007F
+   debugList(2,["mode is ", mode, " or ", hex(mode)]);
+   packedParam = flightTime;  //up to 0x007F
+   packedParam = packedParam | (mode << MULTIMODE_OFFSET);
+   debugList(2,["packedParam is ", packedParam, " or ", hex(packedParam)]);
+   #if defined LAUNCHALPHA
+      packedParam = packedParam | LAUNCH_ALPHA_MASK;
+   #endif
+   #if defined DEBUG
+      packedParam = packedParam | DEBUG_MASK;
+   #endif
+   if (explodeOnCollision >0)
+      packedParam = packedParam | COLLISION_MASK;
+   if (freezeOnBoom >0)
+      packedParam = packedParam | FREEZE_MASK;
+   if (wind >0)
+      packedParam = packedParam | WIND_MASK;
+   if (explodeOnLowVelocity >0)
+      packedParam = packedParam | LOW_VELOCITY_MASK;
+   #ifndef NO_FOLLOW_VELOCITY
+      packedParam = packedParam | FOLLOW_VELOCITY_MASK;
+   #endif
+   return packedParam;
+}
+
+
+
 //{ default()    this allows folding in NP++ 
 default
 {
@@ -386,9 +428,8 @@ default
       #else
          mode = mode | MODE_ANGLECONE;
       #endif
-     debugList(2,["after adding ball type, mode is ", mode, " or ", hex(mode)]);  
-      
-      
+      debugList(2,["after adding ball type, mode is ", mode, " or ", hex(mode)]);  
+
       owner=llGetOwner();
       chatChan = getChatChan(notecardList);
       #if defined DESCRIPTION
@@ -419,40 +460,7 @@ default
       colors = colors + parseColor(notecardList,"color6");
       debugSay(2,"notecard color list is [" + (string)colors + "]");
 
-      // max int 0x80000000  (32 bits)
-      //integer(<127) + integer (<=100, typically 50)
-      //  follow vel   1----- -------- -------- --------  = 0x2000 0000
-      //  low vel       1---- -------- -------- --------  = 0x1000 0000
-      //  wind           1--- -------- -------- --------  = 0x0800 0000
-      //  freeze          1-- -------- -------- --------  = 0x0400 0000
-      //  collision        1- -------- -------- --------  = 0x0200 0000
-      //  debug             1 -------- -------- --------  = 0x0100 0000
-      //  launchalpha       - 1------- -------- --------  = 0x0080 0000
-      //  unused              -1------ -------- --------  = 0x0040 0000
-      //  rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
-      //  unused                       --111111 1-------  =      0x3F80
-      //  flighttime                            -1111111  =      0x007F
-      debugList(2,["mode is ", mode, " or ", hex(mode)]);
-      packedParam = flightTime;  //up to 0x007F
-      packedParam = packedParam | (mode << MULTIMODE_OFFSET);
-      debugList(2,["packedParam is ", packedParam, " or ", hex(packedParam)]);
-      #if defined LAUNCHALPHA
-         packedParam = packedParam | LAUNCH_ALPHA_MASK;
-      #endif
-      #if defined DEBUG
-         packedParam = packedParam | DEBUG_MASK;
-      #endif
-      if (explodeOnCollision >0)
-         packedParam = packedParam | COLLISION_MASK;
-      if (freezeOnBoom >0)
-         packedParam = packedParam | FREEZE_MASK;
-      if (wind >0)
-         packedParam = packedParam | WIND_MASK;
-      if (explodeOnLowVelocity >0)
-         packedParam = packedParam | LOW_VELOCITY_MASK;
-      #ifndef NO_FOLLOW_VELOCITY
-         packedParam = packedParam | FOLLOW_VELOCITY_MASK;
-      #endif
+      generateLaunchParam();
 
       llPreloadSound(LAUNCHSOUND);
       llPreloadSound(BOOMSOUND);
