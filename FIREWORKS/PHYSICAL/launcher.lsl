@@ -45,7 +45,6 @@ key id = "";
 integer explodeOnCollision = 0;
 integer explodeOnLowVelocity = 0;
 integer access;
-string launchMsg;
 list colors;
 float speed = 1.0;
 integer flightTime;
@@ -61,7 +60,7 @@ integer code = 0;
 #endif
 
 #ifndef PRELOADERPRIM
-   define PRELOADERPRIM "preloader"
+   #define PRELOADERPRIM "preloader"
 #endif
 string preloadPrimName = PRELOADERPRIM;
 
@@ -275,6 +274,44 @@ vector chooseOmega(vector omega, integer i)
    return omega2; 
 }
 
+string generateLaunchMsg(integer i)
+{
+   string msg=texture;
+   if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
+   {
+      string colorA = llList2String(colors,(i));
+      msg += ","+colorA+","+colorA+","+colorA;
+   }else{  // i = 0
+      string colorA = llList2String(colors,(i*3));
+      string colorB = llList2String(colors,(i*3)+1);
+      string colorC = llList2String(colors,(i*3)+2);
+      msg += ","+colorA+","+colorB+","+colorC;
+   }
+   msg += ","+(string)systemAge+","+(string)volume;
+   msg += ","+(string)startGlow+","+(string)endGlow;
+   msg += "," + BOOMSOUND;
+   msg += "," + (string)burstRadius;
+   msg += "," + (string)partAge;
+   msg += "," + (string)startAlpha + "," + (string)endAlpha;
+   msg += "," + (string)burstRate; 
+   msg += "," + (string)startScale + "," + (string)endScale;
+   msg += "," + (string)partCount; 
+   msg += "," + (string)chooseOmega(partOmega, i);
+   #if defined BURSTOUT
+   if (i==0) 
+      msg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+   else 
+      msg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
+   #else
+      msg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
+   #endif
+   msg += "," + (string)beginAngle+","+(string)endAngle;
+   msg += "," + (string)partAccel;
+   return msg;
+}
+
+
+
 fire()
 {
    vector muzzleColor = (vector)COLOR_GOLD;
@@ -287,44 +324,19 @@ fire()
    {
       setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
       setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
-      launchMsg=texture;
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
-         string colorA = llList2String(colors,(i));
-         launchMsg += ","+colorA+","+colorA+","+colorA;
          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
       }else{  // i = 0
-         string colorA = llList2String(colors,(i*3));
-         string colorB = llList2String(colors,(i*3)+1);
-         string colorC = llList2String(colors,(i*3)+2);
-         launchMsg += ","+colorA+","+colorB+","+colorC;
          rocket = llGetInventoryName(INVENTORY_OBJECT,i);
       }
-      launchMsg += ","+(string)systemAge+","+(string)volume;
-      launchMsg += ","+(string)startGlow+","+(string)endGlow;
-      launchMsg += "," + BOOMSOUND;
-      launchMsg += "," + (string)burstRadius;
-      launchMsg += "," + (string)partAge;
-      launchMsg += "," + (string)startAlpha + "," + (string)endAlpha;
-      launchMsg += "," + (string)burstRate; 
-      launchMsg += "," + (string)startScale + "," + (string)endScale;
-      launchMsg += "," + (string)partCount; 
-      launchMsg += "," + (string)chooseOmega(partOmega, i);
 
-      #if defined BURSTOUT
-      if (i==0) 
-         launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
-      else 
-         launchMsg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
-      #else
-         launchMsg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
-      #endif
-      launchMsg += "," + (string)beginAngle+","+(string)endAngle;
-      launchMsg += "," + (string)partAccel;
+      string launchMsg=generateLaunchMsg(i);
 
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
+
       llPlaySound(LAUNCHSOUND,volume);
       repeatSound(LAUNCHSOUND,volume);
 
