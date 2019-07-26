@@ -43,7 +43,7 @@ integer assert(integer b, string s)
    }
    else
    {
-   debugSay(1,s);
+   debugSay(0,s);
    return FALSE;
    }
 }
@@ -117,7 +117,7 @@ string parseColor(list n, string keyword)
 setRot(rotation rot)
 {
    // llSetRot() has  a delay, this doesn't
-   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_POSITION,pos]);
+   llSetLinkPrimitiveParamsFast(LINK_THIS,[PRIM_ROTATION,rot]);
 }
 
 setGlow(integer prim, float  amount)
@@ -453,6 +453,19 @@ setAllPrimParams()
     }
 }
 
+string getTextureFromInventory(integer n)
+  {
+      string name = llGetInventoryName(INVENTORY_TEXTURE, n);
+      if (name)
+         {
+            key uuid = llGetInventoryKey(name);
+            if (uuid)
+               return (string)uuid;
+            else 
+               return "";
+         }
+      return "";
+   }  
 
 /*
 list mergeLists(list newList, list oldList)
