@@ -10,7 +10,7 @@
 *
 *
 */
-#define VERSION "3.8.1"
+#define VERSION "4.0"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -276,6 +276,13 @@ vector chooseOmega(vector omega, integer i)
 
 string generateLaunchMsg(integer i)
 {
+   #ifdef REZPOSREL
+      vector rezPos = llGetPos()+ ((vector)REZPOSREL * llGetRot());
+   #elif defined REZPOSABS 
+      vector rezPos = (vector)REZPOSABS;
+   #else
+      vector rezPos = <0.0,0.0,0.0>;  // ignored by projectile
+   #endif
    string msg=texture;
    if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
    {
@@ -307,6 +314,7 @@ string generateLaunchMsg(integer i)
    #endif
    msg += "," + (string)beginAngle+","+(string)endAngle;
    msg += "," + (string)partAccel;
+   msg += "," + (string)rezPos;
    return msg;
 }
 
@@ -338,9 +346,10 @@ fire()
       rezChan = (integer) llFrand(255);
       integer packedParam2 = packedParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
-
-      llPlaySound(LAUNCHSOUND,volume);
-      repeatSound(LAUNCHSOUND,volume);
+      #ifndef STATIC
+         llPlaySound(LAUNCHSOUND,volume);
+         repeatSound(LAUNCHSOUND,volume);
+      #endif
 
       rotation rot = llGetRot();
       //rez a distance along the the barrel axis
@@ -398,6 +407,9 @@ integer generateLaunchParam()
       packedParam = packedParam | WIND_MASK;
    if (explodeOnLowVelocity >0)
       packedParam = packedParam | LOW_VELOCITY_MASK;
+   #if defined STATIC
+      packedParam = packedParam | FREEZE_ON_LAUNCH_MASK;
+   #endif
    #ifndef NO_FOLLOW_VELOCITY
       packedParam = packedParam | FOLLOW_VELOCITY_MASK;
    #endif
@@ -448,8 +460,13 @@ default
       explodeOnCollision = getexplodeOnCollision(notecardList);
       explodeOnLowVelocity = getInteger(notecardList, "peak");
       access = getAccess(notecardList);
-      speed = getFloat(notecardList,"speed");
-      flightTime = getInteger(notecardList,"flighttime");
+      #ifdef STATIC
+         speed = 0;
+         flightTime = 1;
+      #else
+         speed = getFloat(notecardList,"speed");
+         flightTime = getInteger(notecardList,"flighttime");
+      #endif
       if (flightTime > 126)
           flightTime =  127;
       freezeOnBoom = getInteger(notecardList,"freeze");
@@ -466,16 +483,22 @@ default
 
       generateLaunchParam();
 
-      llPreloadSound(LAUNCHSOUND);
+      #ifndef STATIC
+         llPreloadSound(LAUNCHSOUND);
+      #endif
       llPreloadSound(BOOMSOUND);
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          llSetLinkTexture(preloadLink,texture,preloadFace);
 
-      muzzleLink = getLinkWithName(muzzlePrimName);
-      debugSay(2,"muzzle is link number " + (string)muzzleLink);
-      assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
-      //llSetLinkTexture(muzzleLink, texture,muzzleFace);
+      #ifdef STATIC
+         muzzleLink = -1;
+      #else
+         muzzleLink = getLinkWithName(muzzlePrimName);
+         debugSay(2,"muzzle is link number " + (string)muzzleLink);
+         assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
+         //llSetLinkTexture(muzzleLink, texture,muzzleFace);
+      #endif
 
       vector v = llGetScale();
       zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
