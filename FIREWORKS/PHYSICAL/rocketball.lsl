@@ -1,10 +1,10 @@
 /*
-* rocketball 3.x
+* rocketball 4.x
 * copyright Tracer Ping / Tracer Prometheus 2018
 * tracerping@gmail.com
 *
 */
-#define Version "3.8.4"
+#define Version "4.0"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -43,6 +43,8 @@ vector boomRotation = <0.0,0.0,0.0>;
 integer pointForward = FALSE;
 integer primRotation = FALSE;
 integer trailball = FALSE;
+vector rezPos = <0.0,0.0,0.0>;
+
 
 #include "LIB\effects\effect_standard_burst.lsl"
 #define DESCRIPTION " "
@@ -189,9 +191,17 @@ default
          else
             launchAlpha = 0.0;
          setColor(LINK_SET,launchColor,launchAlpha);
-         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+
+         if (p & FREEZE_ON_LAUNCH_MASK)
+         {
+            llSetStatus(STATUS_PHYSICS, FALSE);
+         }
+         else
+         {
+            setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+            setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
+         }
          setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-         setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
          //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
          //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
       }
@@ -279,6 +289,10 @@ default
       beginAngle = llList2Float(params,20);
       endAngle = llList2Float(params,21);
       partAccel = llList2Vector(params,22);
+      rezPos =  llList2Vector(params,23);
+      debugSay(2,"rezPos = " + (string)rezPos);
+      if (rezPos != <0.0,0.0,0.0>)
+         llSetRegionPos(rezPos);
 
       if ((mode & 1) == MODE_MULTIBURST)
       {
