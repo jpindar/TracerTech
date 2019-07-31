@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "3.8.3"
+#define Version "3.8.4"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -76,11 +76,13 @@ subBoom0()
 {
    string startColor = llList2String(colors,0);
    string endColor = llList2String(colors,1);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
    setGlow(LINK_THIS,primGlow);
    makeParticles(LINK_THIS,mode,startColor,endColor);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
+   setGlow(LINK_THIS,0.0);
    llPlaySound(sound1,boomVolume);
    repeatSound(sound1,boomVolume);
 }
@@ -121,8 +123,6 @@ boom()
    {
       subBoom0();
    }
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
-   setGlow(LINK_THIS,0.0);
    if (systemAge>0)
       llSleep(systemAge);
    AllOff(FALSE);
