@@ -36,7 +36,7 @@ float glowOnAmount = 0.0; //or 0.05
 
 integer preloadFace = 0;
 
-integer muzzleLink;
+integer muzzleLink = -1;
 key owner;
 integer handle;
 integer chatChan;
@@ -319,11 +319,13 @@ fire()
    integer muzzleFace = ALL_SIDES;
    string rocket;
    integer i;
-
    for (i = 0; i<numOfBalls; i++)
    {
-      setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
-      setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
+      if (muzzleLink > -1)
+      {
+         setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
+         setParamsFast(muzzleLink,[PRIM_GLOW,muzzleFace,1.0]);
+      }
       if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
       {
          rocket = llGetInventoryName(INVENTORY_OBJECT,0);
@@ -346,9 +348,11 @@ fire()
       vector vel = <0,0,speed>*rot; //along the axis of the launcher
       rotation rot2 =  chooseRotation(rot);
       llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
-
-      setGlow(muzzleLink,0.0);
-      setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
+      if (muzzleLink >-1)
+      {
+         setGlow(muzzleLink,0.0);
+         setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
+      }
       llSleep(0.2);
       debugSay(1,"launch vel " + (string)vel);
       debugSay(1,"launcher rot " + (string)rot  + " or " + (string)llRot2Euler(rot));
