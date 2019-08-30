@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.01"
+#define Version "4.02"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -283,8 +283,8 @@ default
       startAlpha =  llList2Float(params,11);
       endAlpha =  llList2Float(params,12);
       burstRate =  llList2Float(params,13);
-      startScale =  llList2Vector(params,14);
-      endScale =  llList2Vector(params,15);
+      startScale = (vector)llList2String(params,14);
+      endScale =  (vector)llList2String(params,15);
       partCount = llList2Integer(params,16);
       partOmega = llList2Vector(params,17);
       maxPartSpeed = llList2Float(params,18);
