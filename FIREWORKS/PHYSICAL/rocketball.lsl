@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.0"
+#define Version "4.01"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -150,40 +150,9 @@ AllOff(integer blacken)
 }
 
 
-default
+parseRezParam(integer p)
 {
-   state_entry()
-   {
-      #if defined DESCRIPTION
-         llSetObjectDesc(Version + " " + DESCRIPTION);
-      #endif
-      #if !defined HOTLAUNCH
-         AllOff(FALSE);
-      #endif
-      #if defined POINTFORWARD
-         pointForward = TRUE;
-      #endif
-      #if defined PRIMROTATION
-         primRotation = TRUE;
-      #endif   
-   }
-
-   //having touch_start makes some effects easier to debug
-   touch_start(integer n)
-   {
-      systemAge = 1;
-      partAge = 4;
-      startGlow = 0.0;
-      endGlow = 0.0;
-      boom();
-   }
-
-   on_rez(integer p)
-   {
-      llResetTime();
-      llSetBuoyancy(0.5);
       debug = (p & DEBUG_MASK);
-      debugSay(2,"initial velocity "+(string)llGetVel());
       if (p > 0)
       {
          if (p & LAUNCH_ALPHA_MASK)
@@ -209,8 +178,6 @@ default
       {
          AllOff(FALSE);
       }
-      llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-      rezParam = p; //save this
       integer chan = (-42000) -((p & CHANNEL_MASK) >>CHANNEL_OFFSET);
       debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan]);
       handle=llListen(chan,"","","");
@@ -227,8 +194,46 @@ default
          freezeOnBoom = TRUE;
       if (p & FOLLOW_VELOCITY_MASK)
          followVelocity = TRUE;
-      llCollisionSound("", 1.0);  //  Disable collision sounds
+}
 
+default
+{
+   state_entry()
+   {
+      #if defined DESCRIPTION
+         llSetObjectDesc(Version + " " + DESCRIPTION);
+      #endif
+      #if !defined HOTLAUNCH
+         AllOff(FALSE);
+      #endif
+      #if defined POINTFORWARD
+         pointForward = TRUE;
+      #endif
+      #if defined PRIMROTATION
+         primRotation = TRUE;
+      #endif   
+   }
+
+   //having touch_start makes some effects easier to debug
+   touch_start(integer n)
+   {
+      //systemAge = 1;
+      //partAge = 4;
+      //startGlow = 0.0;
+      //endGlow = 0.0;
+      //texture = TEXTURE_SPIKESTAR;
+      boom();
+   }
+
+   on_rez(integer p)
+   {
+      llResetTime();
+      llSetBuoyancy(0.5);
+      debugSay(2,"initial velocity "+(string)llGetVel());
+      llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+      parseRezParam(p);
+
+      llCollisionSound("", 1.0);  //  Disable collision sounds
       //setting prim size sets velocity to zero
       //this should have fixed it, but doesn't. Did it work in InWorldz?
       //vector v = llGetVel();
@@ -248,10 +253,8 @@ default
          //r.x = -r.x;
          //r.y = -r.y;
          setRot(r);
-      }   
-      
-
-      if (rezParam>0)
+      }
+      if (p>0)
       {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
