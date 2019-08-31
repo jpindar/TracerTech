@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.02"
+#define Version "4.03"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -231,6 +231,7 @@ default
       llSetBuoyancy(0.5);
       debugSay(2,"initial velocity "+(string)llGetVel());
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+      rezParam = p;
       parseRezParam(p);
 
       llCollisionSound("", 1.0);  //  Disable collision sounds
