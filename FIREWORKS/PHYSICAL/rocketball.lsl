@@ -264,16 +264,55 @@ default
 
    listen( integer chan, string name, key id, string msg )
    {
-      // we want to set the prim color ASAP
-      params = llCSV2List(msg);
-      color1 = llList2String(params,1);
-      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
-      llListenRemove(handle);
       debugList(2,["got msg at ",llGetTime()," velocity: ",llGetVel()]);
       debugSay(2,"msg = "+msg);
-      texture = llList2String(params,0);
+      llListenRemove(handle);
+      params = llCSV2List(msg);
+      color1 = llList2String(params,1);
       color2 = llList2String(params,2);
       color3 = llList2String(params,3);
+      if ((mode & 1) == MODE_MULTIBURST)
+      {
+         debugSay(2,"getting multiburst colors");
+         if (color1 == "!pride")
+         {
+            colors = [COLOR_PRIDE_RED,COLOR_PRIDE_RED,COLOR_PRIDE_ORANGE,COLOR_PRIDE_ORANGE,COLOR_PRIDE_YELLOW,COLOR_PRIDE_YELLOW,COLOR_PRIDE_GREEN,COLOR_PRIDE_GREEN,COLOR_PRIDE_BLUE,COLOR_PRIDE_BLUE,COLOR_PRIDE_PURPLE,COLOR_PRIDE_PURPLE];
+            color1 = COLOR_PRIDE_RED;
+            numOfIterations = 6;
+         }
+         else if ((color1 == "!rwb") || (color1 == "!usa"))
+         {
+            colors = [COLOR_PRIDE_RED,COLOR_PRIDE_RED,COLOR_WHITE,COLOR_WHITE,COLOR_PRIDE_BLUE,COLOR_PRIDE_BLUE];
+            color1 = COLOR_PRIDE_RED;
+            numOfIterations = 3;
+         }
+         else if ((color1 == "!hot"))
+         {
+            colors = [COLOR_WHITE,COLOR_GOLD,COLOR_GOLD,COLOR_ORANGE,COLOR_ORANGE,COLOR_RED];
+            color1 = COLOR_WHITE;
+            numOfIterations = 3;
+         }
+         else if ((color1 == "!fire"))
+         {
+            colors = [COLOR_GOLD,COLOR_GOLD,COLOR_ORANGE,COLOR_ORANGE,COLOR_RED,COLOR_RED];
+            color1 = COLOR_GOLD;
+            numOfIterations = 3;
+         }
+         else
+         {
+            colors = [color1,color1,color2,color2,color3,color3];
+            numOfIterations = 3;
+         }
+      }
+      else
+      {
+         colors = [color1,color2,color3];
+      }
+      debugList(2,colors);
+      lightColor = color1;
+      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+      texture = llList2String(params,0);
       systemAge = llList2Float(params,4);
       boomVolume = llList2Float(params,5);
       startGlow =  llList2Float(params,6);
@@ -297,41 +336,8 @@ default
       debugSay(2,"rezPos = " + (string)rezPos);
       if (rezPos != <0.0,0.0,0.0>)
          llSetRegionPos(rezPos);
-
-      if ((mode & 1) == MODE_MULTIBURST)
-      {
-      if (color1 == "!pride")
-      {
-         colors = [COLOR_PRIDE_RED,COLOR_PRIDE_RED,COLOR_PRIDE_ORANGE,COLOR_PRIDE_ORANGE,COLOR_PRIDE_YELLOW,COLOR_PRIDE_YELLOW,COLOR_PRIDE_GREEN,COLOR_PRIDE_GREEN,COLOR_PRIDE_BLUE,COLOR_PRIDE_BLUE,COLOR_PRIDE_PURPLE,COLOR_PRIDE_PURPLE];
-         color1 = COLOR_PRIDE_RED;
-         numOfIterations = 6;
-      }
-      else if ((color1 == "!rwb") || (color1 == "!usa"))
-      {
-         colors = [COLOR_PRIDE_RED,COLOR_PRIDE_RED,COLOR_WHITE,COLOR_WHITE,COLOR_PRIDE_BLUE,COLOR_PRIDE_BLUE];
-         color1 = COLOR_PRIDE_RED;
-         numOfIterations = 3;
-      }
-      else if ((color1 == "!hot"))
-      {
-         colors = [COLOR_WHITE,COLOR_GOLD,COLOR_GOLD,COLOR_ORANGE,COLOR_ORANGE,COLOR_RED];
-         color1 = COLOR_WHITE;
-         numOfIterations = 3;
-      }
-      else
-      {
-         colors = [color1, color1, color2, color2, color3,color3];
-         numOfIterations = 3;
-      }
-      }
-      else
-      {
-         colors = [color1,color2,color3];
-      }
-      lightColor = color1;
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       armed = TRUE;
-      debugList(2,colors);
+      debugSay(2,"arming at " + (string)llGetTime());
    }
 
    timer()
