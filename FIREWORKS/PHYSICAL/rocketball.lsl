@@ -286,13 +286,13 @@ default
       startScale = (vector)llList2String(params,14);
       endScale =  (vector)llList2String(params,15);
       partCount = llList2Integer(params,16);
-      partOmega = llList2Vector(params,17);
+      partOmega = (vector)llList2String(params,17);
       maxPartSpeed = llList2Float(params,18);
       minPartSpeed = llList2Float(params,19);
       beginAngle = llList2Float(params,20);
       endAngle = llList2Float(params,21);
-      partAccel = llList2Vector(params,22);
-      rezPos =  llList2Vector(params,23);
+      partAccel = (vector)llList2String(params,22);
+      rezPos =  (vector)llList2String(params,23);
       debugSay(2,"rezPos = " + (string)rezPos);
       if (rezPos != <0.0,0.0,0.0>)
          llSetRegionPos(rezPos);
