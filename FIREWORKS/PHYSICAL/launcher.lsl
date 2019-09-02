@@ -487,8 +487,10 @@ default
       llPreloadSound(BOOMSOUND);
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
-         llSetLinkTexture(preloadLink,texture,preloadFace);
-
+         {
+         if (texture != "")
+            llSetLinkTexture(preloadLink,texture,preloadFace);
+         }
       #ifdef STATIC
          muzzleLink = -1;
       #else
