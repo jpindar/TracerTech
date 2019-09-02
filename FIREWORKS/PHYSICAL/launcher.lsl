@@ -439,6 +439,10 @@ default
          mode = mode | MODE_ANGLE;
       #elif defined SPIRALBALL
          mode = mode | MODE_ANGLE;
+      #elif defined MODEANGLE
+         mode = mode | MODE_ANGLE;
+      #elif defined MODEANGLECONE
+         mode = mode | MODE_ANGLECONE;
       #else
          mode = mode | MODE_ANGLECONE;
       #endif
