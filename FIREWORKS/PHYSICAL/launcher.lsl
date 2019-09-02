@@ -1,7 +1,7 @@
 /*
 * launch controller
-* copyright Tracer Ping 2017
-* this goes in the main prim
+* copyright Tracer Prometheus / Tracer Ping 2018
+* tracerping@gmail.com
 *
 * reads data from notecard and forwards it via linkmessage
 * listens for commands on either a chat channel or a link message
@@ -52,6 +52,8 @@ integer freezeOnBoom;
 integer packedParam;
 float angle = 0;
 integer code = 0;
+float beginAngle = 0;
+float endAngle = PI;
 
 #if defined MULTIBURST
   integer mode = MODE_MULTIBURST;
@@ -80,21 +82,6 @@ float launchDelay = LAUNCHDELAY;
 #else
 float launchDelay = 0.5;
 #endif
-
-#if defined BEGINANGLE
-float beginAngle = BEGINANGLE;
-#elif defined STARTANGLE
-float beginAngle = STARTANGLE;
-#else
-float beginAngle = 0;
-#endif
-
-#if defined ENDANGLE
-float endAngle = ENDANGLE;
-#else
-float endAngle = PI;
-#endif
-
 
 #if defined SYSTEMAGE
 float systemAge = SYSTEMAGE;
@@ -431,8 +418,19 @@ default
       #else
          texture = getTextureFromInventory(0);
       #endif
-      debugList(2,["entering state_entry, mode is ", mode, " or ", hex(mode)]);
-
+      //have to put this here because SL can't do math in declarations
+      #if defined BEGINANGLE
+          beginAngle = BEGINANGLE;
+      #elif defined STARTANGLE
+          beginAngle = STARTANGLE;
+      #else
+          beginAngle = 0;
+      #endif
+      #if defined ENDANGLE
+          endAngle = ENDANGLE;
+      #else
+          endAngle = PI;
+      #endif
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
