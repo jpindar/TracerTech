@@ -8,7 +8,8 @@
 *
 *rezzes and launches projectile from its inventory
 *
-*
+*  //{   this allows folding in NP++ 
+*  //}   end of folding section
 */
 #define VERSION "4.0"
 
@@ -30,7 +31,7 @@ integer payloadIndex = 0;
 #if defined CANNON_BARREL
    float zOffset = 1.5;
 #else
-float zOffset = 0.7; //0.7 to 2.0
+   float zOffset = 0.7; //0.7 to 2.0
 #endif
 float glowOnAmount = 0.0; //or 0.05
 
@@ -54,6 +55,8 @@ float angle = 0;
 integer code = 0;
 float beginAngle = 0;
 float endAngle = PI;
+
+//{   preprocessor defines
 
 #if defined MULTIBURST
   integer mode = MODE_MULTIBURST;
@@ -125,7 +128,6 @@ float endAlpha = 1.0;
   float burstRate = 0.1;
 #endif
 
-
 #ifdef BURSTRADIUS
   float burstRadius = BURSTRADIUS;
 #else
@@ -179,12 +181,11 @@ vector  endScale = <1.0,1.0,0.0>;
 #endif
 
 #define NOTECARD_IN_THIS_PRIM
+//}
 
-
-/*  handle messages from the menu script
- */
 msgHandler(string sender, string msg)
 {
+   //{
    debugSay(3,"got message " + msg + " from "+ (string)sender);
    //allow sameOwner so message can be from a trigger owned by our owner
    if (!sameOwner(sender)) 
@@ -214,10 +215,12 @@ msgHandler(string sender, string msg)
    {
       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
    }
+   //}
 }
 
 rotation chooseRotation(rotation rot)
 {
+   //{
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
    #elif defined LAUNCH_ROT_ZERO
@@ -239,10 +242,12 @@ rotation chooseRotation(rotation rot)
       rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    #endif
    return rot2;
+   //}
 }
 
 vector chooseOmega(vector omega, integer i)
 {
+   //{
    vector omega2 = omega;
    #if defined PARTOMEGA_REL
        //this is probably not right, should probably be only 2 dimensional  
@@ -259,10 +264,12 @@ vector chooseOmega(vector omega, integer i)
             omega2 = -1 * omega2;
    #endif 
    return omega2; 
+   //}
 }
 
 string generateLaunchMsg(integer i)
 {
+   //{
    #ifdef REZPOSREL
       vector rezPos = llGetPos()+ ((vector)REZPOSREL * llGetRot());
    #elif defined REZPOSABS 
@@ -303,12 +310,12 @@ string generateLaunchMsg(integer i)
    msg += "," + (string)partAccel;
    msg += "," + (string)rezPos;
    return msg;
+   //}
 }
-
-
 
 fire()
 {
+   //{
    vector muzzleColor = (vector)COLOR_GOLD;
    float muzzleGlow = 1.0;
    integer muzzleFace = ALL_SIDES;
@@ -358,24 +365,27 @@ fire()
       if (launchDelay > 0.0)
          llSleep(launchDelay);
    }
+   //}
 }
-
 
 integer generateLaunchParam()
 {
-   // max int 0x80000000  (32 bits)
-   //integer(<127) + integer (<=100, typically 50)
-   //  follow vel   1----- -------- -------- --------  = 0x2000 0000
-   //  low vel       1---- -------- -------- --------  = 0x1000 0000
-   //  wind           1--- -------- -------- --------  = 0x0800 0000
-   //  freeze          1-- -------- -------- --------  = 0x0400 0000
-   //  collision        1- -------- -------- --------  = 0x0200 0000
-   //  debug             1 -------- -------- --------  = 0x0100 0000
-   //  launchalpha       - 1------- -------- --------  = 0x0080 0000
-   //  unused              -1------ -------- --------  = 0x0040 0000
-   //  rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
-   //  unused                       --111111 1-------  =      0x3F80
-   //  flighttime                            -1111111  =      0x007F
+   //{
+   /* max int 0x80000000  (32 bits)
+      integer(<127) + integer (<=100, typically 50)
+      follow vel   1----- -------- -------- --------  = 0x2000 0000
+      low vel       1---- -------- -------- --------  = 0x1000 0000
+      wind           1--- -------- -------- --------  = 0x0800 0000
+      freeze          1-- -------- -------- --------  = 0x0400 0000
+      collision        1- -------- -------- --------  = 0x0200 0000
+      debug             1 -------- -------- --------  = 0x0100 0000
+      launchalpha       - 1------- -------- --------  = 0x0080 0000
+      unused              -1------ -------- --------  = 0x0040 0000
+      rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
+      unused                       --111111 1-------  =      0x3F80
+      flighttime                            -1111111  =      0x007F
+   */
+   
    debugList(2,["mode is ", mode, " or ", hex(mode)]);
    packedParam = flightTime;  //up to 0x007F
    packedParam = packedParam | (mode << MULTIMODE_OFFSET);
@@ -401,13 +411,12 @@ integer generateLaunchParam()
       packedParam = packedParam | FOLLOW_VELOCITY_MASK;
    #endif
    return packedParam;
+   //}
 }
 
-
-
-//{ default()    this allows folding in NP++ 
 default
 {
+   //{
    on_rez(integer n){llResetScript();}
    changed(integer change){if(change &( CHANGED_INVENTORY|CHANGED_SCALE)) llResetScript();}
 
@@ -451,8 +460,7 @@ default
       owner=llGetOwner();
       chatChan = getChatChan(notecardList);
       #if defined DESCRIPTION
-         // Note that this sets the prim's description, not the object's.
-         //so it is OK to leave in launcher that is being linked to another object
+         // Note that this sets the prim's description, not the object's so it is OK to leave in launcher that is being linked to another object
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
@@ -513,7 +521,6 @@ default
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
    }
-//}
 
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
@@ -527,6 +534,7 @@ default
       debugSay(2,"got message " + msg + " on channel " + (string) chan);
       msgHandler(id, msg);
    }
+   //}
 }
 
 //this has to be after the default state
