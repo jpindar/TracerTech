@@ -55,8 +55,11 @@ subBoom1(integer i)
    //{
    float flashTime = 0.2;
    float interEmitterDelay = systemAge;
-   llPlaySound(sound1, volume);
-   repeatSound(sound1,volume);
+   if (sound1 != "")
+   {
+      llPlaySound(sound1, volume);
+      repeatSound(sound1,volume);
+   }
    string startColor = llList2String(colors,i*2);
    string endColor = llList2String(colors,(i*2)+1);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
@@ -88,8 +91,11 @@ subBoom0()
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
-   llPlaySound(sound1,boomVolume);
-   repeatSound(sound1,boomVolume);
+   if (sound1 != "")
+   {
+      llPlaySound(sound1,boomVolume);
+      repeatSound(sound1,boomVolume);
+   }
    //}
 }
 
