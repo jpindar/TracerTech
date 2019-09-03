@@ -52,6 +52,7 @@ vector rezPos = <0.0,0.0,0.0>;
 
 subBoom1(integer i)
 {
+   //{
    float flashTime = 0.2;
    float interEmitterDelay = systemAge;
    llPlaySound(sound1, volume);
@@ -72,10 +73,12 @@ subBoom1(integer i)
    setGlow(LINK_SET,0.0);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    if (interEmitterDelay>0) llSleep(interEmitterDelay);
+   //}
 }
 
 subBoom0()
 {
+   //{
    string startColor = llList2String(colors,0);
    string endColor = llList2String(colors,1);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
@@ -87,11 +90,13 @@ subBoom0()
    setGlow(LINK_THIS,0.0);
    llPlaySound(sound1,boomVolume);
    repeatSound(sound1,boomVolume);
+   //}
 }
 
 
 boom()
 {
+   //{
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    //if (!armed)
    //  return;
@@ -136,68 +141,73 @@ boom()
       llDie();
    }
    llSleep(5); //dunno why this is needed - but without it, no boom
+   //}
 }
 
 
 AllOff(integer blacken)
 {
+   //{
    llParticleSystem([]);
    setGlow(LINK_THIS,0.0);
    if (blacken)
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
    llLinkParticleSystem(LINK_THIS,[]);
+   //}
 }
 
 
 parseRezParam(integer p)
 {
-      debug = (p & DEBUG_MASK);
-      if (p > 0)
+   //{
+   debug = (p & DEBUG_MASK);
+   if (p > 0)
+   {
+      if (p & LAUNCH_ALPHA_MASK)
+         launchAlpha = 1.0;
+      else
+         launchAlpha = 0.0;
+      setColor(LINK_SET,launchColor,launchAlpha);
+      if (p & FREEZE_ON_LAUNCH_MASK)
       {
-         if (p & LAUNCH_ALPHA_MASK)
-            launchAlpha = 1.0;
-         else
-            launchAlpha = 0.0;
-         setColor(LINK_SET,launchColor,launchAlpha);
-
-         if (p & FREEZE_ON_LAUNCH_MASK)
-         {
-            llSetStatus(STATUS_PHYSICS, FALSE);
-         }
-         else
-         {
-            setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
-            setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
-         }
-         setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-         //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-         //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
+         llSetStatus(STATUS_PHYSICS, FALSE);
       }
       else
       {
-         AllOff(FALSE);
+         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+         setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
       }
-      integer chan = (-42000) -((p & CHANNEL_MASK) >>CHANNEL_OFFSET);
-      debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan]);
-      handle=llListen(chan,"","","");
-      // why is flighttime a float?   
-      // because I going to divide recieved flighttime by 10?
-      flightTime = (float)(p & FLIGHTTIME_MASK);
-      mode = (p & MULTIMODE_MASK) >>MULTIMODE_OFFSET;
-      debugList(2,["mode is ",mode, " or ", hex(mode)]);
-      if  (p & LOW_VELOCITY_MASK)
-         explodeOnLowVelocity = TRUE;
-      if (p & COLLISION_MASK)
-         explodeOnCollision = TRUE;
-      if (p & FREEZE_MASK)
-         freezeOnBoom = TRUE;
-      if (p & FOLLOW_VELOCITY_MASK)
-         followVelocity = TRUE;
+      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+      //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+      //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
+   }
+   else
+   {
+      AllOff(FALSE);
+   }
+   integer chan = (-42000) -((p & CHANNEL_MASK) >>CHANNEL_OFFSET);
+   debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan]);
+   handle=llListen(chan,"","","");
+   // why is flighttime a float?   
+   // because I going to divide recieved flighttime by 10?
+   flightTime = (float)(p & FLIGHTTIME_MASK);
+   mode = (p & MULTIMODE_MASK) >>MULTIMODE_OFFSET;
+   debugList(2,["mode is ",mode, " or ", hex(mode)]);
+   if  (p & LOW_VELOCITY_MASK)
+      explodeOnLowVelocity = TRUE;
+   if (p & COLLISION_MASK)
+      explodeOnCollision = TRUE;
+   if (p & FREEZE_MASK)
+      freezeOnBoom = TRUE;
+   if (p & FOLLOW_VELOCITY_MASK)
+      followVelocity = TRUE;
+   //}
 }
 
 default
 {
+   //{
    state_entry()
    {
       #if defined DESCRIPTION
@@ -227,6 +237,7 @@ default
 
    on_rez(integer p)
    {
+      //{
       llResetTime();
       llSetBuoyancy(0.5);
       debugSay(2,"initial velocity "+(string)llGetVel());
@@ -260,10 +271,12 @@ default
          llSetTimerEvent(0.01);
       }
       debugSay(2,"end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
+      //}
    }
 
    listen( integer chan, string name, key id, string msg )
    {
+      //{
       debugList(2,["got msg at ",llGetTime()," velocity: ",llGetVel()]);
       debugSay(2,"msg = "+msg);
       llListenRemove(handle);
@@ -338,10 +351,12 @@ default
          llSetRegionPos(rezPos);
       armed = TRUE;
       debugSay(2,"arming at " + (string)llGetTime());
+      //}
    }
 
    timer()
    {
+      //{
       float tim = llGetTime();
       vector v = llGetVel();
       debugSay(2,"llGetTime "+(string)tim+", velocity: "+(string)v);
@@ -371,10 +386,12 @@ default
             }
          }
       }
+      //}
    }
 
    collision_start(integer n)
    {
+      //{
       integer f = 0;
       key id;
       vector spd;
@@ -405,10 +422,12 @@ default
             }
          }
       } while (++f < n);
+      //}
    }
 
    land_collision_start(vector pos)
    {
+      //{
       if ((explodeOnCollision==0) || (!armed))
          return;
       debugSay(2,"collision with land");
@@ -423,6 +442,9 @@ default
             boom();
          }
       }
+      //}
    }
+
+   //}
 }
 
