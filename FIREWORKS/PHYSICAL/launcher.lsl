@@ -27,22 +27,16 @@
 string texture;
 string color1;
 string color2;
-integer payloadIndex = 0;
 #if defined CANNON_BARREL
    float zOffset = 1.5;
 #else
    float zOffset = 0.7; //0.7 to 2.0
 #endif
-float glowOnAmount = 0.0; //or 0.05
-
 integer preloadFace = 0;
-
 integer muzzleLink = -1;
 key owner;
 integer handle;
 integer chatChan;
-integer rezChan;
-key id = "";
 integer explodeOnCollision = 0;
 integer explodeOnLowVelocity = 0;
 integer access;
@@ -50,19 +44,10 @@ list colors;
 float speed = 1.0;
 integer flightTime;
 integer freezeOnBoom;
-integer packedParam;
+integer launchParam;
 float angle = 0;
-integer code = 0;
-float beginAngle = 0;
-float endAngle = PI;
 
 //{   preprocessor defines
-
-#if defined MULTIBURST
-  integer mode = MODE_MULTIBURST;
-#else
-  integer mode = 0;
-#endif
 
 #ifndef PRELOADERPRIM
    #define PRELOADERPRIM "preloader"
@@ -269,7 +254,11 @@ vector chooseOmega(vector omega, integer i)
 
 string generateLaunchMsg(integer i)
 {
-   //{
+   //{ 
+   /* this uses texture,numOfBalls,colors etc., too many to pass as individual
+      parameters, but extracting from a list is, I think, very slow in LSL.  So, globals.
+      TODO: test speed with parameters in a list
+   */
    #ifdef REZPOSREL
       vector rezPos = llGetPos()+ ((vector)REZPOSREL * llGetRot());
    #elif defined REZPOSABS 
@@ -277,6 +266,21 @@ string generateLaunchMsg(integer i)
    #else
       vector rezPos = <0.0,0.0,0.0>;  // ignored by projectile
    #endif
+
+   //have to put this here because SL can't do math in declarations
+   #if defined BEGINANGLE
+      float beginAngle = BEGINANGLE;
+   #elif defined STARTANGLE
+      float beginAngle = STARTANGLE;
+   #else
+      float beginAngle = 0;
+   #endif
+   #if defined ENDANGLE
+      float endAngle = ENDANGLE;
+   #else
+      float endAngle = PI;
+   #endif
+
    string msg=texture;
    if (numOfBalls > 1)   //multiple monochrome balls aka rainbow?
    {
@@ -336,9 +340,8 @@ fire()
       }
 
       string launchMsg=generateLaunchMsg(i);
-
-      rezChan = (integer) llFrand(255);
-      integer packedParam2 = packedParam + (rezChan*0x4000);
+      integer rezChan = (integer) llFrand(255);
+      integer p2 = launchParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
       #ifndef STATIC
          llPlaySound(LAUNCHSOUND,volume);
@@ -350,7 +353,9 @@ fire()
       vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
       vector vel = <0,0,speed>*rot; //along the axis of the launcher
       rotation rot2 =  chooseRotation(rot);
-      llRezAtRoot(rocket,pos,vel, rot2, packedParam2);
+
+      llRezAtRoot(rocket,pos,vel, rot2, p2);
+
       if (muzzleLink >-1)
       {
          setGlow(muzzleLink,0.0);
@@ -368,10 +373,11 @@ fire()
    //}
 }
 
-integer generateLaunchParam()
+integer generateLaunchParams()
 {
    //{
    /* max int 0x80000000  (32 bits)
+
       integer(<127) + integer (<=100, typically 50)
       follow vel   1----- -------- -------- --------  = 0x2000 0000
       low vel       1---- -------- -------- --------  = 0x1000 0000
@@ -385,34 +391,86 @@ integer generateLaunchParam()
       unused                       --111111 1-------  =      0x3F80
       flighttime                            -1111111  =      0x007F
    */
-   
-   debugList(2,["mode is ", mode, " or ", hex(mode)]);
-   packedParam = flightTime;  //up to 0x007F
-   packedParam = packedParam | (mode << MULTIMODE_OFFSET);
-   debugList(2,["packedParam is ", packedParam, " or ", hex(packedParam)]);
+   vector v = llGetScale();
+   zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
+   if (zOffset > 10.0) //can't rez more than 10 m away
+      zOffset = 9.0;
+ 
+   #if defined MULTIBURST
+      integer mode = MODE_MULTIBURST;
+   #else
+      integer mode = 0;
+   #endif
+
+   #if defined RINGBALL
+      mode = mode | MODE_ANGLE;
+   #elif defined SPIRALBALL
+      mode = mode | MODE_ANGLE;
+   #elif defined MODEANGLE
+      mode = mode | MODE_ANGLE;
+   #elif defined MODEANGLECONE
+      mode = mode | MODE_ANGLECONE;
+   #else
+      mode = mode | MODE_ANGLECONE;
+   #endif
+   debugList(2,["mode is ", hex(mode)]); 
+   integer p = flightTime;  //up to 0x007F
+   p = p | (mode << MULTIMODE_OFFSET);
+   debugList(2,["parameter is ", p, " or ", hex(p)]);
    #if defined LAUNCHALPHA
-      packedParam = packedParam | LAUNCH_ALPHA_MASK;
+      p = p | LAUNCH_ALPHA_MASK;
    #endif
    #if defined DEBUG
-      packedParam = packedParam | DEBUG_MASK;
+      p = p | DEBUG_MASK;
    #endif
    if (explodeOnCollision >0)
-      packedParam = packedParam | COLLISION_MASK;
+      p = p | COLLISION_MASK;
    if (freezeOnBoom >0)
-      packedParam = packedParam | FREEZE_MASK;
+      p = p | FREEZE_MASK;
    if (wind >0)
-      packedParam = packedParam | WIND_MASK;
+      p = p | WIND_MASK;
    if (explodeOnLowVelocity >0)
-      packedParam = packedParam | LOW_VELOCITY_MASK;
+      p = p | LOW_VELOCITY_MASK;
    #if defined STATIC
-      packedParam = packedParam | FREEZE_ON_LAUNCH_MASK;
+      p = p | FREEZE_ON_LAUNCH_MASK;
    #endif
    #ifndef NO_FOLLOW_VELOCITY
-      packedParam = packedParam | FOLLOW_VELOCITY_MASK;
+      p = p | FOLLOW_VELOCITY_MASK;
    #endif
-   return packedParam;
+   return p;
    //}
 }
+
+parseNotecardList()
+{
+   //{
+   volume = getVolume(notecardList);
+   explodeOnCollision = getexplodeOnCollision(notecardList);
+   explodeOnLowVelocity = getInteger(notecardList, "peak");
+   access = getAccess(notecardList);
+   chatChan = getChatChan(notecardList);
+   #ifdef STATIC
+      speed = 0;
+      flightTime = 1;
+   #else
+      speed = getFloat(notecardList,"speed");
+      flightTime = getInteger(notecardList,"flighttime");
+   #endif
+   if (flightTime > 126)
+      flightTime =  127;
+   freezeOnBoom = getInteger(notecardList,"freeze");
+   wind = getInteger(notecardList,"wind");
+   angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
+   colors = colors + parseColor(notecardList,"color1");
+   colors = colors + parseColor(notecardList,"color2");
+   colors = colors + parseColor(notecardList,"color3");
+   colors = colors + parseColor(notecardList,"color4");
+   colors = colors + parseColor(notecardList,"color5");
+   colors = colors + parseColor(notecardList,"color6");
+   debugSay(2,"notecard color list is [" + (string)colors + "]");  
+   //}
+}
+
 
 default
 {
@@ -422,81 +480,37 @@ default
 
    state_entry()
    {
+      owner=llGetOwner();
+      
+      #ifdef NOTECARD_IN_THIS_PRIM
+         if(doneReadingNotecard == FALSE) state readNotecardToList;
+      #endif
+      
+      // code before this point can be executed more than once!
+ 
       #if defined TEXTURE1
          texture = TEXTURE1;
       #else
          texture = getTextureFromInventory(0);
       #endif
-      //have to put this here because SL can't do math in declarations
-      #if defined BEGINANGLE
-          beginAngle = BEGINANGLE;
-      #elif defined STARTANGLE
-          beginAngle = STARTANGLE;
-      #else
-          beginAngle = 0;
-      #endif
-      #if defined ENDANGLE
-          endAngle = ENDANGLE;
-      #else
-          endAngle = PI;
-      #endif
-      #ifdef NOTECARD_IN_THIS_PRIM
-         if(doneReadingNotecard == FALSE) state readNotecardToList;
-      #endif
-      // code before this point can be executed more than once!
-      #if defined RINGBALL
-         mode = mode | MODE_ANGLE;
-      #elif defined SPIRALBALL
-         mode = mode | MODE_ANGLE;
-      #elif defined MODEANGLE
-         mode = mode | MODE_ANGLE;
-      #elif defined MODEANGLECONE
-         mode = mode | MODE_ANGLECONE;
-      #else
-         mode = mode | MODE_ANGLECONE;
-      #endif
+      
+      if (numOfBalls < 1)  //if not specified by notecard or #define
+         numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       debugList(2,["after adding ball type, mode is ", mode, " or ", hex(mode)]);  
 
-      owner=llGetOwner();
-      chatChan = getChatChan(notecardList);
+      parseNotecardList();
       #if defined DESCRIPTION
          // Note that this sets the prim's description, not the object's so it is OK to leave in launcher that is being linked to another object
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
 
-      if (numOfBalls < 1)  //if not specified by notecard
-         numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
-      volume = getVolume(notecardList);
-      explodeOnCollision = getexplodeOnCollision(notecardList);
-      explodeOnLowVelocity = getInteger(notecardList, "peak");
-      access = getAccess(notecardList);
-      #ifdef STATIC
-         speed = 0;
-         flightTime = 1;
-      #else
-         speed = getFloat(notecardList,"speed");
-         flightTime = getInteger(notecardList,"flighttime");
-      #endif
-      if (flightTime > 126)
-          flightTime =  127;
-      freezeOnBoom = getInteger(notecardList,"freeze");
-      wind = getInteger(notecardList,"wind");
-      angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
-      // launchDelay = getFloat(notecardList, "delay");
-      colors = colors + parseColor(notecardList,"color1");
-      colors = colors + parseColor(notecardList,"color2");
-      colors = colors + parseColor(notecardList,"color3");
-      colors = colors + parseColor(notecardList,"color4");
-      colors = colors + parseColor(notecardList,"color5");
-      colors = colors + parseColor(notecardList,"color6");
-      debugSay(2,"notecard color list is [" + (string)colors + "]");
-
-      generateLaunchParam();
+      launchParam = generateLaunchParams();
 
       #ifndef STATIC
          llPreloadSound(LAUNCHSOUND);
       #endif
       llPreloadSound(BOOMSOUND);
+
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
          {
@@ -507,20 +521,13 @@ default
          muzzleLink = -1;
       #else
          muzzleLink = getLinkWithName(muzzlePrimName);
-         debugSay(2,"muzzle is link number " + (string)muzzleLink);
          assert((muzzleLink>0),"CAN'T FIND THE MUZZLE PRIM");
-         //llSetLinkTexture(muzzleLink, texture,muzzleFace);
       #endif
-
-      vector v = llGetScale();
-      zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
-      if (zOffset > 10.0) //can't rez more than 10 m away
-         zOffset = 9.0;
 
       string id = "";
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
-   }
+      }
 
    //link messages come from the menu script
    link_message(integer sender, integer num, string msg, key id)
