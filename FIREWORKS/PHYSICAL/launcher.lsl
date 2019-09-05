@@ -480,6 +480,7 @@ default
 
    state_entry()
    {
+      if (debug > 0) llPlaySound(SOUND_BEEP1,1.0);
       owner=llGetOwner();
       
       #ifdef NOTECARD_IN_THIS_PRIM
@@ -527,6 +528,7 @@ default
       string id = "";
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
+      if (debug > 0) llPlaySound(SOUND_BEEP2,1.0);
       }
 
    //link messages come from the menu script
