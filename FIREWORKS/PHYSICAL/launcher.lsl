@@ -171,7 +171,8 @@ vector  endScale = <1.0,1.0,0.0>;
 msgHandler(string sender, string msg)
 {
    //{
-   debugSay(3,"got message " + msg + " from "+ (string)sender);
+   llResetTime();
+   debugSay(3,"got message '" + msg + "' from "+ (string)sender);
    //allow sameOwner so message can be from a trigger owned by our owner
    if (!sameOwner(sender)) 
    {
@@ -325,8 +326,10 @@ fire()
    integer muzzleFace = ALL_SIDES;
    string rocket;
    integer i;
+   debugSay(3,"firing at "+ (string)llGetTime() + " seconds");
    for (i = 0; i<numOfBalls; i++)
    {
+      debugSay(3,"fire "+(string)i);
       if (muzzleLink > -1)
       {
          setParamsFast(muzzleLink,[PRIM_COLOR,muzzleFace,muzzleColor,1.0]);
@@ -356,6 +359,7 @@ fire()
 
       llRezAtRoot(rocket,pos,vel, rot2, p2);
 
+      debugSay(3,"rezzing at "+ (string)llGetTime() + " seconds");
       if (muzzleLink >-1)
       {
          setGlow(muzzleLink,0.0);
@@ -363,9 +367,9 @@ fire()
       }
       llSleep(0.2);
       debugSay(1,"launch vel " + (string)vel);
-      debugSay(1,"launcher rot " + (string)rot  + " or " + (string)llRot2Euler(rot));
-      debugSay(1,"   launch rot " + (string)rot2 + " or " + (string)llRot2Euler(rot2));
-      debugSay(1,"sending launchMsg *********\n" + launchMsg+ "\n*********");
+      debugSay(1,"launcher rot   " + (string)rot  + " or " + (string)llRot2Euler(rot));
+      debugSay(1,"projectile rot " + (string)rot2 + " or " + (string)llRot2Euler(rot2));
+      debugSay(1,"sending launchMsg at "+(string)llGetTime()+" seconds *********\n" + launchMsg+ "\n*********");
       llRegionSay(rezChan, launchMsg);
       if (launchDelay > 0.0)
          llSleep(launchDelay);
@@ -481,6 +485,7 @@ default
    state_entry()
    {
       if (debug > 0) llPlaySound(SOUND_BEEP1,1.0);
+      debugSay(1,"\n STATE_ENTRY" + " debug level = " + (string)debug);
       owner=llGetOwner();
       
       #ifdef NOTECARD_IN_THIS_PRIM
@@ -488,6 +493,7 @@ default
       #endif
       
       // code before this point can be executed more than once!
+      debugSay(5,"Done reading notecard at "+(string)llGetTime() + "seconds");
  
       #if defined TEXTURE1
          texture = TEXTURE1;
@@ -497,20 +503,24 @@ default
       
       if (numOfBalls < 1)  //if not specified by notecard or #define
          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
-      debugList(2,["after adding ball type, mode is ", mode, " or ", hex(mode)]);  
+      debugSay(5,"1: "+(string)llGetTime() + "seconds");
 
       parseNotecardList();
+      debugSay(5,"1.1: "+(string)llGetTime() + "seconds");
       #if defined DESCRIPTION
          // Note that this sets the prim's description, not the object's so it is OK to leave in launcher that is being linked to another object
          llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
       #endif
+      debugSay(5,"1.2: "+(string)llGetTime() + "seconds");
 
       launchParam = generateLaunchParams();
+      debugSay(5,"1.3: "+(string)llGetTime() + "seconds");
 
       #ifndef STATIC
          llPreloadSound(LAUNCHSOUND);
       #endif
       llPreloadSound(BOOMSOUND);
+      debugSay(5,"2: "+ (string)llGetTime() + "seconds");
 
       integer preloadLink = getLinkWithName(preloadPrimName);
       if (assert((preloadLink>0),"CAN'T FIND THE PRELOADER"))
@@ -528,6 +538,7 @@ default
       string id = "";
       handle = llListen( chatChan, "",id, "" );
       llOwnerSay("listening on channel "+(string)chatChan);
+      debugSay(1,"READY at "+ (string)llGetAndResetTime() + "seconds");
       if (debug > 0) llPlaySound(SOUND_BEEP2,1.0);
       }
 
