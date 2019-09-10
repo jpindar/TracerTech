@@ -10,8 +10,6 @@
 #include "LIB\effects\effect.h"
 
 string sound1;
-float boomVolume = 1.0;                // overridden by notecard via chat
-
 vector launchColor = <1.0,1.0,1.0>;    //OK for now
 float launchAlpha;                     // determined by rez param
 string primColor;
@@ -47,8 +45,6 @@ vector rezPos = <0.0,0.0,0.0>;
 
 
 #include "LIB\effects\effect_standard_burst.lsl"
-#define DESCRIPTION " "
-
 
 subBoom1(integer i)
 {
@@ -93,8 +89,8 @@ subBoom0()
    setGlow(LINK_THIS,0.0);
    if (sound1 != "")
    {
-      llPlaySound(sound1,boomVolume);
-      repeatSound(sound1,boomVolume);
+      llPlaySound(sound1,volume);
+      repeatSound(sound1,volume);
    }
    //}
 }
@@ -184,22 +180,18 @@ parseRezParam(integer p)
          setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
          setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
       }
-      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
-      //llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
-      //setParamsFast(LINK_SET,[PRIM_SIZE,primSize]);
    }
    else
    {
       AllOff(FALSE);
    }
    integer chan = (-42000) -((p & CHANNEL_MASK) >>CHANNEL_OFFSET);
-   debugList(2,["rezparam =",p,"=",hex(p),"chan = ",chan]);
    handle=llListen(chan,"","","");
-   // why is flighttime a float?   
+   // why is flighttime a float?
    // because I going to divide recieved flighttime by 10?
    flightTime = (float)(p & FLIGHTTIME_MASK);
    mode = (p & MULTIMODE_MASK) >>MULTIMODE_OFFSET;
-   debugList(2,["mode is ",mode, " or ", hex(mode)]);
+   debugList(2,["rezparam ",hex(p),"chan ",chan," mode ", hex(mode)]);
    if  (p & LOW_VELOCITY_MASK)
       explodeOnLowVelocity = TRUE;
    if (p & COLLISION_MASK)
@@ -227,7 +219,11 @@ default
       #endif
       #if defined PRIMROTATION
          primRotation = TRUE;
-      #endif   
+      #endif
+      llSetBuoyancy(0.5);
+      llCollisionSound("", 0.0);
+      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
+      llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
    }
 
    //having touch_start makes some effects easier to debug
@@ -245,9 +241,9 @@ default
    {
       //{
       llResetTime();
-      llSetBuoyancy(0.5);
-      debugSay(2,"initial velocity "+(string)llGetVel());
+      setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
+      debugSay(2,"initial velocity "+(string)llGetVel());
       rezParam = p;
       parseRezParam(p);
 
@@ -333,7 +329,7 @@ default
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
       texture = llList2String(params,0);
       systemAge = llList2Float(params,4);
-      boomVolume = llList2Float(params,5);
+      volume = llList2Float(params,5);
       startGlow =  llList2Float(params,6);
       endGlow =  llList2Float(params,7);
       sound1 =  llList2String(params,8);
@@ -363,9 +359,8 @@ default
    timer()
    {
       //{
-      float tim = llGetTime();
       vector v = llGetVel();
-      debugSay(2,"llGetTime "+(string)tim+", velocity: "+(string)v);
+      debugList(2,["time: ",llGetTime()," velocity: ",v]);
       if (pointForward)
       {
       llLookAt(v+llGetPos(), 0.5, 0.1);
@@ -434,9 +429,10 @@ default
    land_collision_start(vector pos)
    {
       //{
+      debugSay(2,"collision with land");
       if ((explodeOnCollision==0) || (!armed))
          return;
-      debugSay(2,"collision with land");
+
       if (rezParam !=0)
       {
          if (trailball)
