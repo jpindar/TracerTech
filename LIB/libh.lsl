@@ -11,7 +11,7 @@
 #if defined HYPERGRID
    #ifndef TRACERGRID
       #define TRACERGRID
-   #endif   
+   #endif
 #endif
 
 #define UNKNOWN -9999
@@ -43,23 +43,23 @@
 
 #ifdef HYPERGRID
 
-   #define TEXTURE_CLASSIC           "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"      // DG OK, GCG OK
-   #define TEXTURE_CLASSIC_THIN          "b3312adb-0fe1-4ef7-a74a-085d0b4d3f22"  // DG OK, GCG OK? 
-   #define TEXTURE_SPIKESTAR         "67b464c2-d8e9-4986-8d14-1681224068eb"      // DG OK, GCG OK
+   #define TEXTURE_CLASSIC           "f19d8a42-c2d6-4f44-a31a-abc490b65f8c"      //DG OK, GCG OK
+   #define TEXTURE_CLASSIC_THIN      "b3312adb-0fe1-4ef7-a74a-085d0b4d3f22"      //DG OK, GCG OK? 
+   #define TEXTURE_SPIKESTAR         "67b464c2-d8e9-4986-8d14-1681224068eb"      //DG OK,GCG OK
    #define TEXTURE_SPIKESTAR2        "306e15ec-9a9d-4c54-9bc9-4683234a5352"      // DG OK, GCG OK
    #define TEXTURE_SPIKESTAR3        "e8ad4cd4-327f-4e1e-b384-6b5e73bd9f32"      // DG OK, GCG OK
    //#define TEXTURE_CLASSIC         "bdd0d47f-e6b2-4971-9eae-e167def7c2ef"
    //#define TEXTURE_SPIKESTAR       "24acad78-2cba-4306-a45c-5702b64ac647"
-   #define TEXTURE_NAUTICAL_STAR     "84003b34-ad78-4c8b-a279-037004b2c8b3"      // DG OK, GCG OK
+   #define TEXTURE_NAUTICAL_STAR     "84003b34-ad78-4c8b-a279-037004b2c8b3"      //GCG OK   DG OK
    //#define TEXTURE_NAUTICAL_STAR2  "1e83875a-7096-4c68-8003-6612e296ea29"      //GCG NG
-   #define TEXTURE_PATRIOTIC_STAR    "d80f20f5-269e-4662-a2e2-b4f7098a81dd"      //DG OK, GCG OK
+   #define TEXTURE_PATRIOTIC_STAR    "d80f20f5-269e-4662-a2e2-b4f7098a81dd"      //GCG OK  DG OK
    #define TEXTURE_PAWSOME           "36a631d4-e202-4d0a-8b05-6a48fde0d258"      //GCG NG   DG NG
    #define TEXTURE_PAWSOME_CHROME    "23a79d51-75e8-4266-b447-547093c36fd6"      //GCG NG  DG NG   
    #define TEXTURE_PAWSOME_CHROME2   "62f87ff6-b72d-45e7-974f-6ca25555578d"      //DG
-   #define TEXTURE_BLANK             "2e3e01f7-2d09-43f3-9eb5-8155efb327f4"      //DG OK?
+   #define TEXTURE_SQUARE           "2e3e01f7-2d09-43f3-9eb5-8155efb327f4"      //DG OK?
    #define TEXTURE_FLAMEBALL         "1d747f98-41e2-4bd6-bbd4-9a9f36ef78bb"      //DG OK
-   #define TEXTURE_FEATHERS          "467472da-9584-42c4-927e-c06b739b29f4"      //DG OK,  GCG NG
-   #define TEXTURE_WHIRLBLADES       "7af7b5a8-75b9-4736-b244-bec7be20a106"      //DG OK,  GCG NG
+   #define TEXTURE_FEATHERS          "467472da-9584-42c4-927e-c06b739b29f4"      //DG OK  GCG NG
+   #define TEXTURE_WHIRLBLADES       "7af7b5a8-75b9-4736-b244-bec7be20a106"      //DG OK  GCG NG
    #define TEXTURE_GLOSSY_HEART      "d056a3a7-e456-4ff3-b360-04475fb16200"      // GCG NG
    #define TEXTURE_GLOSSY_HEARTS     "d056a3a7-e456-4ff3-b360-04475fb16200"      // GCG NG
    #define TEXTURE_ROSE1             "05135c09-e9a5-45da-b00d-19a0c8ef1b71"      // GCG NG
@@ -80,11 +80,11 @@
    #define TEXTURE_COURIER_NEW_BOLD_A "11d48c16-c02e-4766-9ab2-fc8b39ff1f39"
    #define TEXTURE_COURIER_NEW_BOLD_B "c290a675-7383-449a-9c77-87a5aed545de"
    #define TEXTURE_COURIER_NEW_BOLD_C "d3eb6aca-d7d1-46ad-99da-fb2320031a7f"
-   #define TEXTURE_TOBETESTED        "d8bbe2e6-a679-4a34-9829-e72760e928e4"      // patriotic star in GCG
-   #define TEXTURE_PURPLE_SWIRLY     "d5d22584-94a9-4cbe-89e6-a6328ef36197"      // GCG OK
-   #define TEXTURE_ROSE_STEM         "d7669781-4e49-40c2-b60a-841d37b25476"      // GCG OK
-   #define TEXTURE_HEART2            "5b246c26-3b16-4e22-b1e9-6c57aef64bab"      // GCG OK
-   #define TEXTURE_SHOOTINGSTAR_RWB  "af254ad1-ab01-4dba-a88b-48033eebfd1b"      //GCG OK
+   #define TEXTURE_TOBETESTED         "d8bbe2e6-a679-4a34-9829-e72760e928e4"      // patriotic star in GCG
+   #define TEXTURE_PURPLE_SWIRLY      "d5d22584-94a9-4cbe-89e6-a6328ef36197"      // GCG OK
+   #define TEXTURE_ROSE_STEM          "d7669781-4e49-40c2-b60a-841d37b25476"      // GCG OK
+   #define TEXTURE_HEART2             "5b246c26-3b16-4e22-b1e9-6c57aef64bab"      // GCG OK
+   #define TEXTURE_SHOOTINGSTAR_RWB   "af254ad1-ab01-4dba-a88b-48033eebfd1b"      //GCG OK
 
 #elif defined SOAS
    #define TEXTURE_CLASSIC   "e51dfec9-b481-4ea0-aa67-545632d0b3fd"
@@ -104,6 +104,16 @@
    #define TEXTURE_STARWHEEL   "16c953d4-7c42-466b-81fa-23d40f2f77c5"
    #define TEXTURE_FIVECONTRAILS "7e818905-1646-42b8-a1eb-6bdab1639859"
    #define TEXTURE_WEED "dc008585-8d63-49d7-8bdb-92b19b35928b"
+#elif defined SECONDLIFE
+   #define TEXTURE_CLASSIC         "6c99633c-bbe0-46f9-2633-f1cecc4e712e"
+   #define TEXTURE_SPIKESTAR       "870ac25e-8c2a-6443-76a3-a63549c25695"
+   #define TEXTURE_PATRIOTIC_STAR  "ffb76ef6-effb-26a0-b16f-6fb05e3f1c8b"
+   #define TEXTURE_CLASSIC_THIN    "995350d9-1def-4e27-c80b-41b8e461ccd2"
+   #define TEXTURE_NAUTICAL_STAR   "7d5b57ce-3869-1bd0-a242-f54b0295c95d"
+   #define TEXTURE_SQUARE          "adb0e7d5-6f0c-7615-de48-d6f6a5d5803e"
+   #define TEXTURE_PAWSOME         "8ebbb68b-f93c-3b4f-d8e3-42e8e38599fd"
+   #define TEXTURE_DRAKES_FLAME    "0bce40f5-c202-cf82-f9fe-bd8212b60d32"
+   #define TEXTURE_COMMON_FIRE     "3c73ffa8-f7f5-dc1d-02ca-77c48bf787fb"
 #endif
 
 
@@ -171,6 +181,12 @@
    #define SOUND_LAUNCH2     "4399e82e-1c26-4dfe-9fb7-963baf7b4b85"
    #define SOUND_LAUNCH3     "3630a7c9-4309-491d-822c-670727c8e429"
    #define SOUND_BANG3       "e5cd5c92-e5a6-4f8c-a5d3-7e09e362a66f"
+#elif defined SECONDLIFE
+   // #define SOUND_PUREBOOM 
+   #define SOUND_WHOOSH001 "d99e8bdc-3ce6-966c-dfe2-5d7da7711bfb"
+   #define SOUND_BANG1     "ca62e9a3-8f9c-c2df-8111-34c44bccb6e1"  
+   #define SOUND_BEEP1     "4442266d-f362-5ab6-c4e3-365225c45ef6"
+   #define SOUND_BEEP2     "d69aec0d-c967-20ba-b39f-e2f1a57af74f"
 #endif
 
 // masks for encoding options into a short message
