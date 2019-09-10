@@ -207,25 +207,21 @@ string getString(list notecardList, string name)
    return s;
 }
 
-float getFloat(list notecardList, string name)
+float getFloat(list notecardList, string name, float defaultValue)
 {
-   float f;
+   float f = defaultValue;
    integer ptr = llListFindList(notecardList,[name]);
    if (ptr > -1)
       f = llList2Float(notecardList,ptr+1);  //case sensitive, unfortunately
-   else
-      f = ERROR_FLAG;
    return f;
 }
 
-integer getInteger(list notecardList, string name)
+integer getInteger(list notecardList, string name, integer defaultValue)
 {
-   integer i = -1;
+   integer i = defaultValue;
    integer ptr = llListFindList(notecardList,[name]);
    if (ptr > -1)
        i = llList2Integer(notecardList,ptr+1);  //case sensitive, unfortunately
-	else
-        i = -1;
    return i;
 }
 

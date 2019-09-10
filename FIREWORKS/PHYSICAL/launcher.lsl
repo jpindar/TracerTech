@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++ 
 *  //}   end of folding section
 */
-#define VERSION "4.0"
+#define VERSION "4.1"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -457,7 +457,7 @@ parseNotecardList()
    //{
    volume = getVolume(notecardList);
    explodeOnCollision = getexplodeOnCollision(notecardList);
-   explodeOnLowVelocity = getInteger(notecardList, "peak");
+   explodeOnLowVelocity = getInteger(notecardList, "peak", 0);
    access = getAccess(notecardList);
    chatChan = getChatChan(notecardList);
    #ifdef STATIC
@@ -465,13 +465,13 @@ parseNotecardList()
       flightTime = 1;
    #else
       speed = getFloat(notecardList,"speed");
-      flightTime = getInteger(notecardList,"flighttime");
+      flightTime = getInteger(notecardList,"flighttime", 99);
    #endif
    if (flightTime > 126)
       flightTime =  127;
-   freezeOnBoom = getInteger(notecardList,"freeze");
-   wind = getInteger(notecardList,"wind");
-   angle = getInteger(notecardList, "angle") * DEG_TO_RAD;
+   freezeOnBoom = getInteger(notecardList,"freeze", 0);
+   wind = getInteger(notecardList,"wind",0);
+   angle = getInteger(notecardList, "angle",0) * DEG_TO_RAD;
    colors = colors + parseColor(notecardList,"color1");
    colors = colors + parseColor(notecardList,"color2");
    colors = colors + parseColor(notecardList,"color3");
