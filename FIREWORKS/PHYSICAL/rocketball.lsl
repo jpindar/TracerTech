@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.04"
+#define Version "4.05"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -42,7 +42,7 @@ integer pointForward = FALSE;
 integer primRotation = FALSE;
 integer trailball = FALSE;
 vector rezPos = <0.0,0.0,0.0>;
-
+integer ribbon = FALSE;
 
 #include "LIB\effects\effect_standard_burst.lsl"
 
@@ -97,10 +97,12 @@ subBoom0()
 boom()
 {
    //{
+   float arbitraryDelay = 1.0;
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
-   //if (!armed)
-   //  return;
+   if (!armed)
+     return;
    debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
+   llMessageLinked(LINK_THIS, 0, "off", ""); 
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
 
    if (freezeOnBoom)
@@ -110,6 +112,7 @@ boom()
       llSetStatus(STATUS_PHANTOM,TRUE);
    }
    setRot(llEuler2Rot(boomRotation) * llGetRot());
+   llSleep(arbitraryDelay);
 
    if ((mode & MODE_MULTIBURST) == MODE_MULTIBURST)
    {
@@ -274,6 +277,7 @@ default
       {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
+      llMessageLinked(LINK_THIS, 0, "on", "");
       debugSay(2,"end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       //}
    }
