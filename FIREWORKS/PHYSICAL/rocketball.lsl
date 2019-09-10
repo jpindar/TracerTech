@@ -15,7 +15,7 @@ float launchAlpha;                     // determined by rez param
 string primColor;
 float primGlow = 0.0;
 vector primSize = <0.1,0.1,0.1>;
-string lightColor = COLOR_WHITE;
+vector lightColor = <1.0,1.0,1.0>;
 float intensity = 1.0;
 float lightRadius = 20;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
@@ -70,7 +70,7 @@ subBoom1(integer i)
    makeParticles(LINK_THIS,mode,startColor,endColor);
    llSleep(flashTime);
    setGlow(LINK_SET,0.0);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,lightRadius,falloff]);
    if (interEmitterDelay>0) llSleep(interEmitterDelay);
    //}
 }
@@ -85,7 +85,7 @@ subBoom0()
    setGlow(LINK_THIS,primGlow);
    makeParticles(LINK_THIS,mode,startColor,endColor);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (sound1 != "")
    {
@@ -177,7 +177,7 @@ parseRezParam(integer p)
       }
       else
       {
-         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
          setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
       }
    }
@@ -279,8 +279,8 @@ default
    listen( integer chan, string name, key id, string msg )
    {
       //{
-      debugList(2,["got msg at ",llGetTime()," velocity: ",llGetVel()]);
-      debugSay(2,"msg = "+msg);
+      debugList(2,["    got msg at ",llGetAndResetTime()," velocity: ",llGetVel()]);
+      debugSay(2,"**** msg = "+msg + "/n****");
       llListenRemove(handle);
       params = llCSV2List(msg);
       color1 = llList2String(params,1);
@@ -323,10 +323,10 @@ default
       {
          colors = [color1,color2,color3];
       }
-      debugList(2,colors);
+      debugSay(2,"colors " + llList2CSV(colors));
       lightColor = color1;
       setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)lightColor,intensity,lightRadius,falloff]);
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
       texture = llList2String(params,0);
       systemAge = llList2Float(params,4);
       volume = llList2Float(params,5);
@@ -352,7 +352,7 @@ default
       if (rezPos != <0.0,0.0,0.0>)
          llSetRegionPos(rezPos);
       armed = TRUE;
-      debugSay(2,"arming at " + (string)llGetTime());
+      debugSay(2,"arming at " + (string)llGetTime() + " seconds");
       //}
    }
 
@@ -401,6 +401,7 @@ default
          return;
       debugSay(2,llGetScriptName() + ": acting on collision ");
       debugSay(2, "me @ " +(string)llVecMag(llGetVel())+"m/s");
+      debugList(2,["time ",llGetAndResetTime()]);
       for (f=0; f<n; f++)
       {
          debugSay(2,llDetectedName(f) + " @ " + (string)llRound(llVecMag(llDetectedVel(f))) + "m/s");
@@ -418,6 +419,7 @@ default
                   llSetStatus(STATUS_PHYSICS, FALSE);
                   llDie();
                } else {
+                  //debugList(2,["booming at ",llGetAndResetTime()]);
                   boom();
                }
             }
