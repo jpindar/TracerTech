@@ -213,17 +213,11 @@
 #define MODE_ANGLECONE  4
 #define MODE_ANOTHERPARTICLE 6
 
-
 #define MAX_INT           0x80000000
 // this will do for now
 #define ERROR_FLAG        -8989
 
-// global variables
-integer debug = FALSE;
-float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
-float systemSafeSet = 0.00;//prevents erroneous particle emissions
-list linknumberList;
-integer wind;
+
 
 
 #endif  /* ifndef LIB_H */

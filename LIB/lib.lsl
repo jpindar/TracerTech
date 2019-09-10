@@ -12,27 +12,26 @@
    #define HYPERGRID
 #endif
 
+#ifndef DEBUGLEVEL
+   #define DEBUGLEVEL 0
+#endif
+integer debug = DEBUGLEVEL;
+float volume = 1.0;  // 0.0 = silent to 1.0 = full volume
+float systemSafeSet = 0.00;//prevents erroneous particle emissions
+list linknumberList;
 
 debugSay(integer debugLevel, string msg)
 {
-   #ifdef DEBUG
-      llOwnerSay(msg);
-   #else
    if (debug >= debugLevel)
       llOwnerSay(msg);
    //llSay(MY_DEBUG_CHAN,msg);
    //llShout(0,msg);
-   #endif
 }
 
 debugList(integer debugLevel, list values)
 {
-   #ifdef DEBUG
-      llOwnerSay (llList2CSV (values));
-   #else
    if (debug >= debugLevel)
       llOwnerSay (llList2CSV (values));
-   #endif
 }
 
 integer assert(integer b, string s)
