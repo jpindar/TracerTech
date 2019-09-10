@@ -3,6 +3,7 @@
  *  lib.lsl    main library
  *
  */
+#define LIBRARY_VERSION "2.0"
 
 #ifndef LIB_H
   #include "libh.lsl"
@@ -225,6 +226,17 @@ integer getInteger(list notecardList, string name, integer defaultValue)
    return i;
 }
 
+float getAngle(list notecardList, string name, float defaultValue)
+{
+   float f = defaultValue;
+   //name is case sensitive
+   integer ptr = llListFindList(notecardList,[name]);
+   if (ptr > -1)
+   {
+      f = llList2Integer(notecardList,ptr+1) * DEG_TO_RAD;
+   }
+   return f;
+}
 
 integer getChatChan(list notecardList)
 {

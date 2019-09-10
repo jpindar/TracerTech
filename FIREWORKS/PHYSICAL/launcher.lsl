@@ -44,7 +44,7 @@ float speed = 1.0;
 integer flightTime;
 integer freezeOnBoom;
 integer launchParam;
-float angle = 0;
+float angle = NO_VALUE;
 
 //{   preprocessor defines
 
@@ -214,6 +214,12 @@ msgHandler(string sender, string msg)
 rotation chooseRotation(rotation rot)
 {
    //{
+   if (angle != NO_VALUE)   // notecard overrides everything else
+   {
+      return rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
+   }
+   else
+   {
    #if defined LAUNCH_ROT
       rotation rot2 = rot;
    #elif defined LAUNCH_ROT_ZERO
@@ -230,11 +236,11 @@ rotation chooseRotation(rotation rot)
       flat_rot.y = 0.0;
       //flat_rot.z = 0;
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE2) *llEuler2Rot(flat_rot);
-
-   #else // angle is in radians, either as initialized or read from notecard
-      rotation rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
+   #else
+      rotation rot2 = llEuler2Rot(<0,0,0>) * rot;
    #endif
    return rot2;
+   }
    //}
 }
 
@@ -262,7 +268,7 @@ vector chooseOmega(vector omega, integer i)
 
 string generateLaunchMsg(integer i)
 {
-   //{ 
+   //{
    /* this uses texture,numOfBalls,colors etc., too many to pass as individual
       parameters, but extracting from a list is, I think, very slow in LSL.  So, globals.
       TODO: test speed with parameters in a list
@@ -464,14 +470,14 @@ parseNotecardList()
       speed = 0;
       flightTime = 1;
    #else
-      speed = getFloat(notecardList,"speed");
+      speed = getFloat(notecardList,"speed",10); //arbitrary default speed
       flightTime = getInteger(notecardList,"flighttime", 99);
    #endif
    if (flightTime > 126)
       flightTime =  127;
    freezeOnBoom = getInteger(notecardList,"freeze", 0);
    wind = getInteger(notecardList,"wind",0);
-   angle = getInteger(notecardList, "angle",0) * DEG_TO_RAD;
+   angle = getAngle(notecardList, "angle",NO_VALUE);
    colors = colors + parseColor(notecardList,"color1");
    colors = colors + parseColor(notecardList,"color2");
    colors = colors + parseColor(notecardList,"color3");
