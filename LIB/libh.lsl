@@ -20,6 +20,7 @@
 #define MY_DEBUG_CHAN 557
 #define SOUND_REPEAT_CHAN 556
 #define CNTL_CHAN 558
+#define GLOBAL_CHAN 557
 
 #define ACCESS_PUBLIC 1
 #define ACCESS_GROUP 2

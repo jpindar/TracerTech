@@ -35,7 +35,6 @@ string color2;
 integer preloadFace = 0;
 integer muzzleLink = -1;
 key owner;
-integer handle;
 integer chatChan;
 integer explodeOnCollision = 0;
 integer explodeOnLowVelocity = 0;
@@ -200,6 +199,14 @@ msgHandler(string sender, string msg)
    else if (msg == "show")
    {
       llSetLinkAlpha(LINK_SET,1.0, ALL_SIDES);
+   }
+   else if (msg == "mute")
+   {
+      volume = 0.0;
+   }
+   else if (msg == "unmute")
+   {
+      volume = 1.0;
    }
    //}
 }
@@ -536,7 +543,8 @@ default
       #endif
 
       string id = "";
-      handle = llListen( chatChan, "",id, "" );
+      llListen(chatChan, "",id, "" );
+      llListen(GLOBAL_CHAN,"",id,"");
       llOwnerSay("listening on channel "+(string)chatChan);
       debugSay(1,"READY at "+ (string)llGetAndResetTime() + "seconds");
       if (debug > 0) llPlaySound(SOUND_BEEP2,1.0);
