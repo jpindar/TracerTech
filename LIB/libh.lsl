@@ -204,10 +204,9 @@
 #define WIND_MASK            0x08000000
 #define LOW_VELOCITY_MASK    0x10000000
 #define FOLLOW_VELOCITY_MASK 0x20000000
-
+#define FREEZE_ON_LAUNCH_MASK 0x40000000
 
 #define MODE_MULTIBURST 1
-#define MULTIMODE_MASK 0x1
 #define PARTICLE_MODE_MASK 0x6
 #define MODE_ANGLE      2
 #define MODE_ANGLECONE  4
@@ -215,7 +214,8 @@
 
 #define MAX_INT           0x80000000
 // this will do for now
-#define ERROR_FLAG        -8989
+#define ERROR_FLAG        -89898
+#define NO_VALUE -89898
 
 
 
