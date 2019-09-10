@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.05"
+#define Version "4.06"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -351,9 +351,11 @@ default
       endAngle = llList2Float(params,21);
       partAccel = (vector)llList2String(params,22);
       rezPos =  (vector)llList2String(params,23);
-      debugSay(2,"rezPos = " + (string)rezPos);
-      if (rezPos != <0.0,0.0,0.0>)
+      if (rezPos != <0.0,0.0,0.0>) //TODO is != comparison w floats a good idea?
+      {
+         debugSay(2,"moving to " + (string)rezPos);
          llSetRegionPos(rezPos);
+      }
       armed = TRUE;
       debugSay(2,"arming at " + (string)llGetTime() + " seconds");
       //}
