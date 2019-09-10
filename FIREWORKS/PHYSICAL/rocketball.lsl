@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.03"
+#define Version "4.04"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -59,7 +59,6 @@ subBoom1(integer i)
    string startColor = llList2String(colors,i*2);
    string endColor = llList2String(colors,(i*2)+1);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
-   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
    //if (i < numOfEmitters)
    //   e = llList2Integer(emitters,i);
    //else
@@ -70,7 +69,7 @@ subBoom1(integer i)
    makeParticles(LINK_THIS,mode,startColor,endColor);
    llSleep(flashTime);
    setGlow(LINK_SET,0.0);
-   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,<0.0,0.0,0.0>,intensity,lightRadius,falloff]);
    if (interEmitterDelay>0) llSleep(interEmitterDelay);
    //}
 }
@@ -81,11 +80,10 @@ subBoom0()
    string startColor = llList2String(colors,0);
    string endColor = llList2String(colors,1);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
-   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)startColor,0.0]);
    setGlow(LINK_THIS,primGlow);
    makeParticles(LINK_THIS,mode,startColor,endColor);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
-   setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,FALSE,lightColor,intensity,lightRadius,falloff]);
+   setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,<0.0,0.0,0.0>,intensity,lightRadius,falloff]);
    setGlow(LINK_THIS,0.0);
    if (sound1 != "")
    {
@@ -103,6 +101,8 @@ boom()
    //if (!armed)
    //  return;
    debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
+   setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
+
    if (freezeOnBoom)
    {
       debugSay(2,"freezing");
@@ -222,6 +222,8 @@ default
       #endif
       llSetBuoyancy(0.5);
       llCollisionSound("", 0.0);
+      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
+      setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
    }
@@ -324,9 +326,6 @@ default
          colors = [color1,color2,color3];
       }
       debugSay(2,"colors " + llList2CSV(colors));
-      lightColor = color1;
-      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)color1,launchAlpha]);
-      setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
       texture = llList2String(params,0);
       systemAge = llList2Float(params,4);
       volume = llList2Float(params,5);
