@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++ 
 *  //}   end of folding section
 */
-#define VERSION "4.1"
+#define VERSION "4.2"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -47,6 +47,12 @@ integer launchParam;
 float angle = NO_VALUE;
 
 //{   preprocessor defines
+
+#ifdef ENABLEWIND
+   integer wind = ENABLEWIND;
+#else
+   integer wind = 0;
+#endif
 
 #ifndef PRELOADERPRIM
    #define PRELOADERPRIM "preloader"
@@ -476,7 +482,9 @@ parseNotecardList()
    if (flightTime > 126)
       flightTime =  127;
    freezeOnBoom = getInteger(notecardList,"freeze", 0);
-   wind = getInteger(notecardList,"wind",0);
+   integer w = getInteger(notecardList,"wind", NO_VALUE);
+   if (w != NO_VALUE)
+      wind = w;
    angle = getAngle(notecardList, "angle",NO_VALUE);
    colors = colors + parseColor(notecardList,"color1");
    colors = colors + parseColor(notecardList,"color2");
