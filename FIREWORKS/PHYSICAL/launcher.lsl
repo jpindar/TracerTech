@@ -487,7 +487,7 @@ parseNotecardList()
       flightSpeed = 0;
       flightTime = 1;
    #else
-      flightSspeed = getFloat(notecardList,"speed",SPEED); 
+      flightSpeed = getFloat(notecardList,"speed",SPEED); 
       flightTime = getInteger(notecardList,"flighttime", 99);
    #endif
    if (flightTime > 126)
