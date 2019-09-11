@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.07"
+#define Version "4.08"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -65,8 +65,8 @@ subBoom1(integer i)
    //   e = llList2Integer(emitters,0);
    //setGlow(e,primGlow);
    //makeParticles(e,mode,color1,color2);
-   setGlow(LINK_THIS,primGlow);
-   makeParticles(LINK_THIS,mode,startColor,endColor);
+   setGlow(LINK_SET,primGlow);
+   makeParticles(LINK_SET,mode,startColor,endColor);
    llSleep(flashTime);
    setGlow(LINK_SET,0.0);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,<0.0,0.0,0.0>,intensity,lightRadius,falloff]);
@@ -80,11 +80,11 @@ subBoom0()
    string startColor = llList2String(colors,0);
    string endColor = llList2String(colors,1);
    setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,(vector)startColor,intensity,lightRadius,falloff]);
-   setGlow(LINK_THIS,primGlow);
-   makeParticles(LINK_THIS,mode,startColor,endColor);
+   setGlow(LINK_SET,primGlow);
+   makeParticles(LINK_SET,mode,startColor,endColor);
    //llMessageLinked(LINK_SET,(integer) debug,(string)color,"");
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,<0.0,0.0,0.0>,intensity,lightRadius,falloff]);
-   setGlow(LINK_THIS,0.0);
+   setGlow(LINK_SET,0.0);
    if (sound1 != "")
    {
       llPlaySound(sound1,volume);
@@ -128,7 +128,7 @@ boom()
       //if you don't want interEmitterDelay >= systemAge, use this:
       float temp = systemAge;
       systemAge = 0.01;
-      makeParticles(LINK_THIS,mode,"<0.0,0.0,0.0>","<0.0,0.0,0.0>");
+      makeParticles(LINK_SET,mode,"<0.0,0.0,0.0>","<0.0,0.0,0.0>");
       systemAge = temp;
    }
    else
@@ -154,11 +154,11 @@ AllOff(integer blacken)
 {
    //{
    llParticleSystem([]);
-   setGlow(LINK_THIS,0.0);
+   setGlow(LINK_SET,0.0);
    if (blacken)
-      setParamsFast(LINK_THIS,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
+      setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,(vector)COLOR_BLACK,1.0]);
    setParamsFast(LINK_SET,[PRIM_POINT_LIGHT,FALSE,(vector)lightColor,intensity,lightRadius,falloff]);
-   llLinkParticleSystem(LINK_THIS,[]);
+   llLinkParticleSystem(LINK_SET,[]);
    //}
 }
 
@@ -277,7 +277,7 @@ default
       {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
-      llMessageLinked(LINK_THIS, 0, "on", "");
+      llMessageLinked(LINK_SET, 0, "on", "");
       debugSay(2,"end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       //}
    }
