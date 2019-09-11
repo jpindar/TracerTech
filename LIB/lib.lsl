@@ -285,16 +285,6 @@ float getVolume(list notecardList)
     return f;
 }
 
-float getSpeed(list notecardList)
-{
-    #define DEFAULT_SPEED 20.0;
-    float f = DEFAULT_SPEED;
-    integer ptr = llListFindList(notecardList,["speed"]);
-    if (ptr > -1)
-        f = llList2Float(notecardList,ptr+1);
-    return f;
-}
-
 float getDelay(list notecardList)
 {
     #define DEFAULT_DELAY 20.0;

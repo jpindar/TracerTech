@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++ 
 *  //}   end of folding section
 */
-#define VERSION "4.3"
+#define VERSION "4.4"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -40,13 +40,14 @@ integer explodeOnCollision = 0;
 integer explodeOnLowVelocity = 0;
 integer access;
 list colors;
-float speed = 1.0;
+float flightSpeed;
 integer flightTime;
 integer freezeOnBoom;
 integer launchParam;
 float angle = NO_VALUE;
 
 //{   preprocessor defines
+#define SPEED 15
 
 #ifdef ENABLEWIND
    integer wind = ENABLEWIND;
@@ -222,7 +223,7 @@ rotation chooseRotation(rotation rot)
    //{
    if (angle != NO_VALUE)   // notecard overrides everything else
    {
-      return rot2 = llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
+      return llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    }
    else
    {
@@ -373,7 +374,7 @@ fire()
       rotation rot = llGetRot();
       //rez a distance along the the barrel axis
       vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
-      vector vel = <0,0,speed>*rot; //along the axis of the launcher
+      vector vel = <0,0,flightSpeed>*rot; //along the axis of the launcher
       rotation rot2 =  chooseRotation(rot);
 
       llRezAtRoot(rocket,pos,vel, rot2, p2);
@@ -441,8 +442,10 @@ integer generateLaunchParams()
    debugList(2,["mode is ", hex(mode)]); 
    
    integer p = flightTime;  //up to 0x007F
+   
    p = p | (mode << MULTIMODE_OFFSET);
    debugList(2,["parameter is ", p, " or ", hex(p)]);
+   
    #if defined LAUNCHALPHA
       p = p | LAUNCH_ALPHA_MASK;
    #endif
@@ -481,10 +484,10 @@ parseNotecardList()
    access = getAccess(notecardList);
    chatChan = getChatChan(notecardList);
    #ifdef STATIC
-      speed = 0;
+      flightSpeed = 0;
       flightTime = 1;
    #else
-      speed = getFloat(notecardList,"speed",10); //arbitrary default speed
+      flightSspeed = getFloat(notecardList,"speed",SPEED); 
       flightTime = getInteger(notecardList,"flighttime", 99);
    #endif
    if (flightTime > 126)
