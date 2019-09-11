@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.06"
+#define Version "4.07"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -19,7 +19,7 @@ vector lightColor = <1.0,1.0,1.0>;
 float intensity = 1.0;
 float lightRadius = 20;  // 5 to 20
 float falloff = 0.1; //0.02 to 0.75
-
+integer wind;
 integer explodeOnCollision = 0;        //overridden by notecard via rez param
 integer explodeOnLowVelocity = 0;      //overridden by notecard via rez param
 integer freezeOnBoom = FALSE;          //overridden by notecard via rez param
@@ -365,7 +365,8 @@ default
    {
       //{
       vector v = llGetVel();
-      debugList(2,["time: ",llGetTime()," velocity: ",v]);
+      float tim = llGetTime();
+      debugList(2,["time: ",tim," velocity: ",v]);
       if (pointForward)
       {
       llLookAt(v+llGetPos(), 0.5, 0.1);
