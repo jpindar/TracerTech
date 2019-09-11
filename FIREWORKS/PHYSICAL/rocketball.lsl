@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.08"
+#define Version "4.09"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -43,6 +43,7 @@ integer primRotation = FALSE;
 integer trailball = FALSE;
 vector rezPos = <0.0,0.0,0.0>;
 integer ribbon = FALSE;
+integer smoke = FALSE;
 
 #include "LIB\effects\effect_standard_burst.lsl"
 
@@ -112,7 +113,8 @@ boom()
       llSetStatus(STATUS_PHANTOM,TRUE);
    }
    setRot(llEuler2Rot(boomRotation) * llGetRot());
-   llSleep(arbitraryDelay);
+   if (smoke)
+      llSleep(arbitraryDelay);
 
    if ((mode & MODE_MULTIBURST) == MODE_MULTIBURST)
    {
@@ -166,6 +168,23 @@ AllOff(integer blacken)
 parseRezParam(integer p)
 {
    //{
+      /* max int 0x80 00 00 00  (32 bits)
+                  ------- -------- -------- --------
+      follow vel   1----- -------- -------- --------  = 0x2000 0000
+      low vel       1---- -------- -------- --------  = 0x1000 0000
+      wind           1--- -------- -------- --------  = 0x0800 0000
+      freeze          1-- -------- -------- --------  = 0x0400 0000
+      collision        1- -------- -------- --------  = 0x0200 0000
+      debug             1 -------- -------- --------  = 0x0100 0000
+      launchalpha       - 1------- -------- --------  = 0x0080 0000
+      unused              -1------ -------- --------  = 0x0040 0000
+      rezchan               111111 11------ --------  = 0x003F C000
+      unused                       --1----- --------  = 0x0000 2000
+      ribbon                       ---1---- --------  = 0x0000 1000
+      smoke                        ----1--- -------- =  0x0000 0800
+      multimode                    -----111 1-------  = 0x0000 0780 
+      flighttime                            -1111111  =      0x007F
+   */
    debug = (p & DEBUG_MASK);
    if (p > 0)
    {
@@ -203,6 +222,10 @@ parseRezParam(integer p)
       freezeOnBoom = TRUE;
    if (p & FOLLOW_VELOCITY_MASK)
       followVelocity = TRUE;
+   if (p & SMOKE_MASK)
+      smoke = TRUE;
+   if (p & RIBBON_MASK)
+      ribbon = TRUE;
    //}
 }
 
@@ -252,6 +275,11 @@ default
       rezParam = p;
       parseRezParam(p);
 
+      if (smoke)
+         llMessageLinked(LINK_SET, 0, "on", "");
+      else
+         llMessageLinked(LINK_SET, 0, "off", "");
+
       llCollisionSound("", 1.0);  //  Disable collision sounds
       //setting prim size sets velocity to zero
       //this should have fixed it, but doesn't. Did it work in InWorldz?
@@ -277,7 +305,6 @@ default
       {  //use timer instead of sleeping to allow other events
          llSetTimerEvent(0.01);
       }
-      llMessageLinked(LINK_SET, 0, "on", "");
       debugSay(2,"end of on_rez at " + (string)llGetTime()+" velocity: "+(string)llGetVel());
       //}
    }

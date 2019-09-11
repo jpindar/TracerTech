@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++ 
 *  //}   end of folding section
 */
-#define VERSION "4.2"
+#define VERSION "4.3"
 
 //#define TRICOLOR
 //#define LAUNCH_ROT
@@ -411,7 +411,9 @@ integer generateLaunchParams()
       launchalpha       - 1------- -------- --------  = 0x0080 0000
       unused              -1------ -------- --------  = 0x0040 0000
       rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
-      unused                       --111111 1-------  =      0x3F80
+      unused                       --11---- --------  = 0x0000 3000
+      smoke                        ----1--- -------- =  0x0000 0800
+      multimode                    -----111 1-------  = 0x0000 0780 
       flighttime                            -1111111  =      0x007F
    */
    vector v = llGetScale();
@@ -437,15 +439,21 @@ integer generateLaunchParams()
       mode = mode | MODE_ANGLECONE;
    #endif
    debugList(2,["mode is ", hex(mode)]); 
+   
    integer p = flightTime;  //up to 0x007F
    p = p | (mode << MULTIMODE_OFFSET);
    debugList(2,["parameter is ", p, " or ", hex(p)]);
    #if defined LAUNCHALPHA
       p = p | LAUNCH_ALPHA_MASK;
    #endif
-   #if defined DEBUG
-      p = p | DEBUG_MASK;
+   #if defined SMOKE
+      p = p | SMOKE_MASK;
    #endif
+   #if defined RIBBON
+      p = p | RIBBON_MASK;
+   #endif
+   if (debug > 0)
+      p = p | DEBUG_MASK;
    if (explodeOnCollision >0)
       p = p | COLLISION_MASK;
    if (freezeOnBoom >0)

@@ -195,17 +195,22 @@
 // from the mask, but why bother
 #define CHANNEL_OFFSET       14
 #define MULTIMODE_OFFSET      7 
-#define FLIGHTTIME_MASK      0x0000007F
-#define MULTIMODE_MASK       0x00000780
-#define CHANNEL_MASK         0x003FC000
-#define LAUNCH_ALPHA_MASK    0x00800000
-#define DEBUG_MASK           0x01000000
-#define COLLISION_MASK       0x02000000
-#define FREEZE_MASK          0x04000000
-#define WIND_MASK            0x08000000
-#define LOW_VELOCITY_MASK    0x10000000
-#define FOLLOW_VELOCITY_MASK 0x20000000
-#define FREEZE_ON_LAUNCH_MASK 0x40000000
+
+#define FLIGHTTIME_MASK      0x0000007F  //                              0111 1111
+#define MULTIMODE_MASK       0x00000780  //                         0111 1000 0000
+#define SMOKE_MASK           0x00000800  //                         1000 0000 0000
+#define RIBBON_MASK          0x00001000  //                       1 0000 0000 0000
+
+#define CHANNEL_MASK         0x003FC000  //          0011 1111 1100 0000 0000 0000
+
+#define LAUNCH_ALPHA_MASK    0x00800000  //          1000 0000 0000 0000 0000 0000
+#define DEBUG_MASK           0x01000000  //        1 0000 0000 0000 0000 0000 0000
+#define COLLISION_MASK       0x02000000  //       10 0000
+#define FREEZE_MASK          0x04000000  //      100 0000
+#define WIND_MASK            0x08000000  //     1000 0000
+#define LOW_VELOCITY_MASK    0x10000000  //   1 0000 0000
+#define FOLLOW_VELOCITY_MASK 0x20000000  //  10 0000
+#define FREEZE_ON_LAUNCH_MASK 0x40000000 //100 0000
 
 #define MODE_MULTIBURST 1
 #define PARTICLE_MODE_MASK 0x6
