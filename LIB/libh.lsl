@@ -105,6 +105,8 @@
    #define TEXTURE_STARWHEEL   "16c953d4-7c42-466b-81fa-23d40f2f77c5"
    #define TEXTURE_FIVECONTRAILS "7e818905-1646-42b8-a1eb-6bdab1639859"
    #define TEXTURE_WEED "dc008585-8d63-49d7-8bdb-92b19b35928b"
+   #define TEXTURE_FIRE_BLOB "c6543159-ec2b-4252-a66d-647f228639ea"
+   #define TEXTURE_DRAKES_FLAME "a5abbdb5-ca8b-46bc-964b-32abe2451358"
 #elif defined SECONDLIFE
    #define TEXTURE_CLASSIC         "6c99633c-bbe0-46f9-2633-f1cecc4e712e"
    #define TEXTURE_SPIKESTAR       "870ac25e-8c2a-6443-76a3-a63549c25695"
@@ -114,7 +116,9 @@
    #define TEXTURE_SQUARE          "adb0e7d5-6f0c-7615-de48-d6f6a5d5803e"
    #define TEXTURE_PAWSOME         "8ebbb68b-f93c-3b4f-d8e3-42e8e38599fd"
    #define TEXTURE_DRAKES_FLAME    "0bce40f5-c202-cf82-f9fe-bd8212b60d32"
-   #define TEXTURE_COMMON_FIRE     "3c73ffa8-f7f5-dc1d-02ca-77c48bf787fb"
+   #define TEXTURE_FIRE_BLOB       "3c73ffa8-f7f5-dc1d-02ca-77c48bf787fb"
+   #define TEXTURE_SANNA_CONFETTI_ALPHA "2f3798a2-b61e-3892-f32e-50db3b9db6a7"
+   #define TEXTURE_OS_CONFETTI_ALPHA "6dd00573-7380-4a9d-8f68-872f34773aab"
 #endif
 
 
@@ -150,8 +154,8 @@
 #define COLOR_PRIDE_BLUE     "<0.161, 0.380, 1.000>"
 //#define COLOR_PRIDE_PURPLE "<0.463, 0.000, 0.537>" //too dark for fireworks
 #define COLOR_PRIDE_PURPLE   "<0.808, 0.000, 0.941>" 
-
 //string color = "<0.42,0.017,0.59>";
+
 
 #if defined HYPERGRID
    #define SOUND_WHOOSH001  "a120d4b5-e56c-4f28-ac02-f606862d269e"    //GCG OK  //DG OK
@@ -165,7 +169,8 @@
    #define SOUND_TRIPPYBOOM "8a7ffb6a-4511-4058-b474-4543bda891b7"
    #define SOUND_SPARKLER_5 "f0b33013-a0d1-465f-8776-2de923152ca4"
    #define SOUND_LAUNCH2  "d799a73c-8afd-446b-a41b-6539c4ad92d9"  // DG ONLY SO FAR
-   
+   #define SOUND_BEEP1    "74d66bd8-49bb-4821-a720-6a85211990e6"  //GCG ONLY
+   #define SOUND_BEEP2    "3bb3db1e-fce2-4596-8bda-1872f366ae79"  // GCG only so far
 #elif defined SOAS
    #define SOUND_WHOOSH001  "3a3882d0-d8a6-4e03-b440-be31c37c805d"
    #define SOUND_PUREBOOM   "bbfcb1bf-93b2-4071-832e-89492dd04d68"
@@ -182,8 +187,10 @@
    #define SOUND_LAUNCH2     "4399e82e-1c26-4dfe-9fb7-963baf7b4b85"
    #define SOUND_LAUNCH3     "3630a7c9-4309-491d-822c-670727c8e429"
    #define SOUND_BANG3       "e5cd5c92-e5a6-4f8c-a5d3-7e09e362a66f"
+   #define SOUND_BEEP1       "9a3a5608-06d4-4e4b-a5da-15c199022c5b"
+   #define SOUND_BEEP2       "576b56ef-470c-4834-8131-d6d5c1721e96"
 #elif defined SECONDLIFE
-   // #define SOUND_PUREBOOM 
+   #define SOUND_PUREBOOM  "d886762c-6ba4-c341-ee0a-86a10af62aa8"
    #define SOUND_WHOOSH001 "d99e8bdc-3ce6-966c-dfe2-5d7da7711bfb"
    #define SOUND_BANG1     "ca62e9a3-8f9c-c2df-8111-34c44bccb6e1"  
    #define SOUND_BEEP1     "4442266d-f362-5ab6-c4e3-365225c45ef6"
@@ -213,6 +220,7 @@
 #define FREEZE_ON_LAUNCH_MASK 0x40000000 //100 0000
 
 #define MODE_MULTIBURST 1
+
 #define PARTICLE_MODE_MASK 0x6
 #define MODE_ANGLE      2
 #define MODE_ANGLECONE  4
