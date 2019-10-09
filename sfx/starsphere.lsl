@@ -18,13 +18,11 @@ string texture = TEXTURE_SPIKESTAR;
 //string texture = TEXTURE_PATRIOTIC_STAR;
 //string texture = TEXTURE_CLASSIC;
 
-
-
-string color = (string)COLOR_WHITE;
-string color1 = (string)COLOR_WHITE;
-string color2 = (string)COLOR_WHITE;
-
+string color = COLOR_WHITE;
+string color1 = COLOR_WHITE;
+string color2 = COLOR_WHITE;
 integer on = FALSE;
+integer wind = FALSE;
 
 #if defined STARTGLOW
 float startGlow = STARTGLOW;  //notecard will override these
@@ -155,6 +153,16 @@ go(integer on)
       #elif defined USA
       integer i;
       list params = llCSV2List("red,white,blue");
+      for (i=0; i<3; i++)
+      {
+         //color1 = llList2String(params,i);
+         color1 = nameToColor( llList2String(params,i));
+         color2 = color1;
+         boom(i+1);
+      }
+      #elif defined FIRE
+      integer i;
+      list params = llCSV2List("gold,orange,red");
       for (i=0; i<3; i++)
       {
          //color1 = llList2String(params,i);
