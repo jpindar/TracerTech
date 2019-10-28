@@ -1,5 +1,5 @@
 /*
-*fireworks menu v1.5
+*fireworks menu v1.6
 *copyright Tracer Tech aka Tracer Ping 2018
 *
 *gets notecard data via link message
@@ -27,19 +27,28 @@ integer menuChan;
 integer access;
 integer menuMode = 1;
 integer enabled = FALSE;
+#if defined SHOTCOUNT
+  integer shots = SHOTCOUNT;
+#else
+  integer shots = 1;
+#endif  
 
 #include "LIB\lib.lsl"
 
 sendMsg(string msg)
 {
-   #if defined REMOTE_MENU
-      llSay(chatChan,msg);
-   #endif
-   #if defined LINKED
-      llMessageLinked(LINK_THIS, 0, msg, "");
-   #else
-      llMessageLinked(LINK_SET, 0, msg, "");
-   #endif
+   integer i;
+   for (i = 0; i<shots; i++)
+   {
+      #if defined REMOTE_MENU
+         llSay(chatChan,msg);
+      #endif
+      #if defined LINKED
+         llMessageLinked(LINK_THIS, 0, msg, "");
+      #else
+         llMessageLinked(LINK_SET, 0, msg, "");
+      #endif
+   }
    //llMessageLinked(LINK_SET, 0, msg, "");
    //llMessageLinked(LINK_SET, 0, msg, "");
 }
@@ -54,11 +63,13 @@ default
    {
       menuChan = randomChan();
       owner=llGetOwner();
-      access = ACCESS_PUBLIC;
+      access = ACCESS_PUBLIC;   
+	  llOwnerSay("shots = " + (string) shots);
    }
 
    touch_start(integer num)
    {
+      debugSay(1,"touched");
       if (! enabled)
          return;
       integer timeout = 10;
@@ -66,8 +77,8 @@ default
       toucher=llDetectedKey(0);
       if (toucher == owner)
       {
-      debugSay(1,"you are the owner");
-      debugSay(1,"menuMode = " + (string)menuMode);
+      //debugSay(1,"you are the owner");
+      //debugSay(1,"menuMode = " + (string)menuMode);
          if (menuMode == 0)
          {
             sendMsg("fire");
@@ -138,7 +149,7 @@ default
          list notecard = llCSV2List(msg);
          //debugSay(2,"got list:" + llDumpList2String(notecard,"-"));
          chatChan = getChatChan(notecard);
-         menuMode = getInteger(notecard,"menu");
+         menuMode = getInteger(notecard,"menu",0);
          //debugSay(3,"got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
          //debugSay(3,"access from notecard = " + (string)access);
@@ -147,7 +158,8 @@ default
    }
 
    listen(integer chan,string name,key id,string button)  //listen to dialog box
-   {
+   {      
+     llOwnerSay("got chat msg" + button);
       llSetTimerEvent(0);
       llListenRemove(handle);
       if(button=="fire")
