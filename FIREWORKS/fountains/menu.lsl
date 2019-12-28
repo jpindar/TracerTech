@@ -138,7 +138,7 @@ default
          list notecard = llCSV2List(msg);
          //debugSay(2,"got list:" + llDumpList2String(notecard,"-"));
          chatChan = getChatChan(notecard);
-         menuMode = getInteger(notecard,"menu");
+         menuMode = getInteger(notecard,"menu",0);
          //debugSay(3,"got menuMode = " + (string)menuMode);
          access = getAccess(notecard);
          //debugSay(3,"access from notecard = " + (string)access);
