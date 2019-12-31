@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.10"
+#define Version "4.11"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -238,7 +238,7 @@ default
    state_entry()
    {
       #if defined DESCRIPTION
-         llSetObjectDesc(Version + " " + DESCRIPTION);
+         llSetObjectName(DESCRIPTION + " v" + (string)Version);
       #endif
       #if !defined HOTLAUNCH
          AllOff(FALSE);
