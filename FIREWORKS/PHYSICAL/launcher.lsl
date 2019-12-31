@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++
 *  //}   end of folding section
 */
-#define VERSION "4.5"
+#define VERSION "4.6"
 
 //#define CANNON_BARREL
 #include "LIB\lib.lsl"
@@ -222,32 +222,43 @@ msgHandler(string sender, string msg)
 
 rotation chooseRotation(rotation rot)
 {
+   debugSay(2,"in chooseRotation");
    //{
    if (angle != NO_VALUE)   // notecard overrides everything else
    {
+      debugSay(2,"got relative angle from notecard");
       return llEuler2Rot(<0,angle,0>) * rot; //putting the constant first means local rotation
    }
    else
    {
    #if defined LAUNCH_ROT
+      debugSay(2,"LAUNCH_ROT");
       rotation rot2 = rot;
    #elif defined LAUNCH_ROT_ZERO
+      debugSay(2,"LAUNCH_ROT_ZERO");
       rotation rot2 = <0.0,0.0,0.0,0.0>;
    #elif defined LAUNCH_ROT_ABSOLUTE4
+      debugSay(2,"LAUNCH_ROT_ABSOLUTE4");
       rotation rot2 = LAUNCH_ROT_ABSOLUTE4;
    #elif defined LAUNCH_ROT_ABSOLUTE
+      debugSay(2,"LAUNCH_ROT_ABSOLUTE");
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_ABSOLUTE);
+      debugSay(2,(string)rot2);
    #elif defined LAUNCH_ROT_RELATIVE
+      debugSay(2,"LAUNCH_ROT_RELATIVE");
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE) *rot;
    #elif defined LAUNCH_ROT_RELATIVE2
+      debugSay(2,"LAUNCH_ROT_RELATIVE2");
       vector flat_rot = llRot2Euler(rot);
       flat_rot.x = 0.0;
       flat_rot.y = 0.0;
       //flat_rot.z = 0;
       rotation rot2 = llEuler2Rot(LAUNCH_ROT_RELATIVE2) *llEuler2Rot(flat_rot);
    #else
+      debugSay(2,"LAUNCH_ROT not defined");
       rotation rot2 = llEuler2Rot(<0,0,0>) * rot;
    #endif
+   debugSay(2,"rotation = " + (string)rot2);
    return rot2;
    }
    //}
@@ -282,12 +293,39 @@ string generateLaunchMsg(integer i)
       parameters, but extracting from a list is, I think, very slow in LSL.  So, globals.
       TODO: test speed with parameters in a list
    */
+
+   /*
+   LAUNCH MESSAGE FORMAT  (all as strings)
+   texture
+   3 colors
+   systemAge  a float
+   volume
+   startGlow, endGlow
+   BOOMSOUND
+   burstRadius
+   partAge
+   startAlpha,endAlpha
+   burstRate
+   startScale,endScale
+   partCount
+   partOmega
+   maxPartSpeed,minPartSpeed
+   beginAngle,endAngle
+   partAccel
+   rezPos
+   */
    #ifdef REZPOSREL
       vector rezPos = llGetPos()+ ((vector)REZPOSREL * llGetRot());
+      debugSay(2,"rezpos " + (string)rezPos);
    #elif defined REZPOSABS
       vector rezPos = (vector)REZPOSABS;
+      debugSay(2,"rezpos " + (string)rezPos);
+   #elif define REZPOSTEST
+      vector rezPos = (vector)TARGET_POS_TEST;
+      debugSay(2,"rezpos " + (string)rezPos);
    #else
       vector rezPos = <0.0,0.0,0.0>;  // ignored by projectile
+      debugSay(2,"rezpos null");
    #endif
 
    //have to put this here because SL can't do math in declarations
@@ -343,7 +381,8 @@ string generateLaunchMsg(integer i)
 integer generateLaunchParams()
 {
    //{
-   /* max int 0x80000000  (32 bits)
+   /* format of launch parameter
+       max int 0x80000000  (32 bits)
 
       integer(<127) + integer (<=100, typically 50)
       follow vel   1----- -------- -------- --------  = 0x2000 0000
@@ -354,17 +393,17 @@ integer generateLaunchParams()
       debug             1 -------- -------- --------  = 0x0100 0000
       launchalpha       - 1------- -------- --------  = 0x0080 0000
       unused              -1------ -------- --------  = 0x0040 0000
-      rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
+      rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000)
       unused                       --11---- --------  = 0x0000 3000
       smoke                        ----1--- -------- =  0x0000 0800
-      multimode                    -----111 1-------  = 0x0000 0780 
+      multimode                    -----111 1-------  = 0x0000 0780
       flighttime                            -1111111  =      0x007F
    */
    vector v = llGetScale();
    zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
    if (zOffset > 10.0) //can't rez more than 10 m away
       zOffset = 9.0;
- 
+
    #if defined MULTIBURST
       integer mode = MODE_MULTIBURST;
    #else
@@ -380,9 +419,9 @@ integer generateLaunchParams()
    #elif defined MODEANGLECONE
       mode = mode | MODE_ANGLECONE;
    #else
-      mode = mode | MODE_ANGLECONE;
+      llOwnerSay("NO PATTERN DEFINE");
    #endif
-   debugList(2,["mode is ", hex(mode)]); 
+   debugList(2,["mode is ", hex(mode)]);
 
    integer p = flightTime;  //up to 0x007F
 
@@ -398,7 +437,7 @@ integer generateLaunchParams()
    #if defined RIBBON
       p = p | RIBBON_MASK;
    #endif
-   if (debug > 0)
+   if (debug > 1)
       p = p | DEBUG_MASK;
    if (explodeOnCollision >0)
       p = p | COLLISION_MASK;
@@ -457,7 +496,7 @@ fire(float systemAge)
       vector pos = llGetPos()+ (<0.0,0.0,zOffset> * rot);
       vector vel = <0,0,flightSpeed>*rot; //along the axis of the launcher
       rotation rot2 =  chooseRotation(rot);
-
+      debugSay(2,"rotation = " + (string)rot2);
       llRezAtRoot(rocket,pos,vel, rot2, p2);
 
       debugSay(3,"rezzing at "+ (string)llGetTime() + " seconds");
@@ -467,10 +506,10 @@ fire(float systemAge)
          setParamsFast(muzzleLink,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
       }
       llSleep(0.2);
-      debugSay(1,"launch vel " + (string)vel);
-      debugSay(1,"launcher rot   " + (string)rot  + " or " + (string)llRot2Euler(rot));
-      debugSay(1,"projectile rot " + (string)rot2 + " or " + (string)llRot2Euler(rot2));
-      debugSay(1,"sending launchMsg at "+(string)llGetTime()+" seconds *********\n" + launchMsg+ "\n*********");
+      debugSay(2,"launch vel " + (string)vel);
+      debugSay(2,"launcher rot   " + (string)rot  + " or " + (string)llRot2Euler(rot));
+      debugSay(2,"projectile rot " + (string)rot2 + " or " + (string)llRot2Euler(rot2));
+      debugSay(2,"sending launchMsg at "+(string)llGetTime()+" seconds *********\n" + launchMsg+ "\n*********");
       llRegionSay(rezChan, launchMsg);
       if (launchDelay > 0.0)
          llSleep(launchDelay);
@@ -496,18 +535,24 @@ parseNotecardList()
    #endif
    if (flightTime > 126)
       flightTime =  127;
+
+   #if defined FREEZE
+      freezeOnBoom = FREEZE
+   #else
    freezeOnBoom = getInteger(notecardList,"freeze", 0);
+   #endif
    integer w = getInteger(notecardList,"wind", NO_VALUE);
    if (w != NO_VALUE)
       wind = w;
    angle = getAngle(notecardList, "angle",NO_VALUE);
-   colors = colors + parseColor(notecardList,"color1");
-   colors = colors + parseColor(notecardList,"color2");
-   colors = colors + parseColor(notecardList,"color3");
-   colors = colors + parseColor(notecardList,"color4");
-   colors = colors + parseColor(notecardList,"color5");
-   colors = colors + parseColor(notecardList,"color6");
-   debugSay(2,"notecard color list is [" + (string)colors + "]");  
+   debugSay(4,"notecard angle says "+ (string) angle);
+   colors = colors + parseColor(notecardList,"color1")
+                   + parseColor(notecardList,"color2")
+                   + parseColor(notecardList,"color3")
+                   + parseColor(notecardList,"color4")
+                   + parseColor(notecardList,"color5")
+                   + parseColor(notecardList,"color6");
+   debugSay(2,"notecard color list is [" + (string)colors + "]");
    //}
 }
 
@@ -520,7 +565,7 @@ default
 
    state_entry()
    {
-      if (debug > 0) llPlaySound(SOUND_BEEP1,1.0);
+      if (debug > 0) debugSound(SOUND_BEEP1,1.0);
       debugSay(1,"\n STATE_ENTRY" + " debug level = " + (string)debug);
       owner=llGetOwner();
 
@@ -545,7 +590,9 @@ default
       debugSay(5,"1.1: "+(string)llGetTime() + "seconds");
       #if defined DESCRIPTION
          // Note that this sets the prim's description, not the object's so it is OK to leave in launcher that is being linked to another object
-         llSetObjectDesc((string)chatChan+" "+VERSION+" "+DESCRIPTION);
+         llSetObjectDesc((string)chatChan+" "+llGetInventoryName(INVENTORY_OBJECT,0));
+         string name = PREFIX + " Launcher " +VERSION+" "+DESCRIPTION;
+         llSetObjectName(name);
       #endif
       debugSay(5,"1.2: "+(string)llGetTime() + "seconds");
 
@@ -575,8 +622,9 @@ default
       llListen(chatChan, "",id, "" );
       llListen(GLOBAL_CHAN,"",id,"");
       llOwnerSay("listening on channel "+(string)chatChan);
+      llOwnerSay("listening on channel "+(string)GLOBAL_CHAN);
       debugSay(1,"READY at "+ (string)llGetAndResetTime() + "seconds");
-      if (debug > 0) llPlaySound(SOUND_BEEP2,1.0);
+      if (debug > 0) debugSound(SOUND_BEEP2,1.0);
       }
 
    //link messages come from the menu script
