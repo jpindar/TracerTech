@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++
 *  //}   end of folding section
 */
-#define VERSION "4.6"
+#define VERSION "4.7.3"
 
 //#define CANNON_BARREL
 #include "LIB\lib.lsl"
@@ -59,8 +59,8 @@ string preloadPrimName = PRELOADERPRIM;
 #endif
 string muzzlePrimName = MUZZLEPRIM;
 
-#if defined BALLCOUNT
-  integer numOfBalls = BALLCOUNT;
+#if defined BALLS
+  integer numOfBalls = BALLS;
 #else
   integer numOfBalls = 0;
 #endif
@@ -429,7 +429,9 @@ integer generateLaunchParams()
    debugList(2,["parameter is ", p, " or ", hex(p)]);
 
    #if defined LAUNCHALPHA
-      p = p | LAUNCH_ALPHA_MASK;
+      #if LAUNCHALPHA == 1
+          p = p | LAUNCH_ALPHA_MASK;
+      #endif
    #endif
    #if defined SMOKE
       p = p | SMOKE_MASK;
@@ -437,6 +439,13 @@ integer generateLaunchParams()
    #if defined RIBBON
       p = p | RIBBON_MASK;
    #endif
+   #if defined NOFLASH
+      debugSay(2,"no flash");
+   #else
+      debugSay(2,"flash");
+      p = p | FLASH_MASK;
+   #endif
+
    if (debug > 1)
       p = p | DEBUG_MASK;
    if (explodeOnCollision >0)
