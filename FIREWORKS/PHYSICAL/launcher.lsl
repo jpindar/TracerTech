@@ -8,18 +8,12 @@
 *
 *rezzes and launches projectile from its inventory
 *
-*  //{   this allows folding in NP++ 
+*  //{   this allows folding in NP++
 *  //}   end of folding section
 */
-#define VERSION "4.4"
+#define VERSION "4.5"
 
-//#define TRICOLOR
-//#define LAUNCH_ROT
-//#define LAUNCH_ROT_90Y  // makes ring perp to flight axis
-//#define SPINTRAILS
-//#define SPARKBALL
 //#define CANNON_BARREL
-
 #include "LIB\lib.lsl"
 #include "LIB\readNotecardToList.h"
 
@@ -66,45 +60,45 @@ string preloadPrimName = PRELOADERPRIM;
 string muzzlePrimName = MUZZLEPRIM;
 
 #if defined BALLCOUNT
-integer numOfBalls = BALLCOUNT;
+  integer numOfBalls = BALLCOUNT;
 #else
-integer numOfBalls = 0;
+  integer numOfBalls = 0;
 #endif
 
 #if defined LAUNCHDELAY
-float launchDelay = LAUNCHDELAY;
+  float launchDelay = LAUNCHDELAY;
 #else
-float launchDelay = 0.5;
+  float launchDelay = 0.5;
 #endif
 
 #if defined SYSTEMAGE
-float systemAge = SYSTEMAGE;
+  float systemAge = SYSTEMAGE;
 #else
-float systemAge = 1.0;
+  float systemAge = 1.0;
 #endif
 
 #if defined STARTGLOW
-float startGlow = STARTGLOW;
+  float startGlow = STARTGLOW;
 #else
-float startGlow = 0.0;
+  float startGlow = 0.0;
 #endif
 
 #if defined ENDGLOW
-float endGlow = ENDGLOW;
+  float endGlow = ENDGLOW;
 #else
-float endGlow = 0.0;
+  float endGlow = 0.0;
 #endif
 
 #if defined STARTALPHA
-float startAlpha = STARTALPHA;
+  float startAlpha = STARTALPHA;
 #else
-float startAlpha = 1.0;
+  float startAlpha = 1.0;
 #endif
 
 #if defined ENDALPHA
-float endAlpha = ENDALPHA;
+  float endAlpha = ENDALPHA;
 #else
-float endAlpha = 1.0;
+  float endAlpha = 1.0;
 #endif
 
 #ifdef PARTAGE
@@ -125,16 +119,16 @@ float endAlpha = 1.0;
   float burstRadius = 1;
 #endif
 
-#if defined STARTSCALE
-vector startScale = STARTSCALE;
+#ifdef STARTSCALE
+  vector startScale = STARTSCALE;
 #else
-vector startScale = <1.0,1.0,0.0>;
+  vector startScale = <1.0,1.0,0.0>;
 #endif
 
-#if defined ENDSCALE
-vector  endScale = ENDSCALE;
+#ifdef ENDSCALE
+  vector  endScale = ENDSCALE;
 #else
-vector  endScale = <1.0,1.0,0.0>;
+  vector  endScale = <1.0,1.0,0.0>;
 #endif
 
 #ifdef PARTCOUNT
@@ -153,19 +147,19 @@ vector  endScale = <1.0,1.0,0.0>;
    vector partOmega = <0.0,0.0,0.0>;
 #endif
 
-#if defined MAXPARTSPEED
+#ifdef MAXPARTSPEED
    float maxPartSpeed = MAXPARTSPEED;
 #else
    float maxPartSpeed = 1.0;
 #endif
 
-#if defined MINPARTSPEED
+#ifdef MINPARTSPEED
    float minPartSpeed = MINPARTSPEED;
 #else
    float minPartSpeed = 1.0;
 #endif
 
-#if defined PARTACCEL
+#ifdef PARTACCEL
    vector partAccel = PARTACCEL;
 #else
    vector partAccel = <0,0,0>;
@@ -180,7 +174,7 @@ msgHandler(string sender, string msg)
    llResetTime();
    debugSay(3,"got message '" + msg + "' from "+ (string)sender);
    //allow sameOwner so message can be from a trigger owned by our owner
-   if (!sameOwner(sender)) 
+   if (!sameOwner(sender))
    {
       if (access == ACCESS_OWNER)
       {
@@ -197,7 +191,15 @@ msgHandler(string sender, string msg)
    msg = llToLower(msg);
    if (msg == "fire")
    {
-      fire();
+      fire(systemAge);
+   }
+   if (msg == "on")
+   {
+      fire(MAX_INT);
+   }
+   if (msg == "off")
+   {
+      fire(0);
    }
    else if (msg == "hide")
    {
@@ -256,7 +258,7 @@ vector chooseOmega(vector omega, integer i)
    //{
    vector omega2 = omega;
    #if defined PARTOMEGA_REL
-       //this is probably not right, should probably be only 2 dimensional  
+       //this is probably not right, should probably be only 2 dimensional
        omega2 = omega2 * rot;
        //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
    #elif defined PARTOMEGA_REL2
@@ -268,8 +270,8 @@ vector chooseOmega(vector omega, integer i)
    #if defined MIRROR
          if ((i%2) == 1)
             omega2 = -1 * omega2;
-   #endif 
-   return omega2; 
+   #endif
+   return omega2;
    //}
 }
 
@@ -282,7 +284,7 @@ string generateLaunchMsg(integer i)
    */
    #ifdef REZPOSREL
       vector rezPos = llGetPos()+ ((vector)REZPOSREL * llGetRot());
-   #elif defined REZPOSABS 
+   #elif defined REZPOSABS
       vector rezPos = (vector)REZPOSABS;
    #else
       vector rezPos = <0.0,0.0,0.0>;  // ignored by projectile
@@ -319,14 +321,14 @@ string generateLaunchMsg(integer i)
    msg += "," + (string)burstRadius;
    msg += "," + (string)partAge;
    msg += "," + (string)startAlpha + "," + (string)endAlpha;
-   msg += "," + (string)burstRate; 
+   msg += "," + (string)burstRate;
    msg += "," + (string)startScale + "," + (string)endScale;
-   msg += "," + (string)partCount; 
+   msg += "," + (string)partCount;
    msg += "," + (string)chooseOmega(partOmega, i);
    #if defined BURSTOUT
-   if (i==0) 
+   if (i==0)
       msg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
-   else 
+   else
       msg += "," + (string)(maxPartSpeed*BURSTOUT)+","+(string)(minPartSpeed*BURSTOUT);
    #else
       msg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
@@ -338,7 +340,86 @@ string generateLaunchMsg(integer i)
    //}
 }
 
-fire()
+integer generateLaunchParams()
+{
+   //{
+   /* max int 0x80000000  (32 bits)
+
+      integer(<127) + integer (<=100, typically 50)
+      follow vel   1----- -------- -------- --------  = 0x2000 0000
+      low vel       1---- -------- -------- --------  = 0x1000 0000
+      wind           1--- -------- -------- --------  = 0x0800 0000
+      freeze          1-- -------- -------- --------  = 0x0400 0000
+      collision        1- -------- -------- --------  = 0x0200 0000
+      debug             1 -------- -------- --------  = 0x0100 0000
+      launchalpha       - 1------- -------- --------  = 0x0080 0000
+      unused              -1------ -------- --------  = 0x0040 0000
+      rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
+      unused                       --11---- --------  = 0x0000 3000
+      smoke                        ----1--- -------- =  0x0000 0800
+      multimode                    -----111 1-------  = 0x0000 0780 
+      flighttime                            -1111111  =      0x007F
+   */
+   vector v = llGetScale();
+   zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
+   if (zOffset > 10.0) //can't rez more than 10 m away
+      zOffset = 9.0;
+ 
+   #if defined MULTIBURST
+      integer mode = MODE_MULTIBURST;
+   #else
+      integer mode = 0;
+   #endif
+
+   #if defined RINGBALL
+      mode = mode | MODE_ANGLE;
+   #elif defined SPIRALBALL
+      mode = mode | MODE_ANGLE;
+   #elif defined MODEANGLE
+      mode = mode | MODE_ANGLE;
+   #elif defined MODEANGLECONE
+      mode = mode | MODE_ANGLECONE;
+   #else
+      mode = mode | MODE_ANGLECONE;
+   #endif
+   debugList(2,["mode is ", hex(mode)]); 
+
+   integer p = flightTime;  //up to 0x007F
+
+   p = p | (mode << MULTIMODE_OFFSET);
+   debugList(2,["parameter is ", p, " or ", hex(p)]);
+
+   #if defined LAUNCHALPHA
+      p = p | LAUNCH_ALPHA_MASK;
+   #endif
+   #if defined SMOKE
+      p = p | SMOKE_MASK;
+   #endif
+   #if defined RIBBON
+      p = p | RIBBON_MASK;
+   #endif
+   if (debug > 0)
+      p = p | DEBUG_MASK;
+   if (explodeOnCollision >0)
+      p = p | COLLISION_MASK;
+   if (freezeOnBoom >0)
+      p = p | FREEZE_MASK;
+   if (wind >0)
+      p = p | WIND_MASK;
+   if (explodeOnLowVelocity >0)
+      p = p | LOW_VELOCITY_MASK;
+   #if defined STATIC
+      p = p | FREEZE_ON_LAUNCH_MASK;
+   #endif
+   #ifndef NO_FOLLOW_VELOCITY
+      p = p | FOLLOW_VELOCITY_MASK;
+   #endif
+   return p;
+   //}
+}
+
+
+fire(float systemAge)
 {
    //{
    vector muzzleColor = (vector)COLOR_GOLD;
@@ -397,83 +478,6 @@ fire()
    //}
 }
 
-integer generateLaunchParams()
-{
-   //{
-   /* max int 0x80000000  (32 bits)
-
-      integer(<127) + integer (<=100, typically 50)
-      follow vel   1----- -------- -------- --------  = 0x2000 0000
-      low vel       1---- -------- -------- --------  = 0x1000 0000
-      wind           1--- -------- -------- --------  = 0x0800 0000
-      freeze          1-- -------- -------- --------  = 0x0400 0000
-      collision        1- -------- -------- --------  = 0x0200 0000
-      debug             1 -------- -------- --------  = 0x0100 0000
-      launchalpha       - 1------- -------- --------  = 0x0080 0000
-      unused              -1------ -------- --------  = 0x0040 0000
-      rezchan               111111 11------ --------  = 0x003F C000 (llFrand(255) * 0x4000) 
-      unused                       --11---- --------  = 0x0000 3000
-      smoke                        ----1--- -------- =  0x0000 0800
-      multimode                    -----111 1-------  = 0x0000 0780 
-      flighttime                            -1111111  =      0x007F
-   */
-   vector v = llGetScale();
-   zOffset = zOffset + ((float)v.z)/2 + 0.2;  //assuming ball diameter is 0.4
-   if (zOffset > 10.0) //can't rez more than 10 m away
-      zOffset = 9.0;
- 
-   #if defined MULTIBURST
-      integer mode = MODE_MULTIBURST;
-   #else
-      integer mode = 0;
-   #endif
-
-   #if defined RINGBALL
-      mode = mode | MODE_ANGLE;
-   #elif defined SPIRALBALL
-      mode = mode | MODE_ANGLE;
-   #elif defined MODEANGLE
-      mode = mode | MODE_ANGLE;
-   #elif defined MODEANGLECONE
-      mode = mode | MODE_ANGLECONE;
-   #else
-      mode = mode | MODE_ANGLECONE;
-   #endif
-   debugList(2,["mode is ", hex(mode)]); 
-   
-   integer p = flightTime;  //up to 0x007F
-   
-   p = p | (mode << MULTIMODE_OFFSET);
-   debugList(2,["parameter is ", p, " or ", hex(p)]);
-   
-   #if defined LAUNCHALPHA
-      p = p | LAUNCH_ALPHA_MASK;
-   #endif
-   #if defined SMOKE
-      p = p | SMOKE_MASK;
-   #endif
-   #if defined RIBBON
-      p = p | RIBBON_MASK;
-   #endif
-   if (debug > 0)
-      p = p | DEBUG_MASK;
-   if (explodeOnCollision >0)
-      p = p | COLLISION_MASK;
-   if (freezeOnBoom >0)
-      p = p | FREEZE_MASK;
-   if (wind >0)
-      p = p | WIND_MASK;
-   if (explodeOnLowVelocity >0)
-      p = p | LOW_VELOCITY_MASK;
-   #if defined STATIC
-      p = p | FREEZE_ON_LAUNCH_MASK;
-   #endif
-   #ifndef NO_FOLLOW_VELOCITY
-      p = p | FOLLOW_VELOCITY_MASK;
-   #endif
-   return p;
-   //}
-}
 
 parseNotecardList()
 {
@@ -487,7 +491,7 @@ parseNotecardList()
       flightSpeed = 0;
       flightTime = 1;
    #else
-      flightSpeed = getFloat(notecardList,"speed",SPEED); 
+      flightSpeed = getFloat(notecardList,"speed",SPEED);
       flightTime = getInteger(notecardList,"flighttime", 99);
    #endif
    if (flightTime > 126)
@@ -519,20 +523,20 @@ default
       if (debug > 0) llPlaySound(SOUND_BEEP1,1.0);
       debugSay(1,"\n STATE_ENTRY" + " debug level = " + (string)debug);
       owner=llGetOwner();
-      
+
       #ifdef NOTECARD_IN_THIS_PRIM
          if(doneReadingNotecard == FALSE) state readNotecardToList;
       #endif
-      
+
       // code before this point can be executed more than once!
       debugSay(5,"Done reading notecard at "+(string)llGetTime() + "seconds");
- 
+
       #if defined TEXTURE1
          texture = TEXTURE1;
       #else
          texture = getTextureFromInventory(0);
       #endif
-      
+
       if (numOfBalls < 1)  //if not specified by notecard or #define
          numOfBalls =  llGetInventoryNumber(INVENTORY_OBJECT);
       debugSay(5,"1: "+(string)llGetTime() + "seconds");
