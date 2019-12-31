@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.11"
+#define Version "4.13"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -102,8 +102,12 @@ boom()
    //llMessageLinked(LINK_SET,(integer)42,"boom",(string)color)
    if (!armed)
      return;
-   debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel());
-   llMessageLinked(LINK_THIS, 0, "off", ""); 
+   rotation rot = llGetRot();
+   debugSay(2,"boom at " + (string)llGetPos() + (string)llGetVel() + " rot " + (string)rot);
+   debugSay(2, "defined omega" + (string)partOmega);
+   partOmega = partOmega * rot;
+   debugSay(2, "final omega" + (string)partOmega);
+   llMessageLinked(LINK_THIS, 0, "off", "");
    setParamsFast(LINK_SET,[PRIM_COLOR,ALL_SIDES,<0.0,0.0,0.0>,0.0]);
 
    if (freezeOnBoom)
