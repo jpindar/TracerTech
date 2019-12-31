@@ -4,7 +4,7 @@
 * tracerping@gmail.com
 *
 */
-#define Version "4.09"
+#define Version "4.10"
 
 #include "LIB\lib.lsl"
 #include "LIB\effects\effect.h"
@@ -123,7 +123,7 @@ boom()
       float flashTime = 0.2;
       for(i=0;i<numOfIterations;i++)
       {
-         subBoom1(i); 
+         subBoom1(i);
       }
       llParticleSystem([]);
       //just doing llParticleSystem([]) didn't work if interEmitterDelay < systemAge
@@ -179,10 +179,10 @@ parseRezParam(integer p)
       launchalpha       - 1------- -------- --------  = 0x0080 0000
       unused              -1------ -------- --------  = 0x0040 0000
       rezchan               111111 11------ --------  = 0x003F C000
-      unused                       --1----- --------  = 0x0000 2000
+      flash                        --1----- --------  = 0x0000 2000
       ribbon                       ---1---- --------  = 0x0000 1000
       smoke                        ----1--- -------- =  0x0000 0800
-      multimode                    -----111 1-------  = 0x0000 0780 
+      multimode                    -----111 1-------  = 0x0000 0780
       flighttime                            -1111111  =      0x007F
    */
    debug = (p & DEBUG_MASK);
@@ -199,8 +199,11 @@ parseRezParam(integer p)
       }
       else
       {
-         setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
-         setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
+         if (p & FLASH_MASK)
+         {
+            setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
+            setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]);
+         }
       }
    }
    else
@@ -249,7 +252,7 @@ default
       llSetBuoyancy(0.5);
       llCollisionSound("", 0.0);
       setParamsFast(LINK_THIS,[PRIM_POINT_LIGHT,TRUE,lightColor,intensity,lightRadius,falloff]);
-      setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]); 
+      setParamsFast(LINK_SET,[PRIM_FULLBRIGHT, ALL_SIDES, TRUE ]);
       setParamsFast(LINK_SET,[PRIM_TEMP_ON_REZ,TRUE]);
       llSetStatus(STATUS_DIE_AT_EDGE, TRUE);
    }
@@ -400,7 +403,7 @@ default
       //or
       //llLookAt(v+llGetPos(), 1.0, 0.5);
       }
-      
+
       if (tim>flightTime)
       {
          debugSay(2,"timed out");
