@@ -11,7 +11,7 @@
 *  //{   this allows folding in NP++
 *  //}   end of folding section
 */
-#define VERSION "4.7.3"
+#define VERSION "4.7.4"
 
 //#define CANNON_BARREL
 #include "LIB\lib.lsl"
@@ -137,16 +137,6 @@ string muzzlePrimName = MUZZLEPRIM;
   integer partCount = 2;
 #endif
 
-#ifdef PARTOMEGA
-   vector partOmega = PARTOMEGA;
-#elif defined PARTOMEGA_REL
-   vector partOmega = PARTOMEGA_REL;
-#elif defined PARTOMEGA_ABS
-   vector partOmega = PARTOMEGA_ABS;
-#else
-   vector partOmega = <0.0,0.0,0.0>;
-#endif
-
 #ifdef MAXPARTSPEED
    float maxPartSpeed = MAXPARTSPEED;
 #else
@@ -264,26 +254,37 @@ rotation chooseRotation(rotation rot)
    //}
 }
 
-vector chooseOmega(vector omega, integer i)
+vector chooseOmega(integer i)
 {
-   //{
+   rotation rot = llGetRot();
+   #ifdef PARTOMEGA
+      vector omega = PARTOMEGA;
+   #elif defined PARTOMEGA_REL
+      vector omega = PARTOMEGA_REL;
+   #elif defined PARTOMEGA_ABS
+      vector omega = PARTOMEGA_ABS;
+   #else
+      vector omega = <0.0,0.0,0.0>;
+   #endif
    vector omega2 = omega;
    #if defined PARTOMEGA_REL
        //this is probably not right, should probably be only 2 dimensional
-       omega2 = omega2 * rot;
-       //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
+       omega2 = omega * rot;
+       //omega2 = omega * (<rot.x,rot.y,rot.z>);
+       debugList(2,["partOmega1",omega,"rot",rot,"partOmega2",omega2]);
    #elif defined PARTOMEGA_REL2
        // still not right
-       //omega2 = omega2 * (<rot.x,rot.y,rot.z>);
-       omega2 = omega2 * rot;
-       omega2.z = 0.0;
+       //omega2 = omega * (<rot.x,rot.y,rot.z>);
+       omega2 = llRot2Euler(llEuler2Rot(omega) * rot);
+       //omega2 = omega * rot;
+       //omega2.z = 0.0;
+       debugList(2,["partOmega1",omega,"rot",rot,"partOmega2",omega2]);
    #endif
    #if defined MIRROR
          if ((i%2) == 1)
             omega2 = -1 * omega2;
    #endif
    return omega2;
-   //}
 }
 
 string generateLaunchMsg(integer i)
@@ -362,7 +363,7 @@ string generateLaunchMsg(integer i)
    msg += "," + (string)burstRate;
    msg += "," + (string)startScale + "," + (string)endScale;
    msg += "," + (string)partCount;
-   msg += "," + (string)chooseOmega(partOmega, i);
+   msg += "," + (string)chooseOmega(i);   //partOmega
    #if defined BURSTOUT
    if (i==0)
       msg += "," + (string)maxPartSpeed+","+(string)minPartSpeed;
