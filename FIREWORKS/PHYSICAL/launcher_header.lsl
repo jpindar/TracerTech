@@ -10,31 +10,34 @@
 *
 */
 #define PREFIX " "
+#define DESCRIPTION "plain spikestar"
 #define DEBUGLEVEL 1
 //#define TRACERGRID
 #define HYPERGRID
-#define DESCRIPTION "plain spikestar"
 
 #define LAUNCHALPHA 1
 #define LAUNCHDELAY 0
-#define BALLCOUNT 1
+#define BALLS 1
 #define SMOKE 1
 //#define NOFLASH
 //#define MIRROR
-//#define MULTIBURST
+
 //#define STATIC
 //#define REZPOSABS <150,150,100>
 //#define REZPOSREL <0,0,50>
-#define LAUNCH_ROT_ABSOLUTE <0,0,0>
-//#define LAUNCH_ROT_RELATIVE <0,0,20>
+//#define LAUNCH_ROT_ABSOLUTE <0,0,0>
+#define LAUNCH_ROT_RELATIVE <0,0,0>
 
-#define PARTOMEGA <0.0,20.0,0.0>
+//#define MULTIBURST
+
 //#define MODEANGLE
 #define STARTANGLE 0
 #define ENDANGLE PI
+#define PARTOMEGA <0.0,0.0,0.0>
+#define PARTACCEL <0.0,0.0,0.0>
 
-#define MINPARTSPEED 2.0
-#define MAXPARTSPEED 5.0
+#define MINPARTSPEED 1.0
+#define MAXPARTSPEED 1.0
 
 #define BURSTRADIUS 10
 #define BURSTRATE 0.2
@@ -43,15 +46,15 @@
 #define SYSTEMAGE 2.0
 
 #define STARTSCALE <1.0,1.0,0.0>
-#define ENDSCALE <1.0,1.0,0.0>
-#define STARTGLOW 0.1
-#define ENDGLOW 0.1
+#define ENDSCALE   <1.0,1.0,0.0>
+#define STARTGLOW  0.1
+#define ENDGLOW    0.1
 #define STARTALPHA 1.0
-#define ENDALPHA 1.0
+#define ENDALPHA   1.0
 
 #define FOLLOWVELOCITY
-#define PARTACCEL <0.0,0.0,-1.0>
-#define WIND
+//#define NO_FOLLOW_VELOCITY  
+//#define WIND
 
 //#define TEXTURE1 TEXTURE_NAUTICAL_STAR
 //#define TEXTURE1 TEXTURE_PATRIOTIC_STAR
