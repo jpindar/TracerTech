@@ -4,18 +4,7 @@
 * tracerping@gmail.com
 */
 #define TRACERGRID
-//#define DEBUG
-//#define RINGBALL
-//#define TRAILBALL
-//#define SPIRALBALL
-//#define HOTLAUNCH
-//#define PRIM_ROTATION
-
-// RINGBALLS SHOULD NOT POINTFORWARD
-//#define POINTFORWARD
-//but if they are, they probably should be ROT_90, so that the ring is perpedicular
-//to the flightpath
-//#define ROT_90
-//#define TRICOLOR
+#define HYPERGRID
+#define DESCRIPTION "PLAIN ROCKETBALL"
 
 #include "FIREWORKS\PHYSICAL\rocketball.lsl"
