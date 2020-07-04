@@ -68,7 +68,7 @@ string muzzlePrimName = MUZZLEPRIM;
 #if defined LAUNCHDELAY
   float launchDelay = LAUNCHDELAY;
 #else
-  float launchDelay = 0.5;
+  float launchDelay = 0.0;
 #endif
 
 #if defined SYSTEMAGE
@@ -476,6 +476,7 @@ fire(float systemAge)
    integer muzzleFace = ALL_SIDES;
    string rocket;
    integer i;
+   float safeVolume = 0;
    debugSay(3,"firing at "+ (string)llGetTime() + " seconds");
    for (i = 0; i<numOfBalls; i++)
    {
@@ -497,7 +498,16 @@ fire(float systemAge)
       integer p2 = launchParam + (rezChan*0x4000);
       rezChan = -42000 -rezChan;  // the -42000 is arbitrary
       #ifndef STATIC
-         llPlaySound(LAUNCHSOUND,volume);
+         #define AUDIOBUGFIX
+         #ifdef AUDIOBUGFIX
+            // This looks like it doesn't do anything
+            // but similar code is a known fix for a known particle bug
+            safeVolume = volume;
+            llPlaySound(LAUNCHSOUND,safeVolume);
+            safeVolume = 0;
+         #else
+            llPlaySound(LAUNCHSOUND,volume);
+         #endif
          repeatSound(LAUNCHSOUND,volume);
       #endif
 
@@ -549,7 +559,7 @@ parseNotecardList()
    #if defined FREEZE
       freezeOnBoom = FREEZE
    #else
-   freezeOnBoom = getInteger(notecardList,"freeze", 0);
+      freezeOnBoom = getInteger(notecardList,"freeze", 0);
    #endif
    integer w = getInteger(notecardList,"wind", NO_VALUE);
    if (w != NO_VALUE)
