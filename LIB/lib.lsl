@@ -92,6 +92,7 @@ string nameToColor(string c)
    if(c=="pridegreen")  return COLOR_PRIDE_GREEN;
    if(c=="prideblue")  return COLOR_PRIDE_BLUE;
    if(c=="pridepurple")  return COLOR_PRIDE_PURPLE;
+   if(c=="amber") return COLOR_AMBER;
    //usually non-colors should be black, but in some special cases
    //we may want to pass them through to be handled later
    if(llGetSubString(c,0,0) =="!")  return c;
@@ -153,7 +154,7 @@ integer randomChan()
 integer ownerChan()
 {
    return (integer)("0xF" + llGetSubString(llGetOwner(),0,6));
-}   
+}
 
 repeatSound(key sound, float volume)
 {
@@ -458,11 +459,11 @@ string getTextureFromInventory(integer n)
             key uuid = llGetInventoryKey(name);
             if (uuid)
                return (string)uuid;
-            else 
+            else
                return "";
          }
       return "";
-   }  
+   }
 
 /*
 list mergeLists(list newList, list oldList)
