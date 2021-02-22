@@ -38,16 +38,16 @@ integer getTouch()
         }
         else
         {
-            debugSay("prim " + (string)link + " face " + (string)touchFace);
+            debugSay(0, "prim " + (string)link + " face " + (string)touchFace);
             if (!(link == targetPrim) && (touchFace == targetFace))
                return -1;
 
-            debugSay("detected touch at " + (string)touchUV);
+            debugSay(0,"detected touch at " + (string)touchUV);
             columnIndex = llFloor((touchUV.x-xOffset) * numberOfColumns);
             rowIndex = llFloor(touchUV.y * numberOfRows);
             //integer cellIndex = (rowIndex * llFloor(numberOfColumns)) + columnIndex;
-            //debugSay("detected touch at " + (string)columnIndex + ", " + (string)rowIndex);
-            debugSay("Key "+(string)columnIndex +  " pressed");
+            debugSay(99,"detected touch at " + (string)columnIndex + ", " + (string)rowIndex);
+            debugSay(0,"Key "+(string)columnIndex +  " pressed");
         }
         return columnIndex;
     }
