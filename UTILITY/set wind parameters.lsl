@@ -2,13 +2,13 @@
 // Touch this object to change the current wind parameters
 // Run osGetWindParam() sample to check if these values are applied
  
-float newStrength = 50.0;
+float newStrength;
 float newAvgStrength = 15.0;
 float newAvgDirection = 10.0;
 float newVarStrength = 7.0;
 float newVarDirection = -30.0;
 float newRateChange = 8.0;
-integer on = TRUE;
+integer on = FALSE;
  
 default
 {
@@ -20,11 +20,14 @@ default
             on =  !on;
             llOwnerSay("[SimpleRandomWind]");
             if (on)
-                osSetWindParam("SimpleRandomWind", "strength", newStrength);
+                newStrength = newAvgStrength;
             else
-                osSetWindParam("SimpleRandomWind", "strength", 0.0);
-                
-            llOwnerSay("wind strength(strength) is changed to " + (string)newStrength);
+                newStrength = 0.0;
+            osSetWindParam("SimpleRandomWind", "strength", newStrength);
+
+            llOwnerSay("changing wind strength to " + (string)newStrength);
+            float s = osGetWindParam("SimpleRandomWind", "strength");
+            llOwnerSay("wind strength is " + string(s));
         }
         else if(activePluginName == "ConfigurableWind")
         {
