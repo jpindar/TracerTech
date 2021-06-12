@@ -1,40 +1,54 @@
 ^l::
+
+
+; uses cntl-s and cntl-l to save or load the contents of a notecard
+; to or from a text file
+
+; select all
 Send, ^a
-Sleep,100
-SetTitleMatchMode, 2 
-  ; 2 means "A window's title can contain WinTitle anywhere inside it to be a match. "
-  ; 3 means match exactly
-WinActivate Notepad++
-Sleep,1000
-Send, ^n
 Sleep,100
 
-Send, ^o
-WinWaitActive Open
-Sleep,3000
-WinWaitNotActive Open
-Send, ^a
-Send, ^c
-Sleep,500
- ; this gets the Firestorm main window, not its console window. But how to get the right one if multiple
- ; instances are open?
+FileSelectFile, Filename
+if (Filename = "")
+    return
+file := FileOpen(Filename, "r")
+if !IsObject(file)
+{
+    MsgBox Can't open "%FileName%"
+    return
+}
+
+FileRead, clipboard, %Filename%
+Sleep,1000
+
+; this is enough of the title to find the Firestorm main window, not its console window.
+; TODO: How to get the right one if multiple instances are open?
 WinActivate Firestorm-Release
-;WinActivate Firestorm-Releasex64 5.1.7.55786 - Tracer Prometheus
 Sleep, 1000
+
 Send, ^v
 return
 
 
 
 ^s::
+; select all and copy
 Send, ^a
 Send, ^c
 Sleep,100
-SetTitleMatchMode, 2
-WinActivate Notepad++
-Sleep,1000
-Send, ^n
-Send, ^v
-Sleep, 500
-Send, ^!s
+ClipWait, 1, 1
+
+FileSelectFile, Filename, S24
+if (Filename = "")
+    return
+file := FileOpen(Filename, "w")
+if !IsObject(file)
+{
+    MsgBox Can't open "%FileName%" for writing.
+    return
+}
+
+file.Write(clipboard)
+file.Close()
+
 return
