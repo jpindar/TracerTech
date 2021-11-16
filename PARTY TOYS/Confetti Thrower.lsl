@@ -1,7 +1,6 @@
-/* 
+/*
 Particle confetti thrower  by Tracer Prometheus
 derived from the "Yay" script commonly found in Open Simulator grids
-
 
 */
 
@@ -9,7 +8,8 @@ derived from the "Yay" script commonly found in Open Simulator grids
 integer m_perm  =   FALSE;
 string texture;
 string target = "";
-integer menuChan;
+integer chatChan = 1;
+key owner;
 
 
 makeParticles()
@@ -44,7 +44,7 @@ makeParticles()
          0 |
          PSYS_PART_EMISSIVE_MASK |
          PSYS_PART_BOUNCE_MASK
-         // | PSYS_PART_TARGET_LINEAR_MASK
+         // | PSYS_PART_TARGET_POS_MASK
       ]);
 }
 
@@ -60,41 +60,45 @@ default
    {
       llResetScript();
    }
-    
+
    on_rez(integer i)
    {
       llResetScript();
    }
-    
+
    state_entry()
    {
-      llRequestPermissions(llGetOwner(), PERMISSION_TRIGGER_ANIMATION);   
-      texture = llGetInventoryName(INVENTORY_TEXTURE,0); 
+      owner = llGetOwner();
+      llRequestPermissions(owner, PERMISSION_TRIGGER_ANIMATION);
+      texture = llGetInventoryName(INVENTORY_TEXTURE,0);
       llSetTexture(texture, ALL_SIDES);
    }
-    
+
    run_time_permissions(integer perm)
    {
       if (perm & PERMISSION_TRIGGER_ANIMATION)
       {
-         llListen(1, "", llGetOwner(), "");
+         llListen(chatChan, "", owner, "");
          m_perm = TRUE;
       }
    }
-    
+
    listen( integer channel, string name, key id, string message )
    {
-      if(m_perm == TRUE)
+      if (channel == chatChan)
       {
-         if(llToLower(message) == "yay")
+         if(m_perm == TRUE)
          {
-            llStartAnimation("Confetti Thrower pose");
-            // llPlaySound("Confetti Thrower sound",1.0);
-            //PSYS_SRC_PATTERN_ANGLE_CONE
-            makeParticles();
-            llSleep(4);
-            llParticleSystem([]);
-            llStopAnimation("Confetti Thrower pose");
+            if(llToLower(message) == "yay")
+            {
+                //llStartAnimation("Confetti Thrower pose");
+                // llPlaySound("Confetti Thrower sound",1.0);
+                //PSYS_SRC_PATTERN_ANGLE_CONE
+                 makeParticles();
+                 llSleep(4);
+                 llParticleSystem([]);
+                 //llStopAnimation("Confetti Thrower pose");
+             }
          }
       }
    }
