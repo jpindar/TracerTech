@@ -2,21 +2,12 @@
 #ifndef LIB_H
    #define LIB_H
 
-#if defined TRACERGRID
-   #ifndef HYPERGRID
-      #define HYPERGRID
-   #endif
-   #ifndef OPENSIM
-      #define OPENSIM
-   #endif
-#endif
-
-#if defined HYPERGRID
+#if defined OPENSIM
    #ifndef TRACERGRID
       #define TRACERGRID
    #endif
-   #ifndef OPENSIM
-      #define OPENSIM
+   #ifndef HYPERGRID
+      #define HYPERGRID
    #endif
 #endif
 
