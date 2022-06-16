@@ -44,7 +44,7 @@ float endGlow = 0;
 #ifdef BURSTRADIUS
 float burstRadius = BURSTRADIUS;
 #else
-float burstRadius = 5;
+float burstRadius = 15;
 #endif
 
 #if defined STARTALPHA
@@ -71,8 +71,12 @@ float burstRadius = 5;
    float systemAge = 0;
    float delay = 1;
 #endif
-vector startScale = <0.5,0.5,0.0>;//or1.9
-vector endScale = <0.5,0.5,0.0>;  // 0.5 to 1.5
+
+vector startScale = <0.5,0.5,0.0>;
+vector endScale = <0.5,0.5,0.0>;
+#if !defined SCALEFACTOR
+   #define SCALEFACTOR 1.0
+#endif
 
 float particleAge = 2.0;
 float speed = 0.1;
@@ -105,8 +109,8 @@ makeParticles(integer link, string color1, string color2)
    PSYS_PART_END_ALPHA,        endAlpha,
    PSYS_PART_START_GLOW,       startGlow,
    PSYS_PART_END_GLOW,         endGlow,
-   PSYS_PART_START_SCALE,      startScale,
-   PSYS_PART_END_SCALE,        endScale,
+   PSYS_PART_START_SCALE,      startScale * SCALEFACTOR,
+   PSYS_PART_END_SCALE,        endScale * SCALEFACTOR,
    PSYS_SRC_TEXTURE,           texture,
    PSYS_SRC_MAX_AGE,           systemSafeSet,
    PSYS_PART_MAX_AGE,          particleAge,
