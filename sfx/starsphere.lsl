@@ -14,6 +14,7 @@
 */
 #define DESCRIPTION "Starsphere "
 #define VERSION "1.1"
+#define REPEATER  // enable timer events
 
 #include "LIB\lib.lsl"
 
@@ -37,6 +38,13 @@ string color1 = COLOR_WHITE;
 string color2 = COLOR_WHITE;
 integer on = FALSE;
 integer wind = FALSE;
+
+// PRIDE is a specific type of RAINBOX, but it's the only one implemented so far
+#if defined RAINBOW
+   #ifndef PRIDE
+      #define PRIDE
+   #endif
+#endif
 
 #if defined STARTGLOW
 float startGlow = STARTGLOW;  //notecard will override these
@@ -152,40 +160,32 @@ go(integer on)
 {
    if (on)
    {
+      integer i;
+      integer numOfColors;
       #if defined PRIDE
-      integer i;
-      list params = llCSV2List("pridered,prideorange,prideyellow,pridegreen,prideblue,pridepurple");
-      //params = llCSV2List("<1,0,0,>,<1,1,0>,<0,1,0>,<0,0,1>,<0,1,1>,<1,1,1>");
-      for (i=0; i<6; i++)
-      {
-         //color1 = llList2String(params,i);
-         color1 = nameToColor( llList2String(params,i));
-         //color1= llList2String(params,i);
-         color2 = color1;
-         boom(i+1);
-      }
+         list params = llCSV2List("pridered,prideorange,prideyellow,pridegreen,prideblue,pridepurple");
+         //params = llCSV2List("<1,0,0,>,<1,1,0>,<0,1,0>,<0,0,1>,<0,1,1>,<1,1,1>");
+         numOfColors = 6;
       #elif defined USA
-      integer i;
-      list params = llCSV2List("red,white,blue");
-      for (i=0; i<3; i++)
-      {
-         //color1 = llList2String(params,i);
-         color1 = nameToColor( llList2String(params,i));
-         color2 = color1;
-         boom(i+1);
-      }
+         list params = llCSV2List("red,white,blue");
+         numOfColors = 3;
       #elif defined FIRE
-      integer i;
-      list params = llCSV2List("gold,orange,red");
-      for (i=0; i<3; i++)
+         list params = llCSV2List("gold,orange,red");
+         numOfColors = 3;
+      #elif defined WHITE
+         list params = llCSV2List("white,white,white");
+         numOfColors = 3;
+      #else
+         list params = [COLOR1,COLOR2,COLOR3];
+         numOfColors = 3;
+      #endif
+      for (i=0; i<numOfColors; i++)
       {
          color1 = nameToColor( llList2String(params,i));
+         //color1 = llList2String(params,i);
          color2 = color1;
          boom(i+1);
       }
-      #else
-         boom(LINK_THIS);
-      #endif
    }
    else
    {
@@ -214,7 +214,6 @@ default
         if (on)
         {
            llOwnerSay("on");
-           llSleep(1);
            go(TRUE);
            #if defined REPEATER
              llSetTimerEvent(delay);
