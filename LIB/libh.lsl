@@ -144,17 +144,17 @@
 #define COLOR_YELLOW        "<1.00,1.00,0.00>"
 #define COLOR_ORANGE        "<1.00,0.50,0.00>"
 #define COLOR_PURPLE        "<1.00,0.00,1.00>"
-#define COLOR_PURPLE2       "<0.69, 0.05, 0.79>"
+#define COLOR_PURPLE2       "<0.69,0.05,0.79>"
 #define COLOR_3             "<0.00,0.80,0.20>"
-#define COLOR_HOTPINK       "<1.0,0.3,0.5>"
-#define COLOR_BLUEPURPLE    "<0.7,0.00,1.00>"
+#define COLOR_HOTPINK       "<1.00,0.30,0.50>"
+#define COLOR_BLUEPURPLE    "<0.70,0.00,1.00>"
 #define COLOR_LIGHTBLUE     "<0.30,0.40,1.00>"
-#define COLOR_BRIGHT_BLUE   "<0.3,0.3,1.00>"
+#define COLOR_BRIGHT_BLUE   "<0.30,0.30,1.00>"
 //#define COLOR_BLUE_TOO    "<0.00,0.46,0.85>"
 #define COLOR_LIGHTGREYBLUE "<0.47,0.68,0.77>"
 #define COLOR_TEAL          "<0.22,0.80,0.80>"
-#define COLOR_AQUA          "<0.5,0.86,1.00>"  //but cyan == aqua?
-#define COLOR_CYAN          "<0.0,1.00,1.00>"
+#define COLOR_AQUA          "<0.50,0.86,1.00>"
+#define COLOR_CYAN          "<0.00,1.00,1.00>"
 #define COLOR_LIME          "<0.00,1.0,0.44>"
 #define COLOR_PRIDE_RED      "<0.906, 0.000, 0.000>"
 #define COLOR_PRIDE_ORANGE   "<1.000, 0.549, 0.000>"
@@ -167,7 +167,7 @@
 #define COLOR_PRIDE_PURPLE   "<0.808, 0.000, 0.941>"
 //string color = "<0.42,0.017,0.59>";
 #define COLOR_DARK_ORANGE     "<1.000, 0.353, 0.000>"
-#define COLOR_AMBER     "<1.000, 0.353, 0.000>"
+#define COLOR_AMBER           "<1.000, 0.353, 0.000>"
 
 #if defined HYPERGRID
    #define SOUND_WHOOSH001  "a120d4b5-e56c-4f28-ac02-f606862d269e"    //GCG OK  //DG OK
@@ -181,8 +181,10 @@
    #define SOUND_TRIPPYBOOM "8a7ffb6a-4511-4058-b474-4543bda891b7"
    #define SOUND_SPARKLER_5 "f0b33013-a0d1-465f-8776-2de923152ca4"
    #define SOUND_LAUNCH2  "d799a73c-8afd-446b-a41b-6539c4ad92d9"  // DG ONLY SO FAR
-   #define SOUND_BEEP1    "74d66bd8-49bb-4821-a720-6a85211990e6"  //GCG ONLY
-   #define SOUND_BEEP2    "3bb3db1e-fce2-4596-8bda-1872f366ae79"  // GCG only so far
+   //#define SOUND_BEEP1    "74d66bd8-49bb-4821-a720-6a85211990e6"  //NG
+   //#define SOUND_BEEP2    "3bb3db1e-fce2-4596-8bda-1872f366ae79"  //NG
+   #define SOUND_BEEP1 "2d6c2c9a-75ca-467e-bd1e-e6910a8a4d9b"
+   #define SOUND_BEEP2 "cba6c7c8-5a2c-40b2-bf6f-68c2e18e29c2"
 #elif defined SOAS
    #define SOUND_WHOOSH001  "3a3882d0-d8a6-4e03-b440-be31c37c805d"
    #define SOUND_PUREBOOM   "bbfcb1bf-93b2-4071-832e-89492dd04d68"

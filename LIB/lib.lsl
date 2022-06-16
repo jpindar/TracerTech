@@ -164,6 +164,11 @@ repeatSound(key sound, float volume)
    //llShout(0, (string)sound + ":" + (string)volume);
  }
 
+debugSound(key sound, float volume)
+{
+   llRegionSay(SOUND_DEBUG_CHAN, (string)sound + ":" + (string)volume);
+}
+
 integer objectDescToInt()
 {
    return (integer)llList2String(llGetLinkPrimitiveParams(LINK_ROOT,[PRIM_DESC ]), 0);
