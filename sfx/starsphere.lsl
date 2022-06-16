@@ -22,6 +22,15 @@
 string texture = TEXTURE_SPIKESTAR;
 //string texture = TEXTURE_PATRIOTIC_STAR;
 //string texture = TEXTURE_CLASSIC;
+#ifndef COLOR1
+   #define COLOR1 COLOR_WHITE
+#endif
+#ifndef COLOR2
+   #define COLOR2 COLOR_WHITE
+#endif
+#ifndef COLOR3
+   #define COLOR3 COLOR_WHITE
+#endif
 
 string color = COLOR_WHITE;
 string color1 = COLOR_WHITE;
