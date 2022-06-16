@@ -2,13 +2,18 @@
 * starsphere  no config
 * copyright Tracer Prometheus 2018
 
+  put this in the root prim of a six prim object
+
  The ANGLE_CONE pattern can be used to imitate the EXPLODE pattern
  by explicitly setting PSYS_SRC_ANGLE_BEGIN to 0.0
  and PSYS_SRC_ANGLE_END to PI (or vice versa).
 
-*/
+  define SYSTEMAGE to about 0.1 for parallel colors
+  or  about 1.5 for serial
 
-//#define TRACERGRID
+*/
+#define DESCRIPTION "Starsphere "
+#define VERSION "1.1"
 
 #include "LIB\lib.lsl"
 
@@ -27,17 +32,17 @@ integer wind = FALSE;
 #if defined STARTGLOW
 float startGlow = STARTGLOW;  //notecard will override these
 #else
-float startGlow;
+float startGlow = 0;
 #endif
 
 #if defined STARTGLOW
 float endGlow = ENDGLOW;
 #else
-float endGlow;
+float endGlow = 0;
 #endif
 
-#ifdef TT_BURST_RADIUS
-float burstRadius = TT_BURST_RADIUS;
+#ifdef BURSTRADIUS
+float burstRadius = BURSTRADIUS;
 #else
 float burstRadius = 5;
 #endif
@@ -53,26 +58,23 @@ float burstRadius = 5;
   float endAlpha = 0.0;
 #endif
 
-#ifdef ANGLE_END
-   float angleEnd = ANGLE_END;
+#ifdef ANGLEEND
+   float angleEnd = ANGLEEND;
 #else
    float angleEnd = PI;
-#endif 
+#endif
 
 #ifdef SYSTEMAGE
-float systemAge = SYSTEMAGE; // 0.2 to 0.3
-float delay = SYSTEMAGE;
+   float systemAge = SYSTEMAGE;
+   float delay = SYSTEMAGE;
 #else
-float systemAge = 0; // 0.2 to 0.3
-float delay = 1;
+   float systemAge = 0;
+   float delay = 1;
 #endif
-//vector startScale = <12.5,12.5,0.0>;//or1.9
-//vector endScale = <3.5,3.5,0.0>;  // 0.5 to 1.5
 vector startScale = <0.5,0.5,0.0>;//or1.9
 vector endScale = <0.5,0.5,0.0>;  // 0.5 to 1.5
 
 float particleAge = 2.0;
-
 float speed = 0.1;
 integer partCount = 200;
 
@@ -124,7 +126,6 @@ boom(integer n)
 {
    makeParticles(n,color1,color2);
    llSleep(systemAge);
-   //allOff();
 }
 
 
@@ -165,7 +166,6 @@ go(integer on)
       list params = llCSV2List("gold,orange,red");
       for (i=0; i<3; i++)
       {
-         //color1 = llList2String(params,i);
          color1 = nameToColor( llList2String(params,i));
          color2 = color1;
          boom(i+1);
@@ -192,6 +192,7 @@ default
       #if !defined HOTLAUNCH
         allOff();
       #endif
+      llSetObjectName(DESCRIPTION + " v" + VERSION);
    }
 
    touch_start(integer n)
