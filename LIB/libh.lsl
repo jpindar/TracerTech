@@ -90,10 +90,13 @@
    #define TEXTURE_SHOOTINGSTAR_RWB   "af254ad1-ab01-4dba-a88b-48033eebfd1b"      //GCG OK
 
    #define TEXTURE_THICK_BLUE_SNOWFLAKE "89d90686-76ab-408b-b0bb-fb3764e56ffd"  //GCG ok, DISC?
-   #define TEXTURE_SANNA_CONFETTI     "7dcbe5e7-cb15-4eb8-b6ec-76ad18dd13d6"  //GCG only
+   //#define TEXTURE_SANNA_CONFETTI     "7dcbe5e7-cb15-4eb8-b6ec-76ad18dd13d6"  //GCG only   
+   #define TEXTURE_SANNA_CONFETTI   "cf593cba-1b90-4d5e-94d9-dfc2b6370199"  //   TL and TS at least
    #define TEXTURE_OS_CONFETTI        "f3e17fa3-7116-4a64-9e41-1d0bb34cddb7"  //GCG ok; DISC?
    #define TEXTURE_HEARTS_CONFETTI    "f955120b-4a21-4a5d-acb2-43b81228160b"  //GCG only
-   #define TEXTURE_FIRE_BLOB           "d2f3b450-09b0-498f-a89f-a01ef897e396"
+   //#define TEXTURE_FIRE_BLOB           "d2f3b450-09b0-498f-a89f-a01ef897e396"  // ng
+   //#define TEXTURE_FIRE_BLOB           "bce3af9c-0c28-4889-a4c4-764c7fec4c88" // in TL and TSAS? 
+   #define TEXTURE_FIRE_BLOB           "fe7f4927-2e23-4f09-8013-6cf1c0c00213" // new upload in Sasquatch 
 #elif defined SOAS
    #define TEXTURE_CLASSIC   "e51dfec9-b481-4ea0-aa67-545632d0b3fd"
    #define TEXTURE_SPIKESTAR "9fe0e79b-f810-481a-9b6f-6a6931ed50ca"
@@ -114,10 +117,10 @@
    #define TEXTURE_WEED              "dc008585-8d63-49d7-8bdb-92b19b35928b"
    #define TEXTURE_FIRE_BLOB         "c6543159-ec2b-4252-a66d-647f228639ea"
    #define TEXTURE_DRAKES_FLAME      "a5abbdb5-ca8b-46bc-964b-32abe2451358"
-   #define TEXTURE_LEAF_MONO        "b208fff8-7e29-4508-a79f-703a2d6e14b8"
+   #define TEXTURE_LEAF_MONO         "b208fff8-7e29-4508-a79f-703a2d6e14b8"
 #elif defined SECONDLIFE
-   #define TEXTURE_CLASSIC             "6c99633c-bbe0-46f9-2633-f1cecc4e712e"
-   #define TEXTURE_SPIKESTAR           "870ac25e-8c2a-6443-76a3-a63549c25695"
+   #define TEXTURE_CLASSIC              "6c99633c-bbe0-46f9-2633-f1cecc4e712e"
+   #define TEXTURE_SPIKESTAR            "870ac25e-8c2a-6443-76a3-a63549c25695"
    #define TEXTURE_PATRIOTIC_STAR       "ffb76ef6-effb-26a0-b16f-6fb05e3f1c8b"
    #define TEXTURE_CLASSIC_THIN         "995350d9-1def-4e27-c80b-41b8e461ccd2"
    #define TEXTURE_NAUTICAL_STAR        "7d5b57ce-3869-1bd0-a242-f54b0295c95d"
