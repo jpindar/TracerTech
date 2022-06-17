@@ -8,10 +8,6 @@
 * sends link messages to the actual particle scripts
 */
 
-#define TRACERGRID
-//#define SOAS
-
-//#define DEBUG
 #define NOTECARD_IN_THIS_PRIM
 #include "LIB\lib.lsl"
 #include "LIB\readNotecardToList.h"
@@ -102,7 +98,7 @@ default
          color1 = parseColor(notecardList,"color1");
          color2 = parseColor(notecardList,"color2");
          color3 = parseColor(notecardList,"color3");
-         systemAge = getFloat(notecardList,"time");
+         systemAge = getFloat(notecardList,"time",1.0);
 
          owner = llGetOwner();
          //no volume, the emitter makes the sound

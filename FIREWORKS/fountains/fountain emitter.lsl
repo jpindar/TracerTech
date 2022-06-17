@@ -23,6 +23,7 @@ list params;
 integer numOfEmitters = 1;
 float glowAmount = PRIMGLOW;
 float speed = SPEED;
+integer wind = 0;
 
 #if defined RAINFALL
    ///float speed = 5;
@@ -130,7 +131,7 @@ default
       {
          list note = llCSV2List(msg);
          volume = getVolume(note);
-         wind = getInteger(note, "wind");
+         wind = getInteger(note, "wind",0);
       }
        //to allow for packing more data into num
       if (num & FIRE_CMD)
