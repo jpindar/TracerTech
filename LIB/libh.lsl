@@ -175,8 +175,9 @@
    #define SOUND_PUREBOOM   "8dac6ea6-380f-4d5e-81d7-fbf6a7ad936e"    //GCG OK   DG OK
    #define SOUND_CLANGECHO  "69f401d1-1e61-476b-99b1-dce18531996b"
    #define SOUND_BANG1      "562f55da-414d-4ae7-b89a-7648f17a836f"   //DG OK
-   #define SOUND_SILENCE    "806f9a16-5799-43cb-a8e7-4430b44b2d2e" //GCG
+   //#define SOUND_SILENCE    "806f9a16-5799-43cb-a8e7-4430b44b2d2e" //GCG
    #define SOUND_SILENT     "806f9a16-5799-43cb-a8e7-4430b44b2d2e" // GCG
+   #define SOUND_SILENCE     "806f9a16-5799-43cb-a8e7-4430b44b2d2e" //TS
    #define SOUND_CRACKLE3S  "35eaaf68-23ff-4c6a-bf7f-7c9235d6a661"
    #define SOUND_TRIPPYBOOM "8a7ffb6a-4511-4058-b474-4543bda891b7"
    #define SOUND_SPARKLER_5 "f0b33013-a0d1-465f-8776-2de923152ca4"
