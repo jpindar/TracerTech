@@ -14,10 +14,20 @@
 #define VERSION "1.2"
 
 #include "LIB\lib.lsl"
-#define COLOR1 COLOR_RED
-#define COLOR2 COLOR_WHITE
-#define COLOR3 COLOR_BRIGHT_BLUE
 
+#ifndef COLOR1
+    #define COLOR1 COLOR_RED
+#endif
+#ifndef COLOR2
+    #define COLOR2 COLOR_GREEN
+#endif
+#ifndef COLOR3
+    #define COLOR3 COLOR_BLUE
+#endif
+
+#ifndef TEXTURE
+    #define TEXTURE ""
+#endif
 
 string texture = TEXTURE;
 
@@ -105,6 +115,10 @@ default
             makeParticles(1, (vector)COLOR_RED);
             makeParticles(2, (vector)COLOR_WHITE);
             makeParticles(3, (vector)COLOR_BLUE);
+         #elif defined RGB
+            makeParticles(1, (vector)COLOR_RED);
+            makeParticles(2, (vector)COLOR_GREEN);
+            makeParticles(3, (vector)COLOR_BRIGHT_BLUE);
          #else
             makeParticles(1, (vector)COLOR1);
             makeParticles(2, (vector)COLOR2);
