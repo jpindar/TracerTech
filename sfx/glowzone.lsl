@@ -10,20 +10,15 @@
 * dance floor, and you get the 'glowzone' effect.
 
 */
+#define DESCRIPTION "Starsphere "
+#define VERSION "1.2"
 
-//#define TRACERGRID
-//#define AMARYLLIS
+#include "LIB\lib.lsl"
 #define COLOR1 COLOR_RED
 #define COLOR2 COLOR_WHITE
 #define COLOR3 COLOR_BRIGHT_BLUE
 
-#include "LIB\lib.lsl"
 
-//string texture = "";
-//string texture = TEXTURE_BLANK;
-//string texture = TEXTURE_SPIKESTAR;
-//string texture = TEXTURE_CLASSIC;
-//string texture =  TEXTURE_SANNA_CONFETTI; 
 string texture = TEXTURE;
 
 string color;
@@ -46,14 +41,14 @@ makeParticles(integer link, vector color)
    PSYS_SRC_TARGET_KEY,llGetKey(),
    PSYS_PART_START_COLOR,color,
    PSYS_PART_END_COLOR,color,
-   PSYS_PART_START_ALPHA,1.0,
+   PSYS_PART_START_ALPHA,1.0,  // or 0.5
    PSYS_PART_END_ALPHA,1,
    PSYS_PART_START_GLOW,0.2,
    PSYS_PART_END_GLOW,0.2,
    PSYS_PART_BLEND_FUNC_SOURCE,PSYS_PART_BF_SOURCE_ALPHA,
    PSYS_PART_BLEND_FUNC_DEST,PSYS_PART_BF_ONE_MINUS_SOURCE_ALPHA,
    PSYS_PART_START_SCALE,<0.1,0.1,0.0>,
-   PSYS_PART_END_SCALE,<0.5,0.5,0.0>,
+   PSYS_PART_END_SCALE,<0.5,0.5,0.0>,    // or <2.4,0.5,0.0>
    PSYS_SRC_TEXTURE,texture,
    PSYS_SRC_MAX_AGE,0,
    PSYS_PART_MAX_AGE,3,
@@ -84,6 +79,7 @@ default
       #if !defined HOTLAUNCH
         allOff();
       #endif
+      llSetObjectName(DESCRIPTION + " v" + VERSION);
    }
 
    touch_start(integer n)
