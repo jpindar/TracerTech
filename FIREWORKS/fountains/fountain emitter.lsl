@@ -1,5 +1,5 @@
 /*
-*Fireworks Fountain emitter 
+*Fireworks Fountain emitter
 *Tracer Prometheus aka Tracer Ping Sept 2018
 */
 //#define DEBUG
@@ -9,6 +9,9 @@
 //#define MINIFOUNTAIN
 #ifndef EFFECTSOUND
   #define EFFECTSOUND SOUND_SILENCE
+#endif
+#ifndef SPEED
+  #define SPEED 10
 #endif
 string version = "3.1";
 string color1;
@@ -21,19 +24,18 @@ list colors;
 list emitters;
 list params;
 integer numOfEmitters = 1;
-float glowAmount = PRIMGLOW;
 float speed = SPEED;
 integer wind = 0;
 
 #if defined RAINFALL
-   ///float speed = 5;
+   ///speed = 5;
    #include "LIB\effects\effect_fountain_rainfall1.lsl"
 #elif defined MINIFOUNTAIN
-   //float speed = 10;
+   //speed = 10;
    float omega = 0;
    #include "LIB\effects\effect_mini_fountain1.lsl"
 #else
-   //float speed = 10;
+   //speed = 10;
    float omega = 0;
    #include "LIB\effects\effect_fountain1.lsl"
 #endif
